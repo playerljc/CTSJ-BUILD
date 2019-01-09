@@ -50,7 +50,7 @@ module.exports = {
     new webpack.HashedModuleIdsPlugin(),
     extractLess,
     new CopyWebpackPlugin([
-      {from: `${runtimePath}src\\assets`, to: `${runtimePath}static`, toType: 'dir'},
+      {from: `${runtimePath}src\\assets`, to: `${runtimePath}dist\\static`, toType: 'dir'},
     ]),
     // 提供全局变量_
     new webpack.ProvidePlugin({
@@ -94,7 +94,7 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        include: [APP_PATH, /highlight.js/],
+        include: [APP_PATH, /highlight.js/, /photoswipe.css/, /default-skin.css/],
         use: ExtractTextPlugin.extract({
           fallback: "style-loader",
           use: "css-loader"

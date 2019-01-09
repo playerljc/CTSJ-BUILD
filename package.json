@@ -1,19 +1,47 @@
 {
   "name": "@ct/build",
   "version": "1.0.0",
-  "description": "管理构建的工具",
+  "description": "负责整个CT环境的构建工作,包括package的构建和app的构建",
   "bin": {
     "ctbuild": "./build.js"
   },
   "scripts": {
     "devDll": "webpack --config webpack.dll.js",
-    "startapp":"cross-env REAP_PATH=dev webpack-dev-server --open --config webpack.dev.js",
+    "startapp": "cross-env REAP_PATH=dev webpack-dev-server --open --config webpack.dev.js",
     "buildapp": "cross-env REAP_PATH=dev webpack --config webpack.prod.js",
     "buildpackage": "rimraf lib && babel src -d lib/src --ignore __tests__ && gulp"
+  },
+  "keywords": [
+    "CT-BuILD",
+    "CTMobile-UI",
+    "CtMobile",
+    "mobile",
+    "webapp",
+    "SPA",
+    "Hybrid",
+    "Cordova",
+    "Android",
+    "iOS",
+    "Material",
+    "playerljc",
+    "WebFramework",
+    "webpack",
+    "gulp",
+    "babel"
+  ],
+  "author": "playerljc <playerljc@163.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/playerljc/CT-BUILD.git"
+  },
+  "bugs": {
+    "url": "https://github.com/playerljc/CT-BUILD/issues"
   },
   "dependencies": {
     "@babel/cli": "^7.1.5",
     "@babel/core": "^7.1.6",
+    "@babel/plugin-proposal-class-properties": "^7.2.3",
     "@babel/plugin-proposal-function-bind": "^7.0.0",
     "@babel/plugin-syntax-dynamic-import": "^7.0.0",
     "@babel/plugin-transform-runtime": "^7.1.0",
@@ -21,12 +49,6 @@
     "@babel/runtime": "^7.1.5",
     "babel-eslint": "^10.0.1",
     "babel-loader": "^8.0.4",
-    "gulp": "^3.9.1",
-    "gulp-clean": "^0.4.0",
-    "gulp-concat": "^2.6.1",
-    "gulp-replace": "^0.6.1",
-    "gulp-uglify": "^3.0.1",
-    "rimraf": "^2.6.2",
     "clean-webpack-plugin": "^0.1.19",
     "copy-webpack-plugin": "^4.5.3",
     "cross-env": "^5.2.0",
@@ -37,6 +59,11 @@
     "fetch": "^1.1.0",
     "file-loader": "^2.0.0",
     "font-awesome": "^4.7.0",
+    "gulp": "^3.9.1",
+    "gulp-clean": "^0.4.0",
+    "gulp-concat": "^2.6.1",
+    "gulp-replace": "^0.6.1",
+    "gulp-uglify": "^3.0.1",
     "html-webpack-include-assets-plugin": "^1.0.6",
     "html-webpack-plugin": "^4.0.0-beta.2",
     "jquery": "^3.3.1",
@@ -48,6 +75,7 @@
     "normalize.less": "^1.0.0",
     "react": "^16.6.3",
     "react-dom": "^16.6.3",
+    "rimraf": "^2.6.2",
     "uglifyjs-webpack-plugin": "^2.0.1",
     "uuid": "^3.3.2",
     "webpack": "^4.20.2",

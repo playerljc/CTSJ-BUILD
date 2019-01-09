@@ -16,16 +16,11 @@ else {
 
 console.log(`customConfigPath:${customConfigPath}`);
 
-if (customConfigPath) {
-  customModule = require(customConfigPath);
-  if (customModule && customModule.getConfig) {
-    customModule = customModule.getConfig(webpack);
-  }
-}
+
 // --runtimepath
 // --customconfig
 
-module.exports = merge(common, {
+const curModule = merge(common, {
   mode: 'development',
   devtool: 'cheap-module-eval-source-map',
   devServer: {
@@ -47,4 +42,13 @@ module.exports = merge(common, {
       }
     }),
   ]
-}, customModule || {});
+});
+
+if (customConfigPath) {
+  customModule = require(customConfigPath);
+  if (customModule && customModule.getConfig) {
+    customModule = customModule.getConfig(webpack, curModule);
+  }
+}
+
+module.exports = merge(curModule, customModule || {});

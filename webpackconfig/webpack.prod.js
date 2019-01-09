@@ -17,16 +17,10 @@ else {
 
 console.log(`customConfigPath:${customConfigPath}`);
 
-if (customConfigPath) {
-  customModule = require(customConfigPath);
-  if (customModule && customModule.getConfig) {
-    customModule = customModule.getConfig(webpack);
-  }
-}
 // --runtimepath
 // --customconfig
 
-module.exports = merge(common, {
+const curModule = merge(common, {
   mode: 'production',
   plugins: [
     new CleanWebpackPlugin([`${runtimePath}dist`]),
@@ -39,4 +33,13 @@ module.exports = merge(common, {
       }
     }),
   ]
-}, customModule || {});
+});
+
+if (customConfigPath) {
+  customModule = require(customConfigPath);
+  if (customModule && customModule.getConfig) {
+    customModule = customModule.getConfig(webpack, curModule);
+  }
+}
+
+module.exports = merge(curModule, customModule || {});
