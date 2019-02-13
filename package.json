@@ -12,7 +12,7 @@
     "buildpackage": "rimraf lib && babel src -d lib/src --ignore __tests__ && gulp"
   },
   "keywords": [
-    "CT-BuILD",
+    "CT-BUILD",
     "CTMobile-UI",
     "CtMobile",
     "mobile",
@@ -63,6 +63,7 @@
     "gulp-clean": "^0.4.0",
     "gulp-concat": "^2.6.1",
     "gulp-replace": "^0.6.1",
+    "gulp-sourcemaps": "^2.6.4",
     "gulp-uglify": "^3.0.1",
     "html-webpack-include-assets-plugin": "^1.0.6",
     "html-webpack-plugin": "^4.0.0-beta.2",
