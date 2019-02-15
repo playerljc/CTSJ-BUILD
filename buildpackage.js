@@ -37,7 +37,7 @@ function clearTask() {
  */
 function babelTask() {
   return new Promise((resolve, reject) => {
-    const babelProcess = spawn(process.platform === "win32" ? `${commandPath}babel.cmd` : `${commandPath}babel`, [`${runtimePath}\\src`, '-d', `${runtimePath}\\lib\\src`, '--ignore', '__tests__'], {
+    const babelProcess = spawn(process.platform === "win32" ? `${commandPath}babel.cmd` : `${commandPath}babel`, [`${runtimePath}\\src`, '-d', `${runtimePath}\\lib`, '--ignore', '__tests__'], {
       cwd: codePath,
       encoding: 'utf-8',
     });
