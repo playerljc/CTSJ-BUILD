@@ -2,78 +2,59 @@ const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
-const CopyWebpackPlugin = require('copy-webpack-plugin');
-const HtmlWebpackIncludeAssetsPlugin = require('html-webpack-include-assets-plugin');
 const LessPluginCleanCSS = require('less-plugin-clean-css');
 const LessPluginAutoPrefix = require('less-plugin-autoprefix');
+const runtimePath = process.argv[6];
+const packagename = process.argv[8];
 const extractLess = new ExtractTextPlugin({
   filename: (getPath) => {
-    return getPath('[name].css');
+    return getPath(`${packagename}.css`);
   },
   allChunks: true
 });
 
-const runtimePath = process.argv[6];
-
+console.log('umd-packagename', packagename);
+console.log('umd-runtimePath', runtimePath);
 const APP_PATH = path.resolve(runtimePath, 'src'); // 项目src目录
+console.log('umd-APP_PATH', APP_PATH);
 
 module.exports = {
   entry: {
     app: `${runtimePath}src\\index.js`,
   },
   output: {
-    filename: '[name].[chunkhash].bundle.js',
-    chunkFilename: '[name].[chunkhash].bundle.js',
-    path: path.resolve(runtimePath, 'dist'),
+    filename: `${packagename}.bundle.js`,
+    chunkFilename: `${packagename}.bundle.js`,
+    path: path.resolve(runtimePath, 'umd'),
     publicPath: '/',
+    library: `${packagename}`,
+    libraryTarget: 'umd'
   },
   plugins: [
-    new webpack.DllReferencePlugin({
-      context: runtimePath,
-      manifest: require(`${runtimePath}src\\assets\\dll\\commons-manifest.json`)
-    }),
     new HtmlWebpackPlugin({
       title: 'CtMobile Demo',
       filename: 'index.html',
-      template: `${runtimePath}src\\index.html`,
+      template: `${runtimePath}\\index.html`,
       hash: true,//防止缓存
       minify: {
         removeAttributeQuotes: true//压缩 去掉引号
       }
     }),
-    new HtmlWebpackIncludeAssetsPlugin({
-      assets: ['static/dll/commons.js'],
-      append: false,
-      hash: true,
-    }),
     new webpack.HashedModuleIdsPlugin(),
     extractLess,
-    new CopyWebpackPlugin([
-      {from: `${runtimePath}src\\assets`, to: `${runtimePath}dist\\static`, toType: 'dir'},
-    ]),
-    // 提供全局变量_
-    new webpack.ProvidePlugin({
-      _: "lodash",
-      $: "jquery",
-    }),
   ],
   // optimization: {
+  //   runtimeChunk: 'single',
   //   splitChunks: {
-  //     chunks: 'all'
+  //     cacheGroups: {
+  //       vendor: {
+  //         test: /[\\/]node_modules[\\/]/,
+  //         name: 'vendors',
+  //         chunks: 'all'
+  //       }
+  //     }
   //   }
   // },
-  optimization: {
-    runtimeChunk: 'single',
-    splitChunks: {
-      cacheGroups: {
-        vendor: {
-          test: /[\\/]node_modules[\\/]/,
-          name: 'vendors',
-          chunks: 'all'
-        }
-      }
-    }
-  },
   module: {
     rules: [
       {

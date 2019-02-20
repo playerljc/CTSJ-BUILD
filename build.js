@@ -8,12 +8,14 @@ const commandArgs = require('./commandArgs');
  * @type {{buildapp: *, buildpackage: *, startapp: *}}
  */
 const tasks = {
+  // 用webpack开发
+  startapp: require('./startapp'),
   // 用webpack打包app
   buildapp: require('./buildapp'),
   // 打包npm包
   buildpackage: require('./buildpackage'),
-  // 用webpack开发
-  startapp: require('./startapp')
+  // src打包成umd
+  buildumd: require('./buildumd'),
 };
 
 

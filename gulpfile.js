@@ -1,15 +1,15 @@
 const gulp = require('gulp');
 const uglify = require("gulp-uglify");
-// const clean = require('gulp-clean');
 const sourceMap = require('gulp-sourcemaps');
 const copyexts = ['less', 'svg', 'jpg', 'jpeg', 'png', 'bmp','json'];
 const commandArgs = require('./commandArgs');
 const argsMap = commandArgs.initCommandArgs();
 const runtimePath = argsMap.get('--runtimepath')[0];
+const srcPath = argsMap.get('--srcpath')[0];
 
 gulp.task('copy', () => {
   for (let i = 0; i < copyexts.length; i++) {
-    gulp.src(`${runtimePath}src\\**\\*.${copyexts[i]}`).pipe(gulp.dest(`${runtimePath}lib`));
+    gulp.src(`${srcPath}src\\**\\*.${copyexts[i]}`).pipe(gulp.dest(`${runtimePath}lib`));
   }
 });
 
@@ -22,10 +22,5 @@ gulp.task('minjs', () => {
     .pipe(sourceMap.write('.'))
     .pipe(gulp.dest(`${runtimePath}lib`))
 });
-
-
-// gulp.task('clean', ['minjs'], () => {
-//   gulp.src(`${runtimePath}lib\\src`).pipe(clean({force: true}));
-// });
 
 gulp.task('default', ['copy', 'minjs']);

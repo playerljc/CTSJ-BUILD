@@ -1,9 +1,16 @@
 const {spawn} = require('child_process');
 // 运行脚本的路径
 const runtimePath = process.cwd();
+console.log('buildpackage-runtimePath----------------------', runtimePath);
 // 脚本的路径
 const codePath = __dirname;
 const commandPath = `${codePath}\\node_modules\\.bin\\`;
+
+let srcPath;
+let argsMap;
+
+const tasks = [clearTask, babelTask, gulpTask];
+let index = 0;
 
 /**
  * clearTask
@@ -37,7 +44,7 @@ function clearTask() {
  */
 function babelTask() {
   return new Promise((resolve, reject) => {
-    const babelProcess = spawn(process.platform === "win32" ? `${commandPath}babel.cmd` : `${commandPath}babel`, [`${runtimePath}\\src`, '-d', `${runtimePath}\\lib`, '--ignore', '__tests__'], {
+    const babelProcess = spawn(process.platform === "win32" ? `${commandPath}babel.cmd` : `${commandPath}babel`, [`${srcPath}\\src`, '-d', `${runtimePath}\\lib`, '--ignore', '__tests__'], {
       cwd: codePath,
       encoding: 'utf-8',
     });
@@ -63,7 +70,7 @@ function babelTask() {
  */
 function gulpTask() {
   return new Promise((resolve, reject) => {
-    const gulpProcess = spawn(process.platform === "win32" ? `${commandPath}gulp.cmd` : `${commandPath}gulp`, ['--runtimepath', `${runtimePath}\\`], {
+    const gulpProcess = spawn(process.platform === "win32" ? `${commandPath}gulp.cmd` : `${commandPath}gulp`, ['--runtimepath', `${runtimePath}\\`, '--srcpath', `${srcPath}\\`], {
       cwd: codePath,
       encoding: 'utf-8',
     });
@@ -84,9 +91,6 @@ function gulpTask() {
     // resolve();
   });
 }
-
-const tasks = [clearTask, babelTask, gulpTask];
-let index = 0;
 
 /**
  * loopTask
@@ -115,7 +119,20 @@ function loopTask() {
 }
 
 module.exports = {
-  build: () => {
+  build: (args) => {
+    argsMap = args;
+    let srcpatharg = args.get('--srcpath');
+    if (srcpatharg && Array.isArray(srcpatharg)) {
+      srcpatharg = srcpatharg[0];
+    }
+    console.log('srcpatharg', srcpatharg);
+    if (srcpatharg === '../') {
+      srcPath = runtimePath.substring(0, runtimePath.lastIndexOf('\\'));
+    } else {
+      srcPath = runtimePath;
+    }
+    console.log('buildpackage-srcPath----------------------', srcPath);
+
     loopTask().then(() => {
       console.log('finish');
       process.exit();
