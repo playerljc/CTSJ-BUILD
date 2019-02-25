@@ -136,7 +136,7 @@ function removeSrcTask() {
   });
 }
 
-const tasks = [copySrcTask, corssenvTask, webpackTask, removeSrcTask];
+const tasks = [copySrcTask, corssenvTask, webpackTask/*, removeSrcTask*/];
 let index = 0;
 
 /**

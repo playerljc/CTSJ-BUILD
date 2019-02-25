@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "负责整个CT环境的构建工作,包括package的构建和app的构建",
   "bin": {
-    "ctbuild": "./build.js"
+    "ctbuild": "./build.js",
+    "ctcopy": "./copy.js"
   },
   "scripts": {
     "devDll": "webpack --config webpack.dll.js",
@@ -51,6 +52,7 @@
     "babel-loader": "^8.0.4",
     "clean-webpack-plugin": "^0.1.19",
     "copy-webpack-plugin": "^4.5.3",
+    "cp-cli": "^2.0.0",
     "cross-env": "^5.2.0",
     "csv-loader": "^3.0.2",
     "ejs-loader": "^0.3.1",
@@ -77,6 +79,7 @@
     "react": "^16.6.3",
     "react-dom": "^16.6.3",
     "rimraf": "^2.6.2",
+    "tslib": "^1.9.3",
     "uglifyjs-webpack-plugin": "^2.0.1",
     "uuid": "^3.3.2",
     "webpack": "^4.20.2",

@@ -23,5 +23,8 @@ module.exports = {
       }
     }
     return map;
+  },
+  getArgs() {
+    return process.argv.slice(2);
   }
 };
