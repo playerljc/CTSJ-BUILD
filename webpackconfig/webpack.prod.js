@@ -20,7 +20,7 @@ console.log(`customConfigPath:${customConfigPath}`);
 // --runtimepath
 // --customconfig
 
-const curModule = merge(common, {
+const curModule = merge(common.config, {
   mode: 'production',
   plugins: [
     new CleanWebpackPlugin([`${runtimePath}dist`]),
@@ -38,7 +38,11 @@ const curModule = merge(common, {
 if (customConfigPath) {
   customModule = require(customConfigPath);
   if (customModule && customModule.getConfig) {
-    customModule = customModule.getConfig(webpack, curModule);
+    customModule = customModule.getConfig({
+      webpack,
+      curModule,
+      plugins: common.plugins,
+    });
   }
 }
 

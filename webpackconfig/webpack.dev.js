@@ -20,7 +20,7 @@ console.log(`customConfigPath:${customConfigPath}`);
 // --runtimepath
 // --customconfig
 
-const curModule = merge(common, {
+const curModule = merge(common.config, {
   mode: 'development',
   devtool: 'cheap-module-eval-source-map',
   devServer: {
@@ -47,8 +47,15 @@ const curModule = merge(common, {
 if (customConfigPath) {
   customModule = require(customConfigPath);
   if (customModule && customModule.getConfig) {
-    customModule = customModule.getConfig(webpack, curModule);
+    customModule = customModule.getConfig({
+      webpack,
+      curModule,
+      plugins: common.plugins
+    });
   }
 }
 
-module.exports = merge(curModule, customModule || {});
+const config = merge(curModule, customModule || {});
+console.dir(config);
+
+module.exports = config;
