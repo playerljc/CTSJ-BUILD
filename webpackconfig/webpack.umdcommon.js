@@ -23,8 +23,6 @@ module.exports = {
     HtmlWebpackPlugin,
     HtmlWebpackPlugin,
     ExtractTextPlugin,
-    CopyWebpackPlugin,
-    HtmlWebpackIncludeAssetsPlugin,
     LessPluginCleanCSS,
     LessPluginAutoPrefix,
   },
