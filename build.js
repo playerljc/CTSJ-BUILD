@@ -2,10 +2,10 @@
 
 /**
  * --type [
- *          startapp, dev启动
- *          buildapp, 打包
- *          buildpackage, 打包package
- *          buildumd 打包成umd包
+ *          startapp - dev启动                   --- ctbuild.config.js
+ *          buildapp - 打包                      --- ctbuild.config.js
+ *          buildumd - 打包成umd包 src - umd     --- ctbuild.config.js
+ *          buildpackage - 打包package src - lib
  *        ]
  * --packagename 当--type为buildumd时 为包的名称
  */
@@ -33,10 +33,11 @@ const argsMap = commandArgs.initCommandArgs();
 /**
  * buildpackage
  * buildapp
+ * buildumd
  * startapp
  */
 const buildType = argsMap.get('--type') ? argsMap.get('--type')[0] : '';
-console.log(`参数${buildType}`);
+// console.log(`参数${buildType}`);
 if (tasks[buildType]) {
   tasks[buildType].build(argsMap);
 }

@@ -1,10 +1,11 @@
 #!/usr/bin/env node
-
+const path = require('path');
 const {spawn} = require('child_process');
 const runtimePath = process.cwd();
-const srcPath = runtimePath.substring(0, runtimePath.lastIndexOf('\\'));
+const srcPath = runtimePath.substring(0, runtimePath.lastIndexOf(path.join('/'))/*runtimePath.lastIndexOf('\\')*/);
 const codePath = __dirname;
-const commandPath = `${codePath}\\node_modules\\.bin\\`;
+// const commandPath = `${codePath}\\node_modules\\.bin\\`;
+const commandPath = path.join(codePath, 'node_modules', '.bin', '/');
 let argsMap;
 
 /**
@@ -15,15 +16,23 @@ function copySrcTask() {
     const commands = {
       'win32': {
         command: 'xcopy',
-        params: [`${srcPath}\\src`, `${runtimePath}\\src`, '/e', '/i', '/y']
+        params: [
+          path.join(srcPath, 'src'),//`${srcPath}\\src`,
+          path.join(runtimePath, 'src'),//`${runtimePath}\\src`,
+          '/e', '/i', '/y'
+        ]
       },
       'linux': {
         command: 'cp',
-        params: ['-r','-f',`${srcPath}\\src`, `${runtimePath}\\src`]
+        params: [
+          '-r', '-f',
+          path.join(srcPath, 'src'),//`${srcPath}\\src`,
+          path.join(runtimePath, 'src'),//`${runtimePath}\\src`
+        ]
       }
     };
 
-    console.log('process.platform', process.platform);
+    // console.log('process.platform', process.platform);
     const {command, params} = process.platform === "win32" ? commands['win32'] : commands['linux'];
 
     const copyProcess = spawn(
@@ -53,10 +62,15 @@ function copySrcTask() {
  */
 function corssenvTask() {
   return new Promise((resolve, reject) => {
-    const crossenvProcess = spawn(process.platform === "win32" ? `${commandPath}cross-env.cmd` : `${commandPath}cross-env`, ['REAP_PATH=prod', 'NODE_ENV=production'], {
-      cwd: codePath,
-      encoding: 'utf-8',
-    });
+    const command = process.platform === "win32" ? `${commandPath}cross-env.cmd` : `${commandPath}cross-env`;
+    const crossenvProcess = spawn(
+      command,
+      ['REAP_PATH=prod', 'NODE_ENV=production'],
+      {
+        cwd: codePath,
+        encoding: 'utf-8',
+      }
+    );
 
     crossenvProcess.stdout.on('data', (data) => {
       console.log(`stdout: ${data}`);
@@ -79,13 +93,15 @@ function corssenvTask() {
  */
 function webpackTask() {
   return new Promise((resolve, reject) => {
-    const babelProcess = spawn(process.platform === "win32" ? `${commandPath}webpack.cmd` : `${commandPath}webpack`,
+    const command = process.platform === "win32" ? `${commandPath}webpack.cmd` : `${commandPath}webpack`;
+    const babelProcess = spawn(
+      command,
       [
         '--open',
         '--config',
-        'webpackconfig/webpack.umd.js',
+        path.join('webpackconfig', 'webpack.umd.js'),//'webpackconfig/webpack.umd.js',
         '--runtimepath',
-        `${runtimePath}\\`,
+        path.join(runtimePath, '/'),//`${runtimePath}\\`,
         '--packagename',
         `${argsMap.get('--packagename')}`,
         '--customconfig',
@@ -114,27 +130,27 @@ function webpackTask() {
 /**
  * 从runtimePath中删除src
  */
-function removeSrcTask() {
-  return new Promise((resolve, reject) => {
-    const rimrafProcess = spawn(process.platform === "win32" ? `${commandPath}rimraf.cmd` : `${commandPath}rimraf`, [`${runtimePath}\\src`], {
-      cwd: codePath,
-      encoding: 'utf-8',
-    });
-
-    rimrafProcess.stdout.on('data', (data) => {
-      console.log(`stdout: ${data}`);
-    });
-
-    rimrafProcess.stderr.on('data', (data) => {
-      console.log(`stderr: ${data}`);
-    });
-
-    rimrafProcess.on('close', (code) => {
-      console.log(`rimrafClose：${code}`);
-      resolve();
-    });
-  });
-}
+// function removeSrcTask() {
+//   return new Promise((resolve, reject) => {
+//     const rimrafProcess = spawn(process.platform === "win32" ? `${commandPath}rimraf.cmd` : `${commandPath}rimraf`, [`${runtimePath}\\src`], {
+//       cwd: codePath,
+//       encoding: 'utf-8',
+//     });
+//
+//     rimrafProcess.stdout.on('data', (data) => {
+//       console.log(`stdout: ${data}`);
+//     });
+//
+//     rimrafProcess.stderr.on('data', (data) => {
+//       console.log(`stderr: ${data}`);
+//     });
+//
+//     rimrafProcess.on('close', (code) => {
+//       console.log(`rimrafClose：${code}`);
+//       resolve();
+//     });
+//   });
+// }
 
 const tasks = [copySrcTask, corssenvTask, webpackTask/*, removeSrcTask*/];
 let index = 0;

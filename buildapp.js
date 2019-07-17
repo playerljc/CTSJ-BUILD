@@ -1,9 +1,10 @@
 #!/usr/bin/env node
-
+const path = require('path');
 const {spawn} = require('child_process');
 const runtimePath = process.cwd();
 const codePath = __dirname;
-const commandPath = `${codePath}\\node_modules\\.bin\\`;
+// const commandPath = `${codePath}\\node_modules\\.bin\\`;
+const commandPath = path.join(codePath, 'node_modules', '.bin', '/');
 let argsMap;
 
 /**
@@ -12,7 +13,8 @@ let argsMap;
  */
 function corssenvTask() {
   return new Promise((resolve, reject) => {
-    const crossenvProcess = spawn(process.platform === "win32" ? `${commandPath}cross-env.cmd` : `${commandPath}cross-env`, ['REAP_PATH=prod', 'NODE_ENV=production'], {
+    const command = process.platform === "win32" ? `${commandPath}cross-env.cmd` : `${commandPath}cross-env`;
+    const crossenvProcess = spawn(command, ['REAP_PATH=prod', 'NODE_ENV=production'], {
       cwd: codePath,
       encoding: 'utf-8',
     });
@@ -38,10 +40,20 @@ function corssenvTask() {
  */
 function prodDllTask() {
   return new Promise((resolve, reject) => {
-    const devDllProcess = spawn(process.platform === "win32" ? `${commandPath}webpack.cmd` : `${commandPath}webpack`, ['--config', 'webpackconfig/webpack.prod.dll.js', '--custom', `${runtimePath}\\`], {
-      cwd: codePath,
-      encoding: 'utf-8',
-    });
+    const command = process.platform === "win32" ? `${commandPath}webpack.cmd` : `${commandPath}webpack`;
+    const devDllProcess = spawn(
+      command,
+      [
+        '--config',
+        path.join('webpackconfig', 'webpack.prod.dll.js'),//'webpackconfig/webpack.prod.dll.js',
+        '--custom',
+        path.join(runtimePath, '/'),//`${runtimePath}\\`
+      ],
+      {
+        cwd: codePath,
+        encoding: 'utf-8',
+      }
+    );
 
     devDllProcess.stdout.on('data', (data) => {
       console.log(`stdout: ${data}`);
@@ -64,13 +76,15 @@ function prodDllTask() {
  */
 function webpackTask() {
   return new Promise((resolve, reject) => {
-    const babelProcess = spawn(process.platform === "win32" ? `${commandPath}webpack.cmd` : `${commandPath}webpack`,
+    const command = process.platform === "win32" ? `${commandPath}webpack.cmd` : `${commandPath}webpack`;
+    const babelProcess = spawn(
+      command,
       [
         '--open',
         '--config',
-        'webpackconfig/webpack.prod.js',
+        path.join('webpackconfig', 'webpack.prod.js'),//'webpackconfig/webpack.prod.js',
         '--runtimepath',
-        `${runtimePath}\\`,
+        path.join(runtimePath, '/'),//`${runtimePath}\\`,
         '--customconfig',
         argsMap.get('--config')
       ],

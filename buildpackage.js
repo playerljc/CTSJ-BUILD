@@ -1,24 +1,39 @@
 const {spawn} = require('child_process');
+const path = require('path');
 // 运行脚本的路径
 const runtimePath = process.cwd();
-console.log('buildpackage-runtimePath----------------------', runtimePath);
-// 脚本的路径
+// 脚本所在的路径
 const codePath = __dirname;
-const commandPath = `${codePath}\\node_modules\\.bin\\`;
+const commandPath = path.join(codePath, 'node_modules', '.bin', '/');
+
+// buildpackage生成的目录名称
+const generateDirName = 'lib';
+// buildpackage原始名称
+const srcDirName = 'src';
 
 let srcPath;
 let argsMap;
 
-const tasks = [clearTask, babelTask, gulpTask];
 let index = 0;
+// buildpackage的所有任务
+const tasks = [
+  // 清除生成目录
+  clearTask,
+  // babel转换，转换js
+  babelTask,
+  // 样式
+  gulpTask
+];
 
 /**
  * clearTask
+ * 清除lib目录
  * @return {Promise}
  */
 function clearTask() {
   return new Promise((resolve, reject) => {
-    const rimrafProcess = spawn(process.platform === "win32" ? `${commandPath}rimraf.cmd` : `${commandPath}rimraf`, [`${runtimePath}\\lib`], {
+    const command = process.platform === "win32" ? `${commandPath}rimraf.cmd` : `${commandPath}rimraf`;
+    const rimrafProcess = spawn(command, [path.join(runtimePath, generateDirName)], {
       cwd: codePath,
       encoding: 'utf-8',
     });
@@ -40,14 +55,25 @@ function clearTask() {
 
 /**
  * babelTask
+ * 转换src到lib
  * @return {Promise}
  */
 function babelTask() {
   return new Promise((resolve, reject) => {
-    const babelProcess = spawn(process.platform === "win32" ? `${commandPath}babel.cmd` : `${commandPath}babel`, [`${srcPath}\\src`, '-d', `${runtimePath}\\lib`, '--ignore', '__tests__'], {
-      cwd: codePath,
-      encoding: 'utf-8',
-    });
+    const command = process.platform === "win32" ? `${commandPath}babel.cmd` : `${commandPath}babel`;
+    const babelProcess = spawn(
+      command,
+      [
+        path.join(srcPath, srcDirName),
+        '-d',
+        path.join(runtimePath, generateDirName),
+        '--ignore',
+        '__tests__'
+      ],
+      {
+        cwd: codePath,
+        encoding: 'utf-8',
+      });
 
     babelProcess.stdout.on('data', (data) => {
       console.log(`stdout: ${data}`);
@@ -70,10 +96,20 @@ function babelTask() {
  */
 function gulpTask() {
   return new Promise((resolve, reject) => {
-    const gulpProcess = spawn(process.platform === "win32" ? `${commandPath}gulp.cmd` : `${commandPath}gulp`, ['--runtimepath', `${runtimePath}\\`, '--srcpath', `${srcPath}\\`], {
-      cwd: codePath,
-      encoding: 'utf-8',
-    });
+    const command = process.platform === "win32" ? `${commandPath}gulp.cmd` : `${commandPath}gulp`;
+    const gulpProcess = spawn(
+      command,
+      [
+        '--runtimepath',
+        path.join(runtimePath, '/'),
+        '--srcpath',
+        path.join(srcPath, '/')
+      ],
+      {
+        cwd: codePath,
+        encoding: 'utf-8',
+      }
+    );
 
     gulpProcess.stdout.on('data', (data) => {
       console.log(`stdout: ${data}`);
@@ -87,8 +123,6 @@ function gulpTask() {
       console.log(`gulpTaskClose：${code}`);
       resolve();
     });
-    // console.log('task3');
-    // resolve();
   });
 }
 
@@ -119,7 +153,11 @@ function loopTask() {
 }
 
 module.exports = {
-  build: (args) => {
+  /**
+   * build
+   * @param args
+   */
+  build(args) {
     argsMap = args;
     let srcpatharg = args.get('--srcpath');
     if (srcpatharg && Array.isArray(srcpatharg)) {
@@ -127,7 +165,7 @@ module.exports = {
     }
     console.log('srcpatharg', srcpatharg);
     if (srcpatharg === '../') {
-      srcPath = runtimePath.substring(0, runtimePath.lastIndexOf('\\'));
+      srcPath = runtimePath.substring(0, runtimePath.lastIndexOf(path.join('/')));
     } else {
       srcPath = runtimePath;
     }

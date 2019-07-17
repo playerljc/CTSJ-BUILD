@@ -1,12 +1,13 @@
 #!/usr/bin/env node
-
+const path = require('path');
 const {spawn} = require('child_process');
 // 运行命令的路径
 const runtimePath = process.cwd();
 // 命令的路径
 const codePath = __dirname;
 // 命令所在路径
-const commandPath = `${codePath}\\node_modules\\.bin\\`;
+const commandPath = path.join(codePath, 'node_modules', '.bin', '/');
+//`${codePath}\\node_modules\\.bin\\`;
 let argsMap;
 
 /**
@@ -16,7 +17,8 @@ let argsMap;
  */
 function corssenvTask() {
   return new Promise((resolve, reject) => {
-    const crossenvProcess = spawn(process.platform === "win32" ? `${commandPath}cross-env.cmd` : `${commandPath}cross-env`, ['REAP_PATH=dev', 'NODE_ENV=development'], {
+    const command = process.platform === "win32" ? `${commandPath}cross-env.cmd` : `${commandPath}cross-env`;
+    const crossenvProcess = spawn(command, ['REAP_PATH=dev', 'NODE_ENV=development'], {
       cwd: codePath,
       encoding: 'utf-8',
     });
@@ -42,10 +44,20 @@ function corssenvTask() {
  */
 function devDllTask() {
   return new Promise((resolve, reject) => {
-    const devDllProcess = spawn(process.platform === "win32" ? `${commandPath}webpack.cmd` : `${commandPath}webpack`, ['--config', 'webpackconfig/webpack.dev.dll.js', '--custom', `${runtimePath}\\`], {
-      cwd: codePath,
-      encoding: 'utf-8',
-    });
+    const command = process.platform === "win32" ? `${commandPath}webpack.cmd` : `${commandPath}webpack`;
+    const devDllProcess = spawn(
+      command,
+      [
+        '--config',
+        path.join('webpackconfig', 'webpack.dev.dll.js'),//'webpackconfig/webpack.dev.dll.js',
+        '--custom',
+        path.join(runtimePath, '/'),//`${runtimePath}\\`
+      ],
+      {
+        cwd: codePath,
+        encoding: 'utf-8',
+      }
+    );
 
     devDllProcess.stdout.on('data', (data) => {
       console.log(`stdout: ${data}`);
@@ -68,13 +80,15 @@ function devDllTask() {
  */
 function webpackServiceTask() {
   return new Promise((resolve, reject) => {
-    const babelProcess = spawn(process.platform === "win32" ? `${commandPath}webpack-dev-server.cmd` : `${commandPath}webpack-dev-server`,
+    const command = process.platform === "win32" ? `${commandPath}webpack-dev-server.cmd` : `${commandPath}webpack-dev-server`;
+    const babelProcess = spawn(
+      command,
       [
         '--open',
         '--config',
-        'webpackconfig/webpack.dev.js',
+        path.join('webpackconfig', 'webpack.dev.js'),//'webpackconfig/webpack.dev.js',
         '--runtimepath',
-        `${runtimePath}\\`,
+        path.join(runtimePath, '/'),//`${runtimePath}\\`,
         '--customconfig',
         argsMap.get('--config')
       ],
@@ -98,6 +112,7 @@ function webpackServiceTask() {
   });
 }
 
+// startapp的tasks
 const tasks = [corssenvTask, devDllTask, webpackServiceTask];
 let index = 0;
 

@@ -1,5 +1,10 @@
 #!/usr/bin/env node
 
+/**
+ * src - 原始目录
+ * targetsrc 目标目录
+ */
+const path = require('path');
 const {spawn} = require('child_process');
 const args = require('./commandArgs');
 
@@ -8,8 +13,8 @@ const runtimePath = process.cwd();
 
 // 脚本的路径
 const codePath = __dirname;
-const commandPath = `${codePath}\\node_modules\\.bin\\`;
-
+// const commandPath = `${codePath}\\node_modules\\.bin\\`;
+const commandPath = path.join(codePath, 'node_modules', '.bin', '/');
 const tasks = [cpTask];
 let index = 0;
 
@@ -19,13 +24,15 @@ let index = 0;
  */
 function cpTask() {
   return new Promise((resolve, reject) => {
+    const command = process.platform === "win32" ? `${commandPath}cp-cli.cmd` : `${commandPath}cp-cli`;
     const cpProcess = spawn(
-      process.platform === "win32" ? `${commandPath}cp-cli.cmd` : `${commandPath}cp-cli`,
+      command,
       args.getArgs(),
       {
         cwd: runtimePath,
         encoding: 'utf-8',
-      });
+      }
+    );
 
     cpProcess.stdout.on('data', (data) => {
       console.log(`stdout: ${data}`);
