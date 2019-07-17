@@ -57,23 +57,23 @@
  
  &nbsp;&nbsp;&nbsp;&nbsp;这个文件是对webpack配置文件进行合并的文件，用户的自定义功能可以在getConfig进行配置，如果getConfig返回空对象，则使用默认配置。
 
-    1.webpack - webpack对象
-    
-    2.curModule - 默认配置
-    
-    3.plugins - webpack的plugins，当前有如下插件
-    
-      HtmlWebpackPlugin,
-      
-      ExtractTextPlugin,
-      
-      CopyWebpackPlugin,
-      
-      HtmlWebpackIncludeAssetsPlugin,
-      
-      LessPluginCleanCSS,
-      
-      LessPluginAutoPrefix
+ 1.webpack - webpack对象
+
+ 2.curModule - 默认配置
+
+ 3.plugins - webpack的plugins，当前有如下插件
+
+   HtmlWebpackPlugin,
+
+   ExtractTextPlugin,
+
+   CopyWebpackPlugin,
+
+   HtmlWebpackIncludeAssetsPlugin,
+
+   LessPluginCleanCSS,
+
+   LessPluginAutoPrefix
   
   可以对curModule进行重写来达到自定义的目的，如果自定的时候用到了webpack对象，如要使用参数中的webpack对象，如果自定义的时候需要用到插件，也应该用参数中plugins。
   
