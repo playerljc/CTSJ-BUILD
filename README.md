@@ -4,33 +4,36 @@
  1. ctbuild
     * --type [build的类型]
      * startapp [启动开发模式]
-   ```bash
-   ctbuild --type startapp
-   ```
+    ```bash
+     ctbuild --type startapp
+    ```
      * buildapp [对应用进行打包]
-   ```bash
-   ctbuild --type buildapp
-   ```     
+    ```bash
+    ctbuild --type buildapp
+    ```     
      * buildpackage [打包npmpackage]
-   ```bash
-   ctbuild --type buildpackage
-   ``` 
+    ```bash
+    ctbuild --type buildpackage
+    ``` 
      * buildumd [对应用进行umd打包]
-   ```bash
-   ctbuild --type buildumd --packagename packageName
-   ```     
+    ```bash
+    ctbuild --type buildumd --packagename packageName
+    ```     
     
  2. ctcopy
      * srcDir
      * targetDir
+     
    ```bash
    ctcopy src target
    ``` 
+   
    将src中的内容拷贝到target中
  
 ##  ctbuild命令详解
  3. startapp，buildapp
   startapp和buildapp对应的是webpack中的dev和build
+  
  * 目录结构
    .src
    &nbsp;&nbsp;.index.html
@@ -43,6 +46,7 @@
    可以将不变的第三方库放入commmon.js中，采用了webpack中的dll。
 
  * ctbuild.config.js
+ 
 &nbsp;&nbsp;&nbsp;&nbsp;这个文件是对webpack配置文件进行合并的文件，用户的自定义功能可以在getConfig进行配置，如果getConfig返回空对象，则使用默认配置。
 1.webpack - webpack对象
 2.curModule - 默认配置
