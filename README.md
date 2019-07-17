@@ -3,7 +3,7 @@
 ## 命令介绍
  1. ctbuild
     * --type [build的类型]
-     * startapp [启动开发模式]
+      * startapp [启动开发模式]
     ```bash
      ctbuild --type startapp
     ```
