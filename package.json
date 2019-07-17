@@ -1,7 +1,7 @@
 {
-  "name": "@ct/build",
+  "name": "@ctjs/build",
   "version": "1.0.0",
-  "description": "负责整个CT环境的构建工作,包括package的构建和app的构建",
+  "description": "一个基于webpack的打包工具",
   "bin": {
     "ctbuild": "./build.js",
     "ctcopy": "./copy.js"
