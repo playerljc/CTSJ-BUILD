@@ -1,4 +1,4 @@
-## CT-BUILD
+## CTSJ-BUILD
 &ensp;&ensp;一个基于webpack的打包工具
 ## 命令介绍
  1. ctbuild
