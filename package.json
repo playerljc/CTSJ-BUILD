@@ -1,5 +1,5 @@
 {
-  "name": "@ctjs/build",
+  "name": "@ctsj/build",
   "version": "1.0.0",
   "description": "一个基于webpack的打包工具",
   "bin": {
@@ -13,9 +13,9 @@
     "buildpackage": "rimraf lib && babel src -d lib/src --ignore __tests__ && gulp"
   },
   "keywords": [
-    "CT-BUILD",
+    "CTSJ-BUILD",
     "CTMobile-UI",
-    "CT-UI",
+    "CTSJ-UI",
     "CtMobile",
     "PC",
     "mobile",
@@ -36,10 +36,10 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/playerljc/CT-BUILD.git"
+    "url": "https://github.com/playerljc/CTSJ-BUILD.git"
   },
   "bugs": {
-    "url": "https://github.com/playerljc/CT-BUILD/issues"
+    "url": "https://github.com/playerljc/CTSJ-BUILD/issues"
   },
   "dependencies": {
     "@babel/cli": "^7.1.5",
