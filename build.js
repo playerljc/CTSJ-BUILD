@@ -1,12 +1,18 @@
 #!/usr/bin/env node
 
+/**
+ * --type [
+ *          startapp, dev启动
+ *          buildapp, 打包
+ *          buildpackage, 打包package
+ *          buildumd 打包成umd包
+ *        ]
+ * --packagename 当--type为buildumd时 为包的名称
+ */
+
 // 处理命令行的工具
 const commandArgs = require('./commandArgs');
 
-/***
- * 根据--type指定的类型执行任务
- * @type {{buildapp: *, buildpackage: *, startapp: *}}
- */
 const tasks = {
   // 用webpack开发
   startapp: require('./startapp'),

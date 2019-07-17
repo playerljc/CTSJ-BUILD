@@ -32,7 +32,6 @@ module.exports = {
      */
     entry: {
       index: `${runtimePath}src\\index.js`,
-
       // mobile: `${runtimePath}src\\mobile.js`,
     },
     /**
@@ -59,8 +58,6 @@ module.exports = {
         },
         chunks: ["index"]
       }),
-
-
       // new HtmlWebpackPlugin({
       //   title: 'CtMobile Demo',
       //   filename: 'mobile.html',
@@ -72,8 +69,6 @@ module.exports = {
       //   //   removeAttributeQuotes: true, // 压缩 去掉引号
       //   // },
       // }),
-
-
       new HtmlWebpackIncludeAssetsPlugin({
         assets: ['static/dll/commons.js'],
         append: false,
@@ -112,7 +107,7 @@ module.exports = {
         {
           test: /\.m?js$/,
           exclude: /(node_modules|bower_components)/,
-          // include: [APP_PATH],
+          include: [APP_PATH],
           use: {
             loader: 'babel-loader',
             options: {

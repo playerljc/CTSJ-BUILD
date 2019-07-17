@@ -1,7 +1,7 @@
 const gulp = require('gulp');
 const uglify = require("gulp-uglify");
 const sourceMap = require('gulp-sourcemaps');
-const copyexts = ['less', 'svg', 'jpg', 'jpeg', 'png', 'bmp','json'];
+const copyexts = ['less', 'svg', 'jpg', 'jpeg', 'png', 'bmp', 'json', 'eot', 'woff', 'ttf'];
 const commandArgs = require('./commandArgs');
 const argsMap = commandArgs.initCommandArgs();
 const runtimePath = argsMap.get('--runtimepath')[0];

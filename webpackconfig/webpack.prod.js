@@ -15,11 +15,8 @@ else {
   customConfigPath = `${runtimePath}ctbuild.config.js`
 }
 
-console.log(`customConfigPath:${customConfigPath}`);
-
 // --runtimepath
 // --customconfig
-
 const curModule = merge(common.config, {
   mode: 'production',
   plugins: [
@@ -39,8 +36,11 @@ if (customConfigPath) {
   customModule = require(customConfigPath);
   if (customModule && customModule.getConfig) {
     customModule = customModule.getConfig({
+      // webpack
       webpack,
+      // 已经配置好的module
       curModule,
+      // plugins
       plugins: common.plugins,
     });
   }

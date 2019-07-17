@@ -14,9 +14,6 @@ else {
   customConfigPath = `${runtimePath}ctbuild.config.js`
 }
 
-console.log(`customConfigPath:${customConfigPath}`);
-
-
 // --runtimepath
 // --customconfig
 
@@ -56,6 +53,4 @@ if (customConfigPath) {
 }
 
 const config = merge(curModule, customModule || {});
-console.dir(config);
-
 module.exports = config;

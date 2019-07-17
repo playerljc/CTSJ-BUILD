@@ -15,12 +15,8 @@ else {
   customConfigPath = `${runtimePath}ctbuild.config.js`
 }
 
-console.log(`customConfigPath:${customConfigPath}`);
-
-console.log('runtimePath-----',runtimePath);
 // --runtimepath
 // --customconfig
-
 const curModule = merge(common.config, {
   mode: 'production',
   plugins: [
