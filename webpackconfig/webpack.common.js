@@ -6,6 +6,8 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 const HtmlWebpackIncludeAssetsPlugin = require('html-webpack-include-assets-plugin');
 const LessPluginCleanCSS = require('less-plugin-clean-css');
 const LessPluginAutoPrefix = require('less-plugin-autoprefix');
+const VueLoaderPlugin = require('vue-loader/lib/plugin');
+
 const extractLess = new ExtractTextPlugin({
   filename: (getPath) => {
     return getPath('[name].css');
@@ -24,7 +26,8 @@ module.exports = {
     CopyWebpackPlugin,
     HtmlWebpackIncludeAssetsPlugin,
     LessPluginCleanCSS,
-    LessPluginAutoPrefix
+    LessPluginAutoPrefix,
+    VueLoaderPlugin,
   },
   config: {
     /**
@@ -44,6 +47,8 @@ module.exports = {
       publicPath: '/',
     },
     plugins: [
+      // 请确保引入这个插件！
+      new VueLoaderPlugin(),
       new webpack.DllReferencePlugin({
         context: runtimePath,
         manifest: require(`${runtimePath}src\\assets\\dll\\commons-manifest.json`)

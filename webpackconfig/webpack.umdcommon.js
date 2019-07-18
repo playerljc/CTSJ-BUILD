@@ -4,6 +4,8 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const LessPluginCleanCSS = require('less-plugin-clean-css');
 const LessPluginAutoPrefix = require('less-plugin-autoprefix');
+const VueLoaderPlugin = require('vue-loader/lib/plugin');
+
 const runtimePath = process.argv[6];
 const packagename = process.argv[8];
 const extractLess = new ExtractTextPlugin({
@@ -25,6 +27,7 @@ module.exports = {
     ExtractTextPlugin,
     LessPluginCleanCSS,
     LessPluginAutoPrefix,
+    VueLoaderPlugin
   },
   config: {
     entry: {
@@ -39,6 +42,8 @@ module.exports = {
       libraryTarget: 'umd'
     },
     plugins: [
+      // 请确保引入这个插件！
+      new VueLoaderPlugin(),
       new HtmlWebpackPlugin({
         title: 'CtMobile Demo',
         filename: 'index.html',
