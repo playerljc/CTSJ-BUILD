@@ -2,10 +2,10 @@
 const path = require('path');
 const {spawn} = require('child_process');
 const runtimePath = process.cwd();
-const srcPath = runtimePath.substring(0, runtimePath.lastIndexOf(path.join('/'))/*runtimePath.lastIndexOf('\\')*/);
+const srcPath = runtimePath.substring(0, runtimePath.lastIndexOf(path.sep);
 const codePath = __dirname;
 // const commandPath = `${codePath}\\node_modules\\.bin\\`;
-const commandPath = path.join(codePath, 'node_modules', '.bin', '/');
+const commandPath = path.join(codePath, 'node_modules', '.bin', path.sep);
 let argsMap;
 
 /**
@@ -101,7 +101,7 @@ function webpackTask() {
         '--config',
         path.join('webpackconfig', 'webpack.umd.js'),//'webpackconfig/webpack.umd.js',
         '--runtimepath',
-        path.join(runtimePath, '/'),//`${runtimePath}\\`,
+        path.join(runtimePath, path.sep),//`${runtimePath}\\`,
         '--packagename',
         `${argsMap.get('--packagename')}`,
         '--customconfig',

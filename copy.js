@@ -13,8 +13,7 @@ const runtimePath = process.cwd();
 
 // 脚本的路径
 const codePath = __dirname;
-// const commandPath = `${codePath}\\node_modules\\.bin\\`;
-const commandPath = path.join(codePath, 'node_modules', '.bin', '/');
+const commandPath = path.join(codePath, 'node_modules', '.bin', path.sep);
 const tasks = [cpTask];
 let index = 0;
 
@@ -44,6 +43,9 @@ function cpTask() {
 
     cpProcess.on('close', (code) => {
       console.log(`cpClose：${code}`);
+
+
+
       resolve();
     });
   });

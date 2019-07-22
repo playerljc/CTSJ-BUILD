@@ -34,7 +34,7 @@ module.exports = {
      * 入口
      */
     entry: {
-      index: `${runtimePath}src\\index.js`,
+      index: path.join(runtimePath,'src','index.js'),//`${runtimePath}src\\index.js`,
       // mobile: `${runtimePath}src\\mobile.js`,
     },
     /**
@@ -48,15 +48,18 @@ module.exports = {
     },
     plugins: [
       // 请确保引入这个插件！
-      new VueLoaderPlugin(),
+      // new VueLoaderPlugin(),
       new webpack.DllReferencePlugin({
         context: runtimePath,
-        manifest: require(`${runtimePath}src\\assets\\dll\\commons-manifest.json`)
+        manifest: require(
+          path.join(runtimePath,'src','assets','dll','commons-manifest.json')
+          // `${runtimePath}src\\assets\\dll\\commons-manifest.json`
+        )
       }),
       new HtmlWebpackPlugin({
         title: 'CtMobile Demo',
         filename: 'index.html',
-        template: `${runtimePath}src\\index.html`,
+        template: path.join(runtimePath,'src','index.html'),//`${runtimePath}src\\index.html`,
         hash: true,//防止缓存
         minify: {
           removeAttributeQuotes: true//压缩 去掉引号
@@ -75,14 +78,18 @@ module.exports = {
       //   // },
       // }),
       new HtmlWebpackIncludeAssetsPlugin({
-        assets: ['static/dll/commons.js'],
+        assets: [path.join('static','dll','commons.js'),/*'static/dll/commons.js'*/],
         append: false,
         hash: true,
       }),
       new webpack.HashedModuleIdsPlugin(),
       extractLess,
       new CopyWebpackPlugin([
-        {from: `${runtimePath}src\\assets`, to: `${runtimePath}dist\\static`, toType: 'dir'},
+        {
+          from: path.join(runtimePath,'src','assets'),//`${runtimePath}src\\assets`,
+          to: path.join(runtimePath,'dist','static'),//`${runtimePath}dist\\static`,
+          toType: 'dir'
+        },
       ]),
       // 提供全局变量_
       new webpack.ProvidePlugin({

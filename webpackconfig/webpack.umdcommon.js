@@ -15,10 +15,10 @@ const extractLess = new ExtractTextPlugin({
   allChunks: true
 });
 
-console.log('umd-packagename', packagename);
-console.log('umd-runtimePath', runtimePath);
+// console.log('umd-packagename', packagename);
+// console.log('umd-runtimePath', runtimePath);
 const APP_PATH = path.resolve(runtimePath, 'src'); // 项目src目录
-console.log('umd-APP_PATH', APP_PATH);
+// console.log('umd-APP_PATH', APP_PATH);
 
 module.exports = {
   plugins: {
@@ -31,7 +31,7 @@ module.exports = {
   },
   config: {
     entry: {
-      index: `${runtimePath}src\\index.js`,
+      index: path.join(runtimePath,'src','index.js'),//`${runtimePath}src\\index.js`,
     },
     output: {
       filename: `${packagename}.bundle.js`,
@@ -43,11 +43,11 @@ module.exports = {
     },
     plugins: [
       // 请确保引入这个插件！
-      new VueLoaderPlugin(),
+      // new VueLoaderPlugin(),
       new HtmlWebpackPlugin({
         title: 'CtMobile Demo',
         filename: 'index.html',
-        template: `${runtimePath}\\index.html`,
+        template: path.join(runtimePath,'index.html'),//`${runtimePath}\\index.html`,
         hash: true,//防止缓存
         minify: {
           removeAttributeQuotes: true//压缩 去掉引号

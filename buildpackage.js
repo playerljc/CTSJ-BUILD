@@ -4,7 +4,7 @@ const path = require('path');
 const runtimePath = process.cwd();
 // 脚本所在的路径
 const codePath = __dirname;
-const commandPath = path.join(codePath, 'node_modules', '.bin', '/');
+const commandPath = path.join(codePath, 'node_modules', '.bin', path.sep);
 
 // buildpackage生成的目录名称
 const generateDirName = 'lib';
@@ -101,9 +101,9 @@ function gulpTask() {
       command,
       [
         '--runtimepath',
-        path.join(runtimePath, '/'),
+        path.join(runtimePath, path.sep),
         '--srcpath',
-        path.join(srcPath, '/')
+        path.join(srcPath, path.sep)
       ],
       {
         cwd: codePath,
