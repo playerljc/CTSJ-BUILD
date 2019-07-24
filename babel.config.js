@@ -7,14 +7,16 @@ const plugins = [
   "@babel/plugin-transform-runtime",
   "@babel/plugin-proposal-function-bind",
   "@babel/plugin-proposal-class-properties",
-  "transform-vue-jsx",
-  ["import", {
-    libraryName: "antd-mobile",
-    style: 'css'
-  }/*, {
-    libraryName: "antd",
-    style: true
-  }*/],
+  // "transform-vue-jsx",
+  // [
+  //   "import",
+  //   {
+  //     libraryName: "antd-mobile",
+  //     style: 'css'
+  //   }/*, {
+  //   libraryName: "antd",
+  //   style: true
+  // }*/],
 ];
 
 module.exports = {presets, plugins};
