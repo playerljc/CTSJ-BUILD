@@ -31,7 +31,7 @@ module.exports = {
   },
   config: {
     entry: {
-      index: path.join(runtimePath,'src','index.js'),//`${runtimePath}src\\index.js`,
+      index: path.join(runtimePath, 'src', 'index.js'),//`${runtimePath}src\\index.js`,
     },
     output: {
       filename: `${packagename}.bundle.js`,
@@ -47,7 +47,7 @@ module.exports = {
       new HtmlWebpackPlugin({
         title: 'CtMobile Demo',
         filename: 'index.html',
-        template: path.join(runtimePath,'index.html'),//`${runtimePath}\\index.html`,
+        template: path.join(runtimePath, 'index.html'),//`${runtimePath}\\index.html`,
         hash: true,//防止缓存
         minify: {
           removeAttributeQuotes: true//压缩 去掉引号
@@ -72,7 +72,7 @@ module.exports = {
     module: {
       rules: [
         {
-          test: /\.m?js$/,
+          test: /\.m?jsx?$/,
           exclude: /(node_modules|bower_components)/,
           // include: [APP_PATH],
           use: {
@@ -147,5 +147,8 @@ module.exports = {
         }
       ]
     },
+    resolve: {
+      extensions: ['.js', '.jsx', '.less', '.css', '.json'], //后缀名自动补全
+    }
   }
 };

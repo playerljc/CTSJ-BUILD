@@ -117,7 +117,7 @@ module.exports = {
     module: {
       rules: [
         {
-          test: /\.m?js$/,
+          test: /\.m?jsx?$/,
           exclude: /(node_modules|bower_components)/,
           include: [APP_PATH],
           use: {
@@ -192,5 +192,8 @@ module.exports = {
         }
       ]
     },
+    resolve: {
+      extensions: ['.js', '.jsx', '.less', '.css', '.json'], //后缀名自动补全
+    }
   }
 }
