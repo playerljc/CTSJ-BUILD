@@ -1,19 +1,21 @@
 const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const ExtractTextPlugin = require("extract-text-webpack-plugin");
+// const ExtractTextPlugin = require("extract-text-webpack-plugin");
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const LessPluginCleanCSS = require('less-plugin-clean-css');
 const LessPluginAutoPrefix = require('less-plugin-autoprefix');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
 
 const runtimePath = process.argv[6];
 const packagename = process.argv[8];
-const extractLess = new ExtractTextPlugin({
-  filename: (getPath) => {
-    return getPath(`${packagename}.css`);
-  },
-  allChunks: true
-});
+
+// const extractLess = new ExtractTextPlugin({
+//   filename: (getPath) => {
+//     return getPath(`${packagename}.css`);
+//   },
+//   allChunks: true
+// });
 
 // console.log('umd-packagename', packagename);
 // console.log('umd-runtimePath', runtimePath);
@@ -24,7 +26,8 @@ module.exports = {
   plugins: {
     HtmlWebpackPlugin,
     HtmlWebpackPlugin,
-    ExtractTextPlugin,
+    // ExtractTextPlugin,
+    MiniCssExtractPlugin,
     LessPluginCleanCSS,
     LessPluginAutoPrefix,
     VueLoaderPlugin
@@ -55,7 +58,14 @@ module.exports = {
         chunks: ["index"]
       }),
       new webpack.HashedModuleIdsPlugin(),
-      extractLess,
+      // extractLess,
+      new MiniCssExtractPlugin({
+        // Options similar to the same options in webpackOptions.output
+        // all options are optional
+        filename: '[name].css',
+        chunkFilename: '[id].css',
+        ignoreOrder: false, // Enable to remove warnings about conflicting order
+      }),
     ],
     // optimization: {
     //   runtimeChunk: 'single',
@@ -94,18 +104,22 @@ module.exports = {
         {
           test: /\.css$/,
           include: [APP_PATH, /highlight.js/, /photoswipe.css/, /default-skin.css/],
-          use: ExtractTextPlugin.extract({
-            fallback: "style-loader",
-            use: "css-loader"
-          })
+          // use: ExtractTextPlugin.extract({
+          //   fallback: "style-loader",
+          //   use: "css-loader"
+          // })
+          use: [
+            process.env.NODE_ENV === 'development' ? 'style-loader' : MiniCssExtractPlugin.loader,
+            'css-loader',
+          ],
         },
         {
           test: /\.less$/,
           include: [APP_PATH, /normalize.less/],
-          use: ExtractTextPlugin.extract({
-            use: [{
-              loader: "css-loader"
-            }, {
+          use: [
+            process.env.NODE_ENV === 'development' ? 'style-loader' : MiniCssExtractPlugin.loader,
+            'css-loader',
+            {
               loader: "less-loader",
               options: {
                 plugins: [
@@ -113,9 +127,22 @@ module.exports = {
                   new LessPluginAutoPrefix({add: false, remove: false, browsers: ['last 2 versions']})
                 ]
               }
-            }],
-            fallback: "style-loader"
-          })
+            }
+          ]
+          //   ExtractTextPlugin.extract({
+          //   use: [{
+          //     loader: "css-loader"
+          //   }, {
+          //     loader: "less-loader",
+          //     options: {
+          //       plugins: [
+          //         new LessPluginCleanCSS({advanced: true}),
+          //         new LessPluginAutoPrefix({add: false, remove: false, browsers: ['last 2 versions']})
+          //       ]
+          //     }
+          //   }],
+          //   fallback: "style-loader"
+          // })
         },
         {
           test: /\.(png|svg|jpg|gif)$/,

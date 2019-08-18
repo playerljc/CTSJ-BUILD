@@ -1,3 +1,12 @@
+# 1.0.5
+
+***
+
+2019/08/18
+
+* extract-text-webpack-plugin修改为mini-css-extract-plugin
+* less降级为3.9.0适配FileManager的错误
+
 # 1.0.4
 
 ***

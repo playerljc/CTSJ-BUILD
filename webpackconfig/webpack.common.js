@@ -1,19 +1,20 @@
 const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const ExtractTextPlugin = require("extract-text-webpack-plugin");
+// const ExtractTextPlugin = require("extract-text-webpack-plugin");
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const HtmlWebpackIncludeAssetsPlugin = require('html-webpack-include-assets-plugin');
 const LessPluginCleanCSS = require('less-plugin-clean-css');
 const LessPluginAutoPrefix = require('less-plugin-autoprefix');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
 
-const extractLess = new ExtractTextPlugin({
-  filename: (getPath) => {
-    return getPath('[name].css');
-  },
-  allChunks: true
-});
+// const extractLess = new MiniCssExtractPlugin({
+//   filename: (getPath) => {
+//     return getPath('[name].css');
+//   },
+//   allChunks: true
+// });
 
 const runtimePath = process.argv[6];
 
@@ -22,7 +23,8 @@ const APP_PATH = path.resolve(runtimePath, 'src'); // 项目src目录
 module.exports = {
   plugins: {
     HtmlWebpackPlugin,
-    ExtractTextPlugin,
+    // ExtractTextPlugin,
+    MiniCssExtractPlugin,
     CopyWebpackPlugin,
     HtmlWebpackIncludeAssetsPlugin,
     LessPluginCleanCSS,
@@ -34,8 +36,7 @@ module.exports = {
      * 入口
      */
     entry: {
-      index: path.join(runtimePath,'src','index.js'),//`${runtimePath}src\\index.js`,
-      // mobile: `${runtimePath}src\\mobile.js`,
+      index: path.join(runtimePath,'src','index.js'),
     },
     /**
      * 出口
@@ -53,13 +54,12 @@ module.exports = {
         context: runtimePath,
         manifest: require(
           path.join(runtimePath,'src','assets','dll','commons-manifest.json')
-          // `${runtimePath}src\\assets\\dll\\commons-manifest.json`
         )
       }),
       new HtmlWebpackPlugin({
         title: 'CtMobile Demo',
         filename: 'index.html',
-        template: path.join(runtimePath,'src','index.html'),//`${runtimePath}src\\index.html`,
+        template: path.join(runtimePath,'src','index.html'),
         hash: true,//防止缓存
         minify: {
           removeAttributeQuotes: true//压缩 去掉引号
@@ -78,12 +78,19 @@ module.exports = {
       //   // },
       // }),
       new HtmlWebpackIncludeAssetsPlugin({
-        assets: [path.join('static','dll','commons.js'),/*'static/dll/commons.js'*/],
+        assets: [path.join('static','dll','commons.js'),],
         append: false,
         hash: true,
       }),
       new webpack.HashedModuleIdsPlugin(),
-      extractLess,
+      // extractLess,
+      new MiniCssExtractPlugin({
+        // Options similar to the same options in webpackOptions.output
+        // all options are optional
+        filename: '[name].css',
+        chunkFilename: '[id].css',
+        ignoreOrder: false, // Enable to remove warnings about conflicting order
+      }),
       new CopyWebpackPlugin([
         {
           from: path.join(runtimePath,'src','assets'),//`${runtimePath}src\\assets`,
@@ -139,15 +146,41 @@ module.exports = {
         {
           test: /\.css$/,
           include: [APP_PATH, /highlight.js/, /photoswipe.css/, /default-skin.css/, /swiper.min.css/, /antd/, /antd-mobile/, /normalize.css/],
-          use: ExtractTextPlugin.extract({
-            fallback: "style-loader",
-            use: "css-loader"
-          })
+          // use: ExtractTextPlugin.extract({
+          //   fallback: "style-loader",
+          //   use: "css-loader"
+          // })
+          // use: [
+          //   {
+          //     loader: MiniCssExtractPlugin.loader,
+          //     options: {
+          //       hmr: process.env.NODE_ENV === 'development',
+          //     },
+          //   },
+          //   'css-loader',
+          // ],
+          use: [
+            process.env.NODE_ENV === 'development' ? 'style-loader' : MiniCssExtractPlugin.loader,
+            'css-loader',
+          ],
         },
         {
           test: /\.less$/,
-          include: [APP_PATH, /normalize.less/],
-          use: ExtractTextPlugin.extract({
+          include: [APP_PATH,/normalize.less/],
+          use: [
+            process.env.NODE_ENV === 'development' ? 'style-loader' : MiniCssExtractPlugin.loader,
+            'css-loader',
+            {
+              loader: "less-loader",
+              options: {
+                plugins: [
+                  new LessPluginCleanCSS({advanced: true}),
+                  new LessPluginAutoPrefix({add: false, remove: false, browsers: ['last 2 versions']})
+                ]
+              }
+            }
+          ]
+          /*ExtractTextPlugin.extract({
             use: [{
               loader: "css-loader"
             }, {
@@ -160,7 +193,7 @@ module.exports = {
               }
             }],
             fallback: "style-loader"
-          })
+          })*/
         },
         {
           test: /\.(png|svg|jpg|gif)$/,
