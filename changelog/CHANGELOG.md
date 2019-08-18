@@ -1,3 +1,12 @@
+# 1.0.4
+
+***
+
+2019/08/18
+
+* package.json加入css-loader依赖
+* package.json加入style-loader依赖
+
 # 1.0.3
 
 ***

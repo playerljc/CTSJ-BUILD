@@ -1,6 +1,6 @@
 {
   "name": "@ctsj/build",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "一个基于webpack的打包工具",
   "bin": {
     "ctbuild": "./build.js",
@@ -60,6 +60,7 @@
     "copy-webpack-plugin": "^4.5.3",
     "cp-cli": "^2.0.0",
     "cross-env": "^5.2.0",
+    "css-loader": "^3.2.0",
     "csv-loader": "^3.0.2",
     "ejs-loader": "^0.3.1",
     "eslint": "^5.8.0",
@@ -85,6 +86,7 @@
     "react": "^16.6.3",
     "react-dom": "^16.6.3",
     "rimraf": "^2.6.2",
+    "style-loader": "^1.0.0",
     "tslib": "^1.9.3",
     "uglifyjs-webpack-plugin": "^2.0.1",
     "uuid": "^3.3.2",
