@@ -1,8 +1,6 @@
 #!/usr/bin/env node
 const path = require('path');
-const {
-
-} = require('child_process');
+const {spawn} = require('child_process');
 const runtimePath = process.cwd();
 const codePath = __dirname;
 const commandPath = path.join(codePath, 'node_modules', '.bin', path.sep);
@@ -84,6 +82,8 @@ function webpackTask() {
         '--open',
         '--config',
         path.join('webpackconfig', 'webpack.prod.js'),//'webpackconfig/webpack.prod.js',
+        '--progress',
+        '--colors',
         '--runtimepath',
         path.join(runtimePath, '/'),//`${runtimePath}\\`,
         '--customconfig',
@@ -109,7 +109,7 @@ function webpackTask() {
   });
 }
 
-const tasks = [corssenvTask, prodDllTask, webpackTask];
+const tasks = [corssenvTask, /*prodDllTask,*/ webpackTask];
 let index = 0;
 
 /**

@@ -1,14 +1,16 @@
 const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-// const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const LessPluginCleanCSS = require('less-plugin-clean-css');
 const LessPluginAutoPrefix = require('less-plugin-autoprefix');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
+const HappyPack = require('happypack');
+const ProgressBarPlugin = require('progress-bar-webpack-plugin');
+// const ExtractTextPlugin = require("extract-text-webpack-plugin");
 
-const runtimePath = process.argv[6];
-const packagename = process.argv[8];
+const runtimePath = process.argv[8];
+const packagename = process.argv[10];
 
 // const extractLess = new ExtractTextPlugin({
 //   filename: (getPath) => {
@@ -66,6 +68,50 @@ module.exports = {
         chunkFilename: '[id].css',
         ignoreOrder: false, // Enable to remove warnings about conflicting order
       }),
+      new ProgressBarPlugin(),
+      new HappyPack({
+        id: 'babel',
+        loaders: [
+          'cache-loader',
+          {
+            loader: 'babel-loader',
+            query: {
+              presets: [
+                '@babel/preset-env',
+                '@babel/preset-react'
+              ],
+              plugins: [
+                '@babel/plugin-transform-runtime',
+                "@babel/plugin-syntax-dynamic-import",
+                "@babel/plugin-proposal-function-bind",
+                "@babel/plugin-proposal-class-properties"
+              ]
+            }
+          }],
+      }),
+      new HappyPack({
+        id: 'css',
+        loaders: [
+          'cache-loader',
+          'css-loader'
+        ],
+      }),
+      new HappyPack({
+        id: 'less',
+        loaders: [
+          'cache-loader',
+          'css-loader',
+          {
+            loader: "less-loader",
+            query: {
+              plugins: [
+                new LessPluginCleanCSS({advanced: true}),
+                new LessPluginAutoPrefix({add: false, remove: false, browsers: ['last 2 versions']})
+              ]
+            }
+          }
+        ],
+      }),
     ],
     // optimization: {
     //   runtimeChunk: 'single',
@@ -86,22 +132,7 @@ module.exports = {
           exclude: /(node_modules|bower_components)/,
           // include: [APP_PATH],
           use: [
-            'cache-loader',
-            {
-              loader: 'babel-loader',
-              options: {
-                presets: [
-                  '@babel/preset-env',
-                  '@babel/preset-react'
-                ],
-                plugins: [
-                  '@babel/plugin-transform-runtime',
-                  "@babel/plugin-syntax-dynamic-import",
-                  "@babel/plugin-proposal-function-bind",
-                  "@babel/plugin-proposal-class-properties"
-                ]
-              }
-            }
+            'happypack/loader?id=babel'
           ]
         },
         {
@@ -112,27 +143,16 @@ module.exports = {
           //   use: "css-loader"
           // })
           use: [
-            'cache-loader',
             process.env.NODE_ENV === 'development' ? 'style-loader' : MiniCssExtractPlugin.loader,
-            'css-loader',
+            'happypack/loader?id=css'
           ],
         },
         {
           test: /\.less$/,
           include: [APP_PATH, /normalize.less/],
           use: [
-            'cache-loader',
             process.env.NODE_ENV === 'development' ? 'style-loader' : MiniCssExtractPlugin.loader,
-            'css-loader',
-            {
-              loader: "less-loader",
-              options: {
-                plugins: [
-                  new LessPluginCleanCSS({advanced: true}),
-                  new LessPluginAutoPrefix({add: false, remove: false, browsers: ['last 2 versions']})
-                ]
-              }
-            }
+            'happypack/loader?id=less',
           ]
           //   ExtractTextPlugin.extract({
           //   use: [{

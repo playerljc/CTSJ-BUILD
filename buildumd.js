@@ -100,6 +100,8 @@ function webpackTask() {
         '--open',
         '--config',
         path.join('webpackconfig', 'webpack.umd.js'),//'webpackconfig/webpack.umd.js',
+        '--progress',
+        '--colors',
         '--runtimepath',
         path.join(runtimePath, path.sep),//`${runtimePath}\\`,
         '--packagename',

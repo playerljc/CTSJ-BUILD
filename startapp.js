@@ -87,6 +87,8 @@ function webpackServiceTask() {
         '--open',
         '--config',
         path.join('webpackconfig', 'webpack.dev.js'),//'webpackconfig/webpack.dev.js',
+        '--progress',
+        '--colors',
         '--runtimepath',
         path.join(runtimePath, '/'),//`${runtimePath}\\`,
         '--customconfig',

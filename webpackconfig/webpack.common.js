@@ -1,14 +1,21 @@
 const path = require('path');
 const webpack = require('webpack');
+// const chalk = require('chalk');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-// const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const HtmlWebpackIncludeAssetsPlugin = require('html-webpack-include-assets-plugin');
 const LessPluginCleanCSS = require('less-plugin-clean-css');
 const LessPluginAutoPrefix = require('less-plugin-autoprefix');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
+const HappyPack = require('happypack');
+const ProgressBarPlugin = require('progress-bar-webpack-plugin');
 
+// const Dashboard = require('webpack-dashboard');
+// const DashboardPlugin = require('webpack-dashboard/plugin');
+// const dashboard = new Dashboard();
+
+// const ExtractTextPlugin = require("extract-text-webpack-plugin");
 // const extractLess = new MiniCssExtractPlugin({
 //   filename: (getPath) => {
 //     return getPath('[name].css');
@@ -16,7 +23,7 @@ const VueLoaderPlugin = require('vue-loader/lib/plugin');
 //   allChunks: true
 // });
 
-const runtimePath = process.argv[6];
+const runtimePath = process.argv[8];
 
 const APP_PATH = path.resolve(runtimePath, 'src'); // 项目src目录
 
@@ -48,6 +55,22 @@ module.exports = {
       publicPath: '/',
     },
     plugins: [
+      // new HtmlWebpackPlugin({
+      //   title: 'CtMobile Demo',
+      //   filename: 'mobile.html',
+      //   template: `${runtimePath}src\\mobile.html`,
+      //   chunks: ["mobile"]
+      //   // hash: true, // 防止缓存
+      //   // // chunks: ['mobile'],
+      //   // minify: {
+      //   //   removeAttributeQuotes: true, // 压缩 去掉引号
+      //   // },
+      // }),
+      // new HtmlWebpackIncludeAssetsPlugin({
+      //   assets: [path.join('static','dll','commons.js'),],
+      //   append: false,
+      //   hash: true,
+      // }),
       // 请确保引入这个插件！
       // new VueLoaderPlugin(),
       // new webpack.DllReferencePlugin({
@@ -66,26 +89,7 @@ module.exports = {
         },
         chunks: ["index"]
       }),
-      // new HtmlWebpackPlugin({
-      //   title: 'CtMobile Demo',
-      //   filename: 'mobile.html',
-      //   template: `${runtimePath}src\\mobile.html`,
-      //   chunks: ["mobile"]
-      //   // hash: true, // 防止缓存
-      //   // // chunks: ['mobile'],
-      //   // minify: {
-      //   //   removeAttributeQuotes: true, // 压缩 去掉引号
-      //   // },
-      // }),
-
-      // new HtmlWebpackIncludeAssetsPlugin({
-      //   assets: [path.join('static','dll','commons.js'),],
-      //   append: false,
-      //   hash: true,
-      // }),
-
       new webpack.HashedModuleIdsPlugin(),
-      // extractLess,
       new MiniCssExtractPlugin({
         // Options similar to the same options in webpackOptions.output
         // all options are optional
@@ -100,10 +104,58 @@ module.exports = {
           toType: 'dir'
         },
       ]),
-      // 提供全局变量_
       new webpack.ProvidePlugin({
         _: "lodash",
         $: "jquery",
+      }),
+      // new DashboardPlugin(dashboard.setData),
+      new HappyPack({
+        id: 'babel',
+        loaders: [
+          'cache-loader',
+          {
+            loader: 'babel-loader',
+            query: {
+              presets: [
+                '@babel/preset-env',
+                '@babel/preset-react'
+              ],
+              plugins: [
+                '@babel/plugin-transform-runtime',
+                "@babel/plugin-syntax-dynamic-import",
+                "@babel/plugin-proposal-function-bind",
+                "@babel/plugin-proposal-class-properties"
+              ]
+            }
+          }],
+      }),
+      new HappyPack({
+        id: 'css',
+        loaders: [
+          'cache-loader',
+          'css-loader'
+        ],
+      }),
+      new HappyPack({
+        id: 'less',
+        loaders: [
+          'cache-loader',
+          'css-loader',
+          {
+            loader: "less-loader",
+            query: {
+              plugins: [
+                new LessPluginCleanCSS({advanced: true}),
+                new LessPluginAutoPrefix({add: false, remove: false, browsers: ['last 2 versions']})
+              ]
+            }
+          }
+        ],
+      }),
+      new ProgressBarPlugin({
+        format: 'build [:bar] :percent (:elapsed seconds)',
+        clear: false,
+        width: 60
       }),
     ],
     // optimization: {
@@ -130,22 +182,7 @@ module.exports = {
           exclude: /(node_modules|bower_components)/,
           include: [APP_PATH],
           use: [
-            'cache-loader',
-            {
-              loader: 'babel-loader',
-              options: {
-                presets: [
-                  '@babel/preset-env',
-                  '@babel/preset-react'
-                ],
-                plugins: [
-                  '@babel/plugin-transform-runtime',
-                  "@babel/plugin-syntax-dynamic-import",
-                  "@babel/plugin-proposal-function-bind",
-                  "@babel/plugin-proposal-class-properties"
-                ]
-              }
-            }
+            'happypack/loader?id=babel'
           ]
         },
         {
@@ -165,27 +202,16 @@ module.exports = {
           //   'css-loader',
           // ],
           use: [
-            'cache-loader',
             process.env.NODE_ENV === 'development' ? 'style-loader' : MiniCssExtractPlugin.loader,
-            'css-loader',
+            'happypack/loader?id=css'
           ],
         },
         {
           test: /\.less$/,
           include: [APP_PATH, /normalize.less/],
           use: [
-            'cache-loader',
             process.env.NODE_ENV === 'development' ? 'style-loader' : MiniCssExtractPlugin.loader,
-            'css-loader',
-            {
-              loader: "less-loader",
-              options: {
-                plugins: [
-                  new LessPluginCleanCSS({advanced: true}),
-                  new LessPluginAutoPrefix({add: false, remove: false, browsers: ['last 2 versions']})
-                ]
-              }
-            }
+            'happypack/loader?id=less',
           ]
           /*ExtractTextPlugin.extract({
             use: [{
