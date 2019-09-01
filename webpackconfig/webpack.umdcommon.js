@@ -85,21 +85,24 @@ module.exports = {
           test: /\.m?jsx?$/,
           exclude: /(node_modules|bower_components)/,
           // include: [APP_PATH],
-          use: {
-            loader: 'babel-loader',
-            options: {
-              presets: [
-                '@babel/preset-env',
-                '@babel/preset-react'
-              ],
-              plugins: [
-                '@babel/plugin-transform-runtime',
-                "@babel/plugin-syntax-dynamic-import",
-                "@babel/plugin-proposal-function-bind",
-                "@babel/plugin-proposal-class-properties"
-              ]
+          use: [
+            'cache-loader',
+            {
+              loader: 'babel-loader',
+              options: {
+                presets: [
+                  '@babel/preset-env',
+                  '@babel/preset-react'
+                ],
+                plugins: [
+                  '@babel/plugin-transform-runtime',
+                  "@babel/plugin-syntax-dynamic-import",
+                  "@babel/plugin-proposal-function-bind",
+                  "@babel/plugin-proposal-class-properties"
+                ]
+              }
             }
-          }
+          ]
         },
         {
           test: /\.css$/,
@@ -109,6 +112,7 @@ module.exports = {
           //   use: "css-loader"
           // })
           use: [
+            'cache-loader',
             process.env.NODE_ENV === 'development' ? 'style-loader' : MiniCssExtractPlugin.loader,
             'css-loader',
           ],
@@ -117,6 +121,7 @@ module.exports = {
           test: /\.less$/,
           include: [APP_PATH, /normalize.less/],
           use: [
+            'cache-loader',
             process.env.NODE_ENV === 'development' ? 'style-loader' : MiniCssExtractPlugin.loader,
             'css-loader',
             {
@@ -147,30 +152,37 @@ module.exports = {
         {
           test: /\.(png|svg|jpg|gif)$/,
           use: [
+            'cache-loader',
             'file-loader'
           ]
         },
         {
           test: /\.(woff|woff2|eot|ttf|otf)$/,
           use: [
+            'cache-loader',
             'file-loader'
           ]
         },
         {
           test: /\.(csv|tsv)$/,
           use: [
+            'cache-loader',
             'csv-loader'
           ]
         },
         {
           test: /\.xml$/,
           use: [
+            'cache-loader',
             'xml-loader'
           ]
         },
         {
           test: /\.ejs/,
-          loader: 'ejs-loader?variable=data'
+          loader: [
+            'cache-loader',
+            'ejs-loader?variable=data'
+          ]
         }
       ]
     },

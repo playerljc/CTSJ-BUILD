@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 const path = require('path');
-const {spawn} = require('child_process');
+const {
+
+} = require('child_process');
 const runtimePath = process.cwd();
 const codePath = __dirname;
 const commandPath = path.join(codePath, 'node_modules', '.bin', path.sep);

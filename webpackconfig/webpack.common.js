@@ -36,7 +36,7 @@ module.exports = {
      * 入口
      */
     entry: {
-      index: path.join(runtimePath,'src','index.js'),
+      index: path.join(runtimePath, 'src', 'index.js'),
     },
     /**
      * 出口
@@ -50,16 +50,16 @@ module.exports = {
     plugins: [
       // 请确保引入这个插件！
       // new VueLoaderPlugin(),
-      new webpack.DllReferencePlugin({
-        context: runtimePath,
-        manifest: require(
-          path.join(runtimePath,'src','assets','dll','commons-manifest.json')
-        )
-      }),
+      // new webpack.DllReferencePlugin({
+      //   context: runtimePath,
+      //   manifest: require(
+      //     path.join(runtimePath,'src','assets','dll','commons-manifest.json')
+      //   )
+      // }),
       new HtmlWebpackPlugin({
         title: 'CtMobile Demo',
         filename: 'index.html',
-        template: path.join(runtimePath,'src','index.html'),
+        template: path.join(runtimePath, 'src', 'index.html'),
         hash: true,//防止缓存
         minify: {
           removeAttributeQuotes: true//压缩 去掉引号
@@ -77,11 +77,13 @@ module.exports = {
       //   //   removeAttributeQuotes: true, // 压缩 去掉引号
       //   // },
       // }),
-      new HtmlWebpackIncludeAssetsPlugin({
-        assets: [path.join('static','dll','commons.js'),],
-        append: false,
-        hash: true,
-      }),
+
+      // new HtmlWebpackIncludeAssetsPlugin({
+      //   assets: [path.join('static','dll','commons.js'),],
+      //   append: false,
+      //   hash: true,
+      // }),
+
       new webpack.HashedModuleIdsPlugin(),
       // extractLess,
       new MiniCssExtractPlugin({
@@ -93,8 +95,8 @@ module.exports = {
       }),
       new CopyWebpackPlugin([
         {
-          from: path.join(runtimePath,'src','assets'),//`${runtimePath}src\\assets`,
-          to: path.join(runtimePath,'dist','static'),//`${runtimePath}dist\\static`,
+          from: path.join(runtimePath, 'src', 'assets'),//`${runtimePath}src\\assets`,
+          to: path.join(runtimePath, 'dist', 'static'),//`${runtimePath}dist\\static`,
           toType: 'dir'
         },
       ]),
@@ -127,21 +129,24 @@ module.exports = {
           test: /\.m?jsx?$/,
           exclude: /(node_modules|bower_components)/,
           include: [APP_PATH],
-          use: {
-            loader: 'babel-loader',
-            options: {
-              presets: [
-                '@babel/preset-env',
-                '@babel/preset-react'
-              ],
-              plugins: [
-                '@babel/plugin-transform-runtime',
-                "@babel/plugin-syntax-dynamic-import",
-                "@babel/plugin-proposal-function-bind",
-                "@babel/plugin-proposal-class-properties"
-              ]
+          use: [
+            'cache-loader',
+            {
+              loader: 'babel-loader',
+              options: {
+                presets: [
+                  '@babel/preset-env',
+                  '@babel/preset-react'
+                ],
+                plugins: [
+                  '@babel/plugin-transform-runtime',
+                  "@babel/plugin-syntax-dynamic-import",
+                  "@babel/plugin-proposal-function-bind",
+                  "@babel/plugin-proposal-class-properties"
+                ]
+              }
             }
-          }
+          ]
         },
         {
           test: /\.css$/,
@@ -160,14 +165,16 @@ module.exports = {
           //   'css-loader',
           // ],
           use: [
+            'cache-loader',
             process.env.NODE_ENV === 'development' ? 'style-loader' : MiniCssExtractPlugin.loader,
             'css-loader',
           ],
         },
         {
           test: /\.less$/,
-          include: [APP_PATH,/normalize.less/],
+          include: [APP_PATH, /normalize.less/],
           use: [
+            'cache-loader',
             process.env.NODE_ENV === 'development' ? 'style-loader' : MiniCssExtractPlugin.loader,
             'css-loader',
             {
@@ -198,30 +205,37 @@ module.exports = {
         {
           test: /\.(png|svg|jpg|gif)$/,
           use: [
+            'cache-loader',
             'file-loader'
           ]
         },
         {
           test: /\.(woff|woff2|eot|ttf|otf)$/,
           use: [
+            'cache-loader',
             'file-loader'
           ]
         },
         {
           test: /\.(csv|tsv)$/,
           use: [
+            'cache-loader',
             'csv-loader'
           ]
         },
         {
           test: /\.xml$/,
           use: [
+            'cache-loader',
             'xml-loader'
           ]
         },
         {
           test: /\.ejs/,
-          loader: 'ejs-loader?variable=data'
+          loader: [
+            'cache-loader',
+            'ejs-loader?variable=data'
+          ]
         }
       ]
     },

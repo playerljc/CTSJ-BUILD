@@ -113,7 +113,7 @@ function webpackServiceTask() {
 }
 
 // startapp的tasks
-const tasks = [corssenvTask, devDllTask, webpackServiceTask];
+const tasks = [corssenvTask, /*devDllTask, */webpackServiceTask];
 let index = 0;
 
 /**
