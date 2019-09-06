@@ -1,15 +1,19 @@
 const path = require('path');
 const webpack = require('webpack');
-// const chalk = require('chalk');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const HtmlWebpackIncludeAssetsPlugin = require('html-webpack-include-assets-plugin');
 const LessPluginCleanCSS = require('less-plugin-clean-css');
 const LessPluginAutoPrefix = require('less-plugin-autoprefix');
-const VueLoaderPlugin = require('vue-loader/lib/plugin');
 const HappyPack = require('happypack');
-const ProgressBarPlugin = require('progress-bar-webpack-plugin');
+const WebpackBar = require('webpackbar');
+
+// const VueLoaderPlugin = require('vue-loader/lib/plugin');
+
+// const chalk = require('chalk');
+
+// const ProgressBarPlugin = require('progress-bar-webpack-plugin');
 
 // const Dashboard = require('webpack-dashboard');
 // const DashboardPlugin = require('webpack-dashboard/plugin');
@@ -30,13 +34,13 @@ const APP_PATH = path.resolve(runtimePath, 'src'); // 项目src目录
 module.exports = {
   plugins: {
     HtmlWebpackPlugin,
-    // ExtractTextPlugin,
     MiniCssExtractPlugin,
     CopyWebpackPlugin,
     HtmlWebpackIncludeAssetsPlugin,
     LessPluginCleanCSS,
     LessPluginAutoPrefix,
-    VueLoaderPlugin,
+    // VueLoaderPlugin,
+    // ExtractTextPlugin,
   },
   config: {
     /**
@@ -80,7 +84,7 @@ module.exports = {
       //   )
       // }),
       new HtmlWebpackPlugin({
-        title: 'CtMobile Demo',
+        title: '',
         filename: 'index.html',
         template: path.join(runtimePath, 'src', 'index.html'),
         hash: true,//防止缓存
@@ -97,13 +101,13 @@ module.exports = {
         chunkFilename: '[id].css',
         ignoreOrder: false, // Enable to remove warnings about conflicting order
       }),
-      new CopyWebpackPlugin([
-        {
-          from: path.join(runtimePath, 'src', 'assets'),//`${runtimePath}src\\assets`,
-          to: path.join(runtimePath, 'dist', 'static'),//`${runtimePath}dist\\static`,
-          toType: 'dir'
-        },
-      ]),
+      // new CopyWebpackPlugin([
+      //   {
+      //     from: path.join(runtimePath, 'src', 'assets'),//`${runtimePath}src\\assets`,
+      //     to: path.join(runtimePath, 'dist', 'static'),//`${runtimePath}dist\\static`,
+      //     toType: 'dir'
+      //   },
+      // ]),
       new webpack.ProvidePlugin({
         _: "lodash",
         $: "jquery",
@@ -152,11 +156,12 @@ module.exports = {
           }
         ],
       }),
-      new ProgressBarPlugin({
-        format: 'build [:bar] :percent (:elapsed seconds)',
-        clear: false,
-        width: 60
-      }),
+      new WebpackBar({ reporters: [ 'profile'], profile: true }),
+      // new ProgressBarPlugin({
+      //   format: 'build [:bar] :percent (:elapsed seconds)',
+      //   clear: false,
+      //   width: 60
+      // }),
     ],
     // optimization: {
     //   splitChunks: {
@@ -230,36 +235,31 @@ module.exports = {
         },
         {
           test: /\.(png|svg|jpg|gif)$/,
-          use: [
-            'cache-loader',
-            'file-loader'
+          use: [,
+            'url-loader'
           ]
         },
         {
           test: /\.(woff|woff2|eot|ttf|otf)$/,
           use: [
-            'cache-loader',
-            'file-loader'
+            'url-loader'
           ]
         },
         {
           test: /\.(csv|tsv)$/,
           use: [
-            'cache-loader',
             'csv-loader'
           ]
         },
         {
           test: /\.xml$/,
           use: [
-            'cache-loader',
             'xml-loader'
           ]
         },
         {
           test: /\.ejs/,
           loader: [
-            'cache-loader',
             'ejs-loader?variable=data'
           ]
         }

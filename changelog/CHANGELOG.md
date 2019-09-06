@@ -1,3 +1,16 @@
+# 1.0.6
+
+***
+
+2019/08/30
+
+* 加入cache-loader
+* 加入url-loader
+* 加入happypack多核编译
+* webpack加入--progress和--colors输出
+* 加入WebpackBar
+* 去掉package.json中无用的依赖项
+
 # 1.0.5
 
 ***

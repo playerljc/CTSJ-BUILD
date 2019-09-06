@@ -4,10 +4,11 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const LessPluginCleanCSS = require('less-plugin-clean-css');
 const LessPluginAutoPrefix = require('less-plugin-autoprefix');
-const VueLoaderPlugin = require('vue-loader/lib/plugin');
 const HappyPack = require('happypack');
-const ProgressBarPlugin = require('progress-bar-webpack-plugin');
+const WebpackBar = require('webpackbar');
+// const ProgressBarPlugin = require('progress-bar-webpack-plugin');
 // const ExtractTextPlugin = require("extract-text-webpack-plugin");
+// const VueLoaderPlugin = require('vue-loader/lib/plugin');
 
 const runtimePath = process.argv[8];
 const packagename = process.argv[10];
@@ -28,11 +29,11 @@ module.exports = {
   plugins: {
     HtmlWebpackPlugin,
     HtmlWebpackPlugin,
-    // ExtractTextPlugin,
     MiniCssExtractPlugin,
     LessPluginCleanCSS,
     LessPluginAutoPrefix,
-    VueLoaderPlugin
+    // ExtractTextPlugin,
+    // VueLoaderPlugin
   },
   config: {
     entry: {
@@ -50,7 +51,7 @@ module.exports = {
       // 请确保引入这个插件！
       // new VueLoaderPlugin(),
       new HtmlWebpackPlugin({
-        title: 'CtMobile Demo',
+        title: '',
         filename: 'index.html',
         template: path.join(runtimePath, 'index.html'),//`${runtimePath}\\index.html`,
         hash: true,//防止缓存
@@ -68,7 +69,7 @@ module.exports = {
         chunkFilename: '[id].css',
         ignoreOrder: false, // Enable to remove warnings about conflicting order
       }),
-      new ProgressBarPlugin(),
+      // new ProgressBarPlugin(),
       new HappyPack({
         id: 'babel',
         loaders: [
@@ -112,6 +113,7 @@ module.exports = {
           }
         ],
       }),
+      new WebpackBar({ reporters: [ 'profile'], profile: true }),
     ],
     // optimization: {
     //   runtimeChunk: 'single',
@@ -172,35 +174,30 @@ module.exports = {
         {
           test: /\.(png|svg|jpg|gif)$/,
           use: [
-            'cache-loader',
-            'file-loader'
+            'url-loader'
           ]
         },
         {
           test: /\.(woff|woff2|eot|ttf|otf)$/,
           use: [
-            'cache-loader',
-            'file-loader'
+            'url-loader'
           ]
         },
         {
           test: /\.(csv|tsv)$/,
           use: [
-            'cache-loader',
             'csv-loader'
           ]
         },
         {
           test: /\.xml$/,
           use: [
-            'cache-loader',
             'xml-loader'
           ]
         },
         {
           test: /\.ejs/,
           loader: [
-            'cache-loader',
             'ejs-loader?variable=data'
           ]
         }
