@@ -1,0 +1,30 @@
+const program = require('commander');
+const packageJson = require('./package');
+const commandConfig = require('./commandConfig');
+
+program.version(packageJson.version);
+
+Object.keys(commandConfig).forEach((command) => {
+  const {
+    alias,
+    description,
+    options = [],
+    action
+  } = commandConfig[command];
+
+  let commandHandler = program
+    .command(command)
+    .alias(alias)
+    .description(description)
+    .action(action);
+
+  options.forEach(({command:optionCommand,description: optionDescription}) => {
+    commandHandler.option(optionCommand, optionDescription);
+  })
+});
+
+program.parse(process.argv);
+
+if (!program.args.length) {
+  program.help();
+}
