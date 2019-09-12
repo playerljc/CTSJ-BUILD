@@ -9,7 +9,7 @@ const outputpath = argsMap.get('--outputpath')[0];
 const compilePath = argsMap.get('--compilepath')[0];
 
 // buildpackage生成的目录名称
-const generateDirName = 'lib';
+// const generateDirName = 'lib';
 
 /**
  * copy
