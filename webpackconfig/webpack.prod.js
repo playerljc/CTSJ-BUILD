@@ -1,12 +1,12 @@
-const path = require('path');
+// const path = require('path');
 const webpack = require('webpack');
 const merge = require('webpack-merge');
 const common = require('./webpack.common.js');
-const CleanWebpackPlugin = require('clean-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const commandArgs = require('../commandArgs');
 const argsMap = commandArgs.initCommandArgs();
 
-const runtimePath = argsMap.get('--runtimepath')[0];
+// const runtimePath = argsMap.get('--runtimepath')[0];
 let customConfigPath = argsMap.get('--customconfig')[0];
 let customModule;
 // if (customConfig !== 'undefined') {
@@ -21,7 +21,7 @@ let customModule;
 const curModule = merge(common.config, {
   mode: 'production',
   plugins: [
-    new CleanWebpackPlugin([path.join(runtimePath, 'dist')]),
+    new CleanWebpackPlugin(),
     new webpack.DefinePlugin({
       'process': {
         'env': {
