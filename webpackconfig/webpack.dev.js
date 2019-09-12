@@ -1,18 +1,19 @@
+// const path = require('path');
 const webpack = require('webpack');
 const merge = require('webpack-merge');
 const common = require('./webpack.common.js');
 const commandArgs = require('../commandArgs');
 const argsMap = commandArgs.initCommandArgs();
 
-const runtimePath = argsMap.get('--runtimepath')[0];
-let customConfig = argsMap.get('--customconfig')[0];
-let customConfigPath, customModule;
-if (customConfig !== 'undefined') {
-  customConfigPath = `${runtimePath}${customConfig}`
-}
-else {
-  customConfigPath = `${runtimePath}ctbuild.config.js`
-}
+// const runtimePath = argsMap.get('--runtimepath')[0];
+const customConfigPath = argsMap.get('--customconfig')[0];
+let customModule;
+// if (customConfig !== 'undefined') {
+//   customConfigPath = path.join(runtimePath, customConfig);
+// }
+// else {
+  //   customConfigPath = path.join(runtimePath,'ctbuild.config.js');
+// }
 
 // --runtimepath
 // --customconfig

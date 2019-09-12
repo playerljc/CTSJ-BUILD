@@ -3,12 +3,12 @@ const path = require('path');
 const {spawn} = require('child_process');
 // 运行命令的路径
 const runtimePath = process.cwd();
-// 命令的路径
+// build.js所在的路径
 const codePath = __dirname;
-// 命令所在路径
-const commandPath = path.join(codePath, 'node_modules', '.bin', '/');
-//`${codePath}\\node_modules\\.bin\\`;
-let argsMap;
+// ctbuild.cmd或者ctbuild.sh所在路径
+const commandPath = path.join(codePath, 'node_modules', '.bin', path.sep);
+// 配置文件所在路径
+let configPath;
 
 /**
  * corssenvTask
@@ -38,41 +38,41 @@ function corssenvTask() {
   });
 }
 
-/**
- * devDllTask
- * @return {Promise}
- */
-function devDllTask() {
-  return new Promise((resolve, reject) => {
-    const command = process.platform === "win32" ? `${commandPath}webpack.cmd` : `${commandPath}webpack`;
-    const devDllProcess = spawn(
-      command,
-      [
-        '--config',
-        path.join('webpackconfig', 'webpack.dev.dll.js'),//'webpackconfig/webpack.dev.dll.js',
-        '--custom',
-        path.join(runtimePath, '/'),//`${runtimePath}\\`
-      ],
-      {
-        cwd: codePath,
-        encoding: 'utf-8',
-      }
-    );
-
-    devDllProcess.stdout.on('data', (data) => {
-      console.log(`stdout: ${data}`);
-    });
-
-    devDllProcess.stderr.on('data', (data) => {
-      console.log(`stderr: ${data}`);
-    });
-
-    devDllProcess.on('close', (code) => {
-      console.log(`devDllTaskClose：${code}`);
-      resolve();
-    });
-  });
-}
+// /**
+//  * devDllTask
+//  * @return {Promise}
+//  */
+// function devDllTask() {
+//   return new Promise((resolve, reject) => {
+//     const command = process.platform === "win32" ? `${commandPath}webpack.cmd` : `${commandPath}webpack`;
+//     const devDllProcess = spawn(
+//       command,
+//       [
+//         '--config',
+//         path.join('webpackconfig', 'webpack.dev.dll.js'),//'webpackconfig/webpack.dev.dll.js',
+//         '--custom',
+//         path.join(runtimePath, '/'),//`${runtimePath}\\`
+//       ],
+//       {
+//         cwd: codePath,
+//         encoding: 'utf-8',
+//       }
+//     );
+//
+//     devDllProcess.stdout.on('data', (data) => {
+//       console.log(`stdout: ${data}`);
+//     });
+//
+//     devDllProcess.stderr.on('data', (data) => {
+//       console.log(`stderr: ${data}`);
+//     });
+//
+//     devDllProcess.on('close', (code) => {
+//       console.log(`devDllTaskClose：${code}`);
+//       resolve();
+//     });
+//   });
+// }
 
 /**
  * webpackServiceTask
@@ -86,13 +86,13 @@ function webpackServiceTask() {
       [
         '--open',
         '--config',
-        path.join('webpackconfig', 'webpack.dev.js'),//'webpackconfig/webpack.dev.js',
+        path.join('webpackconfig', 'webpack.dev.js'),
         '--progress',
         '--colors',
         '--runtimepath',
-        path.join(runtimePath, '/'),//`${runtimePath}\\`,
+        path.join(runtimePath, path.sep),
         '--customconfig',
-        argsMap.get('--config')
+        configPath
       ],
       {
         cwd: codePath,
@@ -145,8 +145,22 @@ function loopTask() {
 }
 
 module.exports = {
-  build: (args) => {
-    argsMap = args;
+  /**
+   * build
+   * @param {String} - ctbuildConfigPath
+   * ctbuild.config.js配置文件的路径，如果没有指定则会寻找命令运行目录下的ctbuild.config.js文件
+   */
+  build: (ctbuildConfigPath = '') => {
+    if(ctbuildConfigPath) {
+      if(path.isAbsolute(ctbuildConfigPath)) {
+        configPath = ctbuildConfigPath;
+      } else {
+        configPath = path.join(runtimePath, ctbuildConfigPath);
+      }
+    } else {
+      configPath = path.join(runtimePath,'ctbuild.config.js');
+    }
+
     loopTask().then(() => {
       console.log('finish');
       process.exit();

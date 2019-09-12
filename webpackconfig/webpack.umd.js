@@ -1,3 +1,4 @@
+const path = require('path');
 const webpack = require('webpack');
 const merge = require('webpack-merge');
 const common = require('./webpack.umdcommon.js');
@@ -6,21 +7,21 @@ const commandArgs = require('../commandArgs');
 const argsMap = commandArgs.initCommandArgs();
 
 const runtimePath = argsMap.get('--runtimepath')[0];
-let customConfig = argsMap.get('--customconfig')[0];
-let customConfigPath, customModule;
-if (customConfig !== 'undefined') {
-  customConfigPath = `${runtimePath}${customConfig}`
-}
-else {
-  customConfigPath = `${runtimePath}ctbuild.config.js`
-}
+let customConfigPath = argsMap.get('--customconfig')[0];
+let customModule;
+// if (customConfig !== 'undefined') {
+//   customConfigPath = path.join(runtimePath, customConfig);
+// }
+// else {
+//   customConfigPath = path.join(runtimePath,'ctbuild.config.js');
+// }
 
 // --runtimepath
 // --customconfig
 const curModule = merge(common.config, {
   mode: 'production',
   plugins: [
-    new CleanWebpackPlugin([`${runtimePath}umd`]),
+    new CleanWebpackPlugin([path.join(runtimePath, 'umd')]),
     new webpack.DefinePlugin({
       'process': {
         'env': {

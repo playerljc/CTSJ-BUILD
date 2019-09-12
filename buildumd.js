@@ -1,12 +1,20 @@
 #!/usr/bin/env node
 const path = require('path');
 const {spawn} = require('child_process');
+// 运行命令的路径
 const runtimePath = process.cwd();
+// 运行命令的路径去掉/
 const srcPath = runtimePath.substring(0, runtimePath.lastIndexOf(path.sep));
+// build.js所在的路径
 const codePath = __dirname;
-// const commandPath = `${codePath}\\node_modules\\.bin\\`;
+// ctbuild.cmd或者ctbuild.sh所在路径
 const commandPath = path.join(codePath, 'node_modules', '.bin', path.sep);
-let argsMap;
+
+// 配置文件所在路径
+let configPath;
+// [packageName].bundle.js
+// [packageName].css
+let packageName;
 
 /**
  * 复制src到runtimePath
@@ -17,8 +25,8 @@ function copySrcTask() {
       'win32': {
         command: 'xcopy',
         params: [
-          path.join(srcPath, 'src'),//`${srcPath}\\src`,
-          path.join(runtimePath, 'src'),//`${runtimePath}\\src`,
+          path.join(srcPath, 'src'),
+          path.join(runtimePath, 'src'),
           '/e', '/i', '/y'
         ]
       },
@@ -26,13 +34,12 @@ function copySrcTask() {
         command: 'cp',
         params: [
           '-r', '-f',
-          path.join(srcPath, 'src'),//`${srcPath}\\src`,
-          path.join(runtimePath, 'src'),//`${runtimePath}\\src`
+          path.join(srcPath, 'src'),
+          path.join(runtimePath, 'src'),
         ]
       }
     };
 
-    // console.log('process.platform', process.platform);
     const {command, params} = process.platform === "win32" ? commands['win32'] : commands['linux'];
 
     const copyProcess = spawn(
@@ -99,15 +106,16 @@ function webpackTask() {
       [
         '--open',
         '--config',
-        path.join('webpackconfig', 'webpack.umd.js'),//'webpackconfig/webpack.umd.js',
+        path.join('webpackconfig', 'webpack.umd.js'),
         '--progress',
         '--colors',
+
         '--runtimepath',
-        path.join(runtimePath, path.sep),//`${runtimePath}\\`,
+        path.join(runtimePath, path.sep),
         '--packagename',
-        `${argsMap.get('--packagename')}`,
+        packageName,
         '--customconfig',
-        argsMap.get('--config')
+        configPath
       ],
       {
         cwd: codePath,
@@ -129,9 +137,9 @@ function webpackTask() {
   });
 }
 
-/**
- * 从runtimePath中删除src
- */
+// /**
+//  * 从runtimePath中删除src
+//  */
 // function removeSrcTask() {
 //   return new Promise((resolve, reject) => {
 //     const rimrafProcess = spawn(process.platform === "win32" ? `${commandPath}rimraf.cmd` : `${commandPath}rimraf`, [`${runtimePath}\\src`], {
@@ -184,8 +192,19 @@ function loopTask() {
 }
 
 module.exports = {
-  build: (args) => {
-    argsMap = args;
+  build: ({config: ctbuildConfigPath = '', packagename = 'packagename'}) => {
+    if(ctbuildConfigPath) {
+      if(path.isAbsolute(ctbuildConfigPath)) {
+        configPath = ctbuildConfigPath;
+      } else {
+        configPath = path.join(runtimePath, ctbuildConfigPath);
+      }
+    } else {
+      configPath = path.join(runtimePath,'ctbuild.config.js');
+    }
+
+    packageName = packagename;
+
     loopTask().then(() => {
       console.log('finish');
       process.exit();

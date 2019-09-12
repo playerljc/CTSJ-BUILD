@@ -1,3 +1,16 @@
+# 1.0.8
+
+***
+
+2019/09/12
+
+* 加入命令行的-v,-h,command的help等操作
+* 整理修改startapp的command参数
+* 整理修改buildapp的command参数
+* 整理修改buildumd的command参数
+* 整理修改buildpackage的command参数
+* 去掉了--type参数
+
 # 1.0.7
 
 ***

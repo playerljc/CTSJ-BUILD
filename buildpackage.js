@@ -11,8 +11,11 @@ const generateDirName = 'lib';
 // buildpackage原始名称
 const srcDirName = 'src';
 
-let srcPath;
-let argsMap;
+// 代码输出路径
+const outputPath = path.join(runtimePath, generateDirName);
+
+// 代码编译路径
+let compilePath;
 
 let index = 0;
 // buildpackage的所有任务
@@ -27,13 +30,13 @@ const tasks = [
 
 /**
  * clearTask
- * 清除lib目录
+ * 清除输出目录
  * @return {Promise}
  */
 function clearTask() {
   return new Promise((resolve, reject) => {
     const command = process.platform === "win32" ? `${commandPath}rimraf.cmd` : `${commandPath}rimraf`;
-    const rimrafProcess = spawn(command, [path.join(runtimePath, generateDirName)], {
+    const rimrafProcess = spawn(command, [outputPath], {
       cwd: codePath,
       encoding: 'utf-8',
     });
@@ -64,9 +67,11 @@ function babelTask() {
     const babelProcess = spawn(
       command,
       [
-        path.join(srcPath, srcDirName),
+        // 编译的目录
+        compilePath,
         '-d',
-        path.join(runtimePath, generateDirName),
+        // 输出的目录
+        outputPath,
         '--ignore',
         '__tests__'
       ],
@@ -100,10 +105,12 @@ function gulpTask() {
     const gulpProcess = spawn(
       command,
       [
-        '--runtimepath',
-        path.join(runtimePath, path.sep),
-        '--srcpath',
-        path.join(srcPath, path.sep)
+        '--outputpath',
+        // 输出路径
+        path.join(outputPath, path.sep),
+        '--compilepath',
+        // 编译目录
+        path.join(compilePath, path.sep)
       ],
       {
         cwd: codePath,
@@ -155,21 +162,24 @@ function loopTask() {
 module.exports = {
   /**
    * build
-   * @param args
+   * @param {String} - srcPath
    */
-  build(args) {
-    argsMap = args;
-    let srcpatharg = args.get('--srcpath');
-    if (srcpatharg && Array.isArray(srcpatharg)) {
-      srcpatharg = srcpatharg[0];
-    }
-    console.log('srcpatharg', srcpatharg);
-    if (srcpatharg === '../') {
-      srcPath = runtimePath.substring(0, runtimePath.lastIndexOf(path.join('/')));
+  build(srcPath) {
+    if (srcPath) {
+      // 指定了编译目录
+
+      if(path.isAbsolute(srcPath)) {
+        // 是绝对路径
+        compilePath = srcPath;
+      } else {
+        // 是相对路径
+        compilePath = path.join(runtimePath, srcPath);
+      }
     } else {
-      srcPath = runtimePath;
+      // 没有指定编译目录
+      compilePath = path.join(runtimePath, srcDirName);
     }
-    console.log('buildpackage-srcPath----------------------', srcPath);
+    // console.log('buildpackage-srcPath----------------------', srcPath);
 
     loopTask().then(() => {
       console.log('finish');

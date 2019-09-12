@@ -5,7 +5,7 @@ const runtimePath = process.argv[5];
 
 module.exports = {
   entry: {
-    'commons': [`${runtimePath}src\\commons`]
+    'commons': [path.join(runtimePath,'src','commons')]
   },
   output: {
     path: path.join(runtimePath, 'src', 'assets', 'dll'),
