@@ -7,6 +7,8 @@
  *          buildumd - 打包成umd包 src - umd     --- ctbuild.config.js
  *          buildpackage - 打包package src - lib
  *        ]
+ * --config 配置文件的路径
+ * --srcpath buildpackage的目录路径
  * --packagename 当--type为buildumd时 为包的名称
  */
 
