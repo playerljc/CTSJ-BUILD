@@ -1,144 +1,87 @@
-## CTSJ-BUILD
-&ensp;&ensp;一个基于webpack的打包工具
-## 命令介绍
- 1. ctbuild
-    * --type [build的类型]
-      * startapp [启动开发模式]
-      ```bash
-       ctbuild --type startapp
-      ```
-      * buildapp [对应用进行打包]
-      ```bash
-      ctbuild --type buildapp
-      ```     
-      * buildpackage [打包npmpackage]
-      ```bash
-      ctbuild --type buildpackage
-      ``` 
-      * buildumd [对应用进行umd打包]
-      ```bash
-      ctbuild --type buildumd --packagename packageName
-      ```     
-    
- 2. ctcopy
-     * srcDir
-     * targetDir
-     ```bash
-     ctcopy src target
-     ``` 
-   
-   将src中的内容拷贝到target中
- 
-##  ctbuild命令详解
- 1. startapp，buildapp
- 
- &nbsp;&nbsp;&nbsp;&nbsp;
- startapp和buildapp对应的是webpack中的dev和build
-  
- * 目录结构
- 
-   .src
-   
-   &nbsp;&nbsp;.index.html
-   
-   &nbsp;&nbsp;.index.js
-   
-   &nbsp;&nbsp;.common.js
-   
-   .ctbuild.config.js
-   
-   .package.json
+# CTSJ-BUILD
 
- * common.js
- 
- &nbsp;&nbsp;&nbsp;&nbsp;可以将不变的第三方库放入commmon.js中，采用了webpack中的dll。
+## A webpack packaging tool
 
- * ctbuild.config.js
- 
- &nbsp;&nbsp;&nbsp;&nbsp;这个文件是对webpack配置文件进行合并的文件，用户的自定义功能可以在getConfig进行配置，如果getConfig返回空对象，则使用默认配置。
+* **.ctbuild**
+  - [**.startapp**](#startapp)
+  - [**.buildapp**](#buildapp)
+  - [**.buildumd**](#buildumd)
+  - [**.buildpackage**](#buildpackage)
+  - [**ctbuild.config.js**](#config)
+  - [**.Default setting**](#defaultsetting)
+* [**.ctcopy**](#ctcopy)
 
- 1.webpack - webpack对象
+**  .startapp **
 
- 2.curModule - 默认配置
+Developed form of operation
 
- 3.plugins - webpack的plugins，当前有如下插件
+Options:
 
-   HtmlWebpackPlugin,
+* -c, --config <path> ctbuild.config.js configuration file location, if not specified, read ctbuild.config.js in the directory where the command is located
 
-   ExtractTextPlugin,
+**  .buildapp **
 
-   CopyWebpackPlugin,
+Production environment packaging
 
-   HtmlWebpackIncludeAssetsPlugin,
+Options:
 
-   LessPluginCleanCSS,
+* -c, --config <path> ctbuild.config.js configuration file location, if not specified, read ctbuild.config.js in the directory where the command is located
 
-   LessPluginAutoPrefix
-  
-  可以对curModule进行重写来达到自定义的目的，如果自定的时候用到了webpack对象，如要使用参数中的webpack对象，如果自定义的时候需要用到插件，也应该用参数中plugins。
-  
- ```js
- module.exports = {
-   getConfig({webpack,curModule,plugins}) {
-     return {};
-   },
- };
- ```
+**  .buildumd **
 
- 2. buildumd
- 
- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;buildumd是把应用打包成node和browser都可以用的包
- 
- * 目录结构
-   .src
-   
-   &nbsp;&nbsp;.index.js
-   
-   &nbsp;&nbsp;...其他文件
-   
-   .ctbuild.config.js
-   
-   .index.html
-   
-   .package.json
-   
-   执行完命令之后会生成umd目录，在umd目录中会生成accordion.bundle.js和index.html文件。
-    ```js
-    ctbuild --type buildumd --packagename accordion
-    ```
- 
- 3. buildpackage
- 
- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;buildpackage是把代码打包成npm包。
+Production environment umd package
 
- * 目录结构
-   
-   .src
-   
-   &nbsp;&nbsp;...代码文件(jsx,js,less,css,图片等)
-   
-   .package.json
-   
-   命令将会把src目录中的文件编译到lib目录下，lib目录和src目录中的文件保持一致。
+Options:
 
-    ```js
-    ctbuild --type buildpackage
-    ```
+* -c, --config <path> ctbuild.config.js configuration file location, if not specified, read ctbuild.config.js in the directory where the command is located
+* -p, --packagename <name> package name,The prefix name of the js file after packaging, If not specified, it is packagename
 
-##  安装
+**  .buildpackage **
 
-* 项目内安装
-```bash
-$ npm install @ct/build --save-dev
+Packaged into npm package
+
+Options:
+
+* -p, --srcpath <path> Packaged directory, if not specified, is the src folder under the running directory
+
+**  .ctbuild.config.js **
+
+Webpack configuration file, use default configuration if no configuration is possible
+
+code
+
 ```
 
-* 全局安装
-```bash
-$ npm install @ct/build -g
+module.exports = {
+  getConfig({ webpack,curModule,plugins }) {
+    return {
+
+    };
+  },
+};
+
 ```
 
-## 讨论群
-![](https://github.com/playerljc/CTMobile/raw/master/outimages/qq.png "讨论群")
+* webpack Webpack native object
+* curModule Default configuration object
+* plugins Default webpack plugin set These plugins include：
+  - HtmlWebpackPlugin
+  - MiniCssExtractPlugin
+  - CopyWebpackPlugin
+  - HtmlWebpackIncludeAssetsPlugin
+  - LessPluginCleanCSS
+  - LessPluginAutoPrefix
 
-## 许可
-[MIT](/LICENSE)
+.The user can perform a merge operation on the curModule, all operations are webpack configuration items, and finally return，Note that if you use webpack objects and plugins, you need to use the values provided by the webpack and plugins provided in the parameters.
+
+**  .defaultSetting **
+
+* js/jsx parsing      
+* css/less parsing      
+* css/less packaged into a file      
+* Image Resolution      
+* Font parsing      
+* HappyPack Multicore Compilation      
+* cache-loader      
+* extensions autocomplete      
+* The splitChunks of node_modules is a vendor
