@@ -213,7 +213,7 @@ module.exports = {
         },
         {
           test: /\.less$/,
-          include: [APP_PATH, /normalize.less/],
+          include: [APP_PATH, /normalize.less/, /antd/],
           use: [
             process.env.NODE_ENV === 'development' ? 'style-loader' : MiniCssExtractPlugin.loader,
             'happypack/loader?id=less',
