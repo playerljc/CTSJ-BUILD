@@ -1,3 +1,28 @@
+# 1.0.11
+
+***
+
+2019/09/17
+
+* less-loader加入javascriptEnabled: true
+* ctbuild.config.js文件修改为直接修改curModule对象，不用在返回
+
+# 1.0.10
+
+***
+
+2019/09/17
+
+* webpack.common.js的less的include中加入/antd/
+
+# 1.0.9
+
+***
+
+2019/09/17
+
+* build.js漏写了#!/usr/bin/env node
+
 # 1.0.8
 
 ***

@@ -42,10 +42,24 @@ const curModule = merge(common.config, {
   ]
 });
 
+// if (customConfigPath) {
+//   customModule = require(customConfigPath);
+//   if (customModule && customModule.getConfig) {
+//     customModule = customModule.getConfig({
+//       webpack,
+//       curModule,
+//       plugins: common.plugins
+//     });
+//   }
+// }
+
+// const config = merge(curModule, customModule || {});
+// module.exports = config;
+
 if (customConfigPath) {
   customModule = require(customConfigPath);
   if (customModule && customModule.getConfig) {
-    customModule = customModule.getConfig({
+    customModule.getConfig({
       webpack,
       curModule,
       plugins: common.plugins
@@ -53,5 +67,4 @@ if (customConfigPath) {
   }
 }
 
-const config = merge(curModule, customModule || {});
-module.exports = config;
+module.exports = curModule;

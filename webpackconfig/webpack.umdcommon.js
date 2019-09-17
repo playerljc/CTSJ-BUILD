@@ -105,6 +105,7 @@ module.exports = {
           {
             loader: "less-loader",
             query: {
+              javascriptEnabled: true,
               plugins: [
                 new LessPluginCleanCSS({advanced: true}),
                 new LessPluginAutoPrefix({add: false, remove: false, browsers: ['last 2 versions']})
@@ -151,7 +152,7 @@ module.exports = {
         },
         {
           test: /\.less$/,
-          include: [APP_PATH, /normalize.less/, /antd/],
+          include: [APP_PATH, /normalize.less/],
           use: [
             process.env.NODE_ENV === 'development' ? 'style-loader' : MiniCssExtractPlugin.loader,
             'happypack/loader?id=less',

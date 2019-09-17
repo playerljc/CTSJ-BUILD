@@ -33,18 +33,31 @@ const curModule = merge(common.config, {
   ]
 });
 
+// if (customConfigPath) {
+//   customModule = require(customConfigPath);
+//   if (customModule && customModule.getConfig) {
+//     customModule = customModule.getConfig({
+//       // webpack
+//       webpack,
+//       // 已经配置好的module
+//       curModule,
+//       // plugins
+//       plugins: common.plugins,
+//     });
+//   }
+// }
+//
+// module.exports = merge(curModule, customModule || {});
+
 if (customConfigPath) {
   customModule = require(customConfigPath);
   if (customModule && customModule.getConfig) {
-    customModule = customModule.getConfig({
-      // webpack
+    customModule.getConfig({
       webpack,
-      // 已经配置好的module
       curModule,
-      // plugins
-      plugins: common.plugins,
+      plugins: common.plugins
     });
   }
 }
 
-module.exports = merge(curModule, customModule || {});
+module.exports = curModule;
