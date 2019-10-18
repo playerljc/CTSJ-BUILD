@@ -9,6 +9,7 @@ const codePath = __dirname;
 const commandPath = path.join(codePath, 'node_modules', '.bin', path.sep);
 // 配置文件所在路径
 let configPath;
+let define;
 
 /**
  * corssenvTask
@@ -91,7 +92,9 @@ function webpackTask() {
         '--runtimepath',
         path.join(runtimePath, path.sep),
         '--customconfig',
-        configPath
+        configPath,
+        '--define',
+        define.join(' ')
       ],
       {
         cwd: codePath,
@@ -148,7 +151,7 @@ module.exports = {
    * @param {String} - ctbuildConfigPath
    * ctbuild.config.js配置文件的路径，如果没有指定则会寻找命令运行目录下的ctbuild.config.js文件
    */
-  build: (ctbuildConfigPath = '') => {
+  build: ({config:ctbuildConfigPath = '', define: defineMap}) => {
     if(ctbuildConfigPath) {
       if(path.isAbsolute(ctbuildConfigPath)) {
         configPath = ctbuildConfigPath;
@@ -158,6 +161,8 @@ module.exports = {
     } else {
       configPath = path.join(runtimePath,'ctbuild.config.js');
     }
+
+    define = defineMap;
 
     loopTask().then(() => {
       console.log('finish');

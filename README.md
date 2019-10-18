@@ -18,6 +18,7 @@ Developed form of operation
 Options:
 
 * -c, --config <path> ctbuild.config.js configuration file location, if not specified, read ctbuild.config.js in the directory where the command is located
+* -d, --define <path> custom params split ","
 
 **  .buildapp **
 
@@ -26,6 +27,7 @@ Production environment packaging
 Options:
 
 * -c, --config <path> ctbuild.config.js configuration file location, if not specified, read ctbuild.config.js in the directory where the command is located
+* -d, --define <path> custom params split ","
 
 **  .buildumd **
 
@@ -35,6 +37,7 @@ Options:
 
 * -c, --config <path> ctbuild.config.js configuration file location, if not specified, read ctbuild.config.js in the directory where the command is located
 * -p, --packagename <name> package name,The prefix name of the js file after packaging, If not specified, it is packagename
+* -d, --define <path> custom params split ","
 
 **  .buildpackage **
 
@@ -54,9 +57,7 @@ code
 
 module.exports = {
   getConfig({ webpack,curModule,plugins }) {
-    return {
 
-    };
   },
 };
 

@@ -1,3 +1,14 @@
+# 1.0.12
+
+***
+
+2019/10/18
+
+* startapp 加入--define自定义参数
+* buildapp 加入--define自定义参数
+* buildumd 加入--define自定义参数
+* buildpackage加入css文件的拷贝
+
 # 1.0.11
 
 ***

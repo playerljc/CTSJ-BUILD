@@ -15,6 +15,7 @@ let configPath;
 // [packageName].bundle.js
 // [packageName].css
 let packageName;
+let define;
 
 /**
  * 复制src到runtimePath
@@ -115,7 +116,9 @@ function webpackTask() {
         '--packagename',
         packageName,
         '--customconfig',
-        configPath
+        configPath,
+        '--define',
+        define.join(' ')
       ],
       {
         cwd: codePath,
@@ -162,7 +165,7 @@ function webpackTask() {
 //   });
 // }
 
-const tasks = [copySrcTask, corssenvTask, webpackTask/*, removeSrcTask*/];
+const tasks = [copySrcTask, /*corssenvTask, */webpackTask/*, removeSrcTask*/];
 let index = 0;
 
 /**
@@ -192,18 +195,25 @@ function loopTask() {
 }
 
 module.exports = {
-  build: ({config: ctbuildConfigPath = '', packagename = 'packagename'}) => {
-    if(ctbuildConfigPath) {
-      if(path.isAbsolute(ctbuildConfigPath)) {
+  build: ({
+            config: ctbuildConfigPath = '',
+            packagename = 'packagename',
+            define: defineMap
+          }
+  ) => {
+    if (ctbuildConfigPath) {
+      if (path.isAbsolute(ctbuildConfigPath)) {
         configPath = ctbuildConfigPath;
       } else {
         configPath = path.join(runtimePath, ctbuildConfigPath);
       }
     } else {
-      configPath = path.join(runtimePath,'ctbuild.config.js');
+      configPath = path.join(runtimePath, 'ctbuild.config.js');
     }
 
     packageName = packagename;
+
+    define = defineMap;
 
     loopTask().then(() => {
       console.log('finish');
