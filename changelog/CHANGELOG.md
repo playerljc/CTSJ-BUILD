@@ -1,10 +1,21 @@
+# 1.0.13
+
+***
+
+2019/10/24
+
+* gulpfile中加入gif
+
 # 1.0.12
 
 ***
 
-2019/11/14
+2019/10/18
 
-* url-loader加入对ico图标的支持
+* startapp 加入--define自定义参数
+* buildapp 加入--define自定义参数
+* buildumd 加入--define自定义参数
+* buildpackage加入css文件的拷贝
 
 # 1.0.11
 

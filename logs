@@ -3,3 +3,7 @@
 
 .WebPack4.x加入了optimization之后可以去掉dll了
  dll和optimization构建完的js能容有重复
+
+
+.gulpfile缺少css文件拷贝
+.startapp,buildapp缺少自定义参数设置

@@ -49,13 +49,16 @@ const curModule = merge(common.config, {
 //
 // module.exports = merge(curModule, customModule || {});
 
+const define = argsMap.get('--define')[0] || '';
+
 if (customConfigPath) {
   customModule = require(customConfigPath);
   if (customModule && customModule.getConfig) {
     customModule.getConfig({
       webpack,
       curModule,
-      plugins: common.plugins
+      plugins: common.plugins,
+      define: commandArgs.toCommandArgs(define)
     });
   }
 }
