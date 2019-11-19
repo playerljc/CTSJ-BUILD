@@ -94,7 +94,11 @@ function webpackTask() {
         '--customconfig',
         configPath,
         '--define',
-        define.join(' ')
+        define.join(' '),
+        '--profile',
+        '--json',
+        '>',
+        path.join(runtimePath,'stats.json'),
       ],
       {
         cwd: codePath,

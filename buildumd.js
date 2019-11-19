@@ -118,7 +118,7 @@ function webpackTask() {
         '--customconfig',
         configPath,
         '--define',
-        define.join(' ')
+        define.join(' '),
       ],
       {
         cwd: codePath,
