@@ -1,3 +1,11 @@
+# 1.0.18
+
+***
+
+2019/12/04
+
+* 修复使用happypack的css-loader3.2.1包Cannot read property 'split' of undefined 的错误，css-loader回滚到3.2.0
+
 # 1.0.17
 
 ***
