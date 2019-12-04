@@ -174,15 +174,21 @@ module.exports = {
         },
         {
           test: /\.(png|svg|jpg|gif|ico)$/,
-          use: [
-            'url-loader'
-          ]
+          use: [{
+            loader: 'url-loader',
+            options: {
+              limit: 1024,
+            },
+          }]
         },
         {
           test: /\.(woff|woff2|eot|ttf|otf)$/,
-          use: [
-            'url-loader'
-          ]
+          use: [{
+            loader: 'url-loader',
+            options: {
+              limit: 1024,
+            },
+          }]
         },
         {
           test: /\.(csv|tsv)$/,

@@ -1,3 +1,36 @@
+# 1.0.18
+
+***
+
+2019/12/04
+
+* 修复使用happypack的css-loader3.2.1包Cannot read property 'split' of undefined 的错误，css-loader回滚到3.2.0
+
+# 1.0.17
+
+***
+
+2019/11/15
+
+* 修复bug
+
+# 1.0.16
+
+***
+
+2019/11/15
+
+* --json加入输出到stats.json
+
+# 1.0.15
+
+***
+
+2019/11/15
+
+* url-loader加入limit大于1K使用file-loader
+* 加入 '--profile','--json'查看依赖包的分析结果
+
 # 1.0.14
 
 ***
