@@ -17,6 +17,7 @@ let configPath;
 let packageName;
 let define;
 
+
 /**
  * 复制src到runtimePath
  */
