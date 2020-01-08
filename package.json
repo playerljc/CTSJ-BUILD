@@ -1,6 +1,6 @@
 {
   "name": "@ctsj/build",
-  "version": "1.0.18",
+  "version": "1.0.19",
   "description": "一个基于webpack的打包工具",
   "bin": {
     "ctbuild": "./build.js",
@@ -94,6 +94,8 @@
     "webpack-dev-server": "^3.1.9",
     "webpack-merge": "^4.1.4",
     "webpackbar": "^4.0.0",
-    "xml-loader": "^1.2.1"
+    "xml-loader": "^1.2.1",
+    "json-loader": "^0.5.7",
+    "yaml-loader": "^0.5.0"
   }
 }

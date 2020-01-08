@@ -269,6 +269,10 @@ module.exports = {
           loader: [
             'ejs-loader?variable=data'
           ]
+        },
+        {
+          test: /\.ya?ml$/,
+          use: ['json-loader', 'yaml-loader'],
         }
       ]
     },
