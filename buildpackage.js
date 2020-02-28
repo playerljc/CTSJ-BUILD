@@ -168,7 +168,7 @@ module.exports = {
     if (srcPath) {
       // 指定了编译目录
 
-      if(path.isAbsolute(srcPath)) {
+      if (path.isAbsolute(srcPath)) {
         // 是绝对路径
         compilePath = srcPath;
       } else {

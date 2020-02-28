@@ -6,6 +6,7 @@ const LessPluginCleanCSS = require('less-plugin-clean-css');
 const LessPluginAutoPrefix = require('less-plugin-autoprefix');
 const HappyPack = require('happypack');
 const WebpackBar = require('webpackbar');
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 // const ProgressBarPlugin = require('progress-bar-webpack-plugin');
 // const ExtractTextPlugin = require("extract-text-webpack-plugin");
 // const VueLoaderPlugin = require('vue-loader/lib/plugin');
@@ -69,6 +70,10 @@ module.exports = {
         chunkFilename: '[id].css',
         ignoreOrder: false, // Enable to remove warnings about conflicting order
       }),
+      new ForkTsCheckerWebpackPlugin({
+        tsconfig: path.join(runtimePath, 'tsconfig.json'),
+        checkSyntacticErrors: true
+      }),
       // new ProgressBarPlugin(),
       new HappyPack({
         id: 'babel',
@@ -89,6 +94,19 @@ module.exports = {
               ]
             }
           }],
+      }),
+      new HappyPack({
+        id: 'ts',
+        loaders: [
+          {
+            loader: 'ts-loader',
+            options: {
+              transpileOnly: true,
+              happyPackMode: true,
+              configFile: path.join(runtimePath, 'tsconfig.json'),
+            },
+          }
+        ]
       }),
       new HappyPack({
         id: 'css',
@@ -114,20 +132,20 @@ module.exports = {
           }
         ],
       }),
-      new WebpackBar({ reporters: [ 'profile'], profile: true }),
+      new WebpackBar({reporters: ['profile'], profile: true}),
     ],
-    // optimization: {
-    //   runtimeChunk: 'single',
-    //   splitChunks: {
-    //     cacheGroups: {
-    //       vendor: {
-    //         test: /[\\/]node_modules[\\/]/,
-    //         name: 'vendors',
-    //         chunks: 'all'
-    //       }
-    //     }
-    //   }
-    // },
+    optimization: {
+      runtimeChunk: 'single',
+      splitChunks: {
+        cacheGroups: {
+          vendor: {
+            test: /[\\/]node_modules[\\/]/,
+            name: 'vendors',
+            chunks: 'all'
+          }
+        }
+      }
+    },
     module: {
       rules: [
         {
@@ -136,6 +154,14 @@ module.exports = {
           // include: [APP_PATH],
           use: [
             'happypack/loader?id=babel'
+          ]
+        },
+        {
+          test: /\.m?tsx?$/,
+          exclude: /(node_modules|bower_components)/,
+          include: [APP_PATH],
+          use: [
+            'happypack/loader?id=ts'
           ]
         },
         {
@@ -207,11 +233,15 @@ module.exports = {
           loader: [
             'ejs-loader?variable=data'
           ]
+        },
+        {
+          test: /\.ya?ml$/,
+          use: ['json-loader', 'yaml-loader'],
         }
       ]
     },
     resolve: {
-      extensions: ['.js', '.jsx', '.less', '.css', '.json'], //后缀名自动补全
+      extensions: ['.js', '.jsx', '.ts', '.tsx', '.less', '.css', '.json'], //后缀名自动补全
     }
   }
 };

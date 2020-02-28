@@ -14,8 +14,7 @@ module.exports = {
       if (arg.startsWith('--')) {
         map.set(arg, []);
         preArg = arg;
-      }
-      else {
+      } else {
         const value = map.get(preArg);
         if (value) {
           value.push(arg);

@@ -45,7 +45,6 @@ function cpTask() {
       console.log(`cpClose：${code}`);
 
 
-
       resolve();
     });
   });
