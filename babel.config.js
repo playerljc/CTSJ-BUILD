@@ -1,6 +1,14 @@
 const presets = [
   "@babel/preset-env",
   "@babel/preset-react",
+  // TODO: babel.config.js 中babel对typescript的支持
+  // [
+  //   "@babel/preset-typescript",
+  //   {
+  //     isTSX: true,
+  //     allExtensions: true,
+  //   },
+  // ],
 ];
 
 const plugins = [

@@ -20,7 +20,7 @@ Object.keys(commandConfig).forEach((command) => {
     .description(description)
     .action(action);
 
-  options.forEach(({command:optionCommand,description: optionDescription}) => {
+  options.forEach(({command: optionCommand, description: optionDescription}) => {
     commandHandler.option(optionCommand, optionDescription);
   })
 });
