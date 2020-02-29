@@ -22,8 +22,8 @@ let index = 0;
 const tasks = [
   // 清除生成目录
   clearTask,
-  // babel转换，转换js
-  babelTask,
+  // tsc转换，转换typescript
+  tscTask,
   // 样式
   gulpTask
 ];
@@ -57,44 +57,34 @@ function clearTask() {
 }
 
 /**
- * babelTask
+ * tscTask
  * 转换src到lib
  * @return {Promise}
  */
-function babelTask() {
+function tscTask() {
   return new Promise((resolve, reject) => {
-    const command = process.platform === "win32" ? `${commandPath}babel.cmd` : `${commandPath}babel`;
-    const babelProcess = spawn(
+    const command = process.platform === "win32" ? `${commandPath}tsc.cmd` : `${commandPath}tsc`;
+    const tscProcess = spawn(
       command,
       [
-        // 编译的目录
-        compilePath,
-        '-d',
-        // 输出的目录
-        outputPath,
-
-        // TODO: 解析扩展名是ts,tsx的文件
-        // '-x',
-        // '.js,.jsx,.ts,.tsx',
-
-        '--ignore',
-        '__tests__'
+        '-p',
+        runtimePath,
       ],
       {
         cwd: codePath,
         encoding: 'utf-8',
       });
 
-    babelProcess.stdout.on('data', (data) => {
+    tscProcess.stdout.on('data', (data) => {
       console.log(`stdout: ${data}`);
     });
 
-    babelProcess.stderr.on('data', (data) => {
+    tscProcess.stderr.on('data', (data) => {
       console.log(`stderr: ${data}`);
     });
 
-    babelProcess.on('close', (code) => {
-      console.log(`babelClose：${code}`);
+    tscProcess.on('close', (code) => {
+      console.log(`tscClose：${code}`);
       resolve();
     });
   });

@@ -8,6 +8,7 @@ const LessPluginCleanCSS = require('less-plugin-clean-css');
 const LessPluginAutoPrefix = require('less-plugin-autoprefix');
 const HappyPack = require('happypack');
 const WebpackBar = require('webpackbar');
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 
 // const VueLoaderPlugin = require('vue-loader/lib/plugin');
 
@@ -112,6 +113,10 @@ module.exports = {
         _: "lodash",
         $: "jquery",
       }),
+      new ForkTsCheckerWebpackPlugin({
+        tsconfig: path.join(runtimePath, 'tsconfig.json'),
+        checkSyntacticErrors: true
+      }),
       // new DashboardPlugin(dashboard.setData),
       new HappyPack({
         id: 'babel',
@@ -132,6 +137,19 @@ module.exports = {
               ]
             }
           }],
+      }),
+      new HappyPack({
+        id: 'ts',
+        loaders: [
+          {
+            loader: 'ts-loader',
+            options: {
+              transpileOnly: true,
+              happyPackMode: true,
+              configFile: path.join(runtimePath, 'tsconfig.json'),
+            },
+          }
+        ]
       }),
       new HappyPack({
         id: 'css',
@@ -157,7 +175,7 @@ module.exports = {
           }
         ],
       }),
-      new WebpackBar({ reporters: [ 'profile'], profile: true }),
+      new WebpackBar({reporters: ['profile'], profile: true}),
       // new ProgressBarPlugin({
       //   format: 'build [:bar] :percent (:elapsed seconds)',
       //   clear: false,
@@ -189,6 +207,14 @@ module.exports = {
           include: [APP_PATH],
           use: [
             'happypack/loader?id=babel'
+          ]
+        },
+        {
+          test: /\.m?tsx?$/,
+          exclude: /(node_modules|bower_components)/,
+          include: [APP_PATH],
+          use: [
+            'happypack/loader?id=ts'
           ]
         },
         {
@@ -277,7 +303,7 @@ module.exports = {
       ]
     },
     resolve: {
-      extensions: ['.js', '.jsx', '.less', '.css', '.json'], //后缀名自动补全
+      extensions: ['.js', '.jsx', '.ts', '.tsx', '.less', '.css', '.json'], //后缀名自动补全
     }
   }
 }

@@ -7,6 +7,7 @@
   - [**.buildapp**](#buildapp)
   - [**.buildumd**](#buildumd)
   - [**.buildpackage**](#buildpackage)
+  - [**.buildpackagets**](#buildpackage)
   - [**ctbuild.config.js**](#config)
   - [**.Default setting**](#defaultsetting)
 * [**.ctcopy**](#ctcopy)
@@ -42,6 +43,14 @@ Options:
 **  .buildpackage **
 
 Packaged into npm package
+
+Options:
+
+* -p, --srcpath <path> Packaged directory, if not specified, is the src folder under the running directory
+
+**  .buildpackagets **
+
+Packaged into npm package use typescript
 
 Options:
 
