@@ -2,6 +2,7 @@ const startapp = require('./startapp');
 const buildapp = require('./buildapp');
 const buildumd = require('./buildumd');
 const buildpackage = require('./buildpackage');
+const buildpackagets = require('./buildpackagets');
 
 /**
  * 将用","分割的define参数转换成key/value的map
@@ -13,6 +14,7 @@ function getDefineMap(define = '') {
 }
 
 module.exports = {
+  // dev环境
   startapp: {
     alias: 'start',
     description: 'run dev',
@@ -32,6 +34,7 @@ module.exports = {
       });
     }
   },
+  // 打包生产环境
   buildapp: {
     alias: 'build',
     description: 'build app',
@@ -52,6 +55,7 @@ module.exports = {
       });
     }
   },
+  // 打包生成环境的umd
   buildumd: {
     alias: 'umd',
     description: 'build app by umd',
@@ -75,6 +79,7 @@ module.exports = {
       });
     }
   },
+  // 编译package
   buildpackage: {
     alias: 'package',
     description: 'build package',
@@ -85,6 +90,19 @@ module.exports = {
     action: (entry) => {
       console.log('buildpackage');
       buildpackage.build(entry.srcpath);
+    }
+  },
+  // 编译package的ts版本
+  buildpackagets: {
+    alias: 'packagets',
+    description: 'build packagets',
+    options: [{
+      command: '-p, --srcpath <path>',
+      description: 'build path'
+    }],
+    action: (entry) => {
+      console.log('buildpackagets');
+      buildpackagets.build(entry.srcpath);
     }
   }
 };
