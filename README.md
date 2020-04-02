@@ -1,4 +1,4 @@
-# CTSJ-BUILD
+## CTSJ-BUILD
 
 ## A webpack packaging tool
 
@@ -8,7 +8,7 @@
   - [**.buildumd**](#buildumd)
   - [**.buildpackage**](#buildpackage)
   - [**.buildpackagets**](#buildpackage)
-  - [**ctbuild.config.js**](#config)
+  - [**.ctbuild.config.js**](#config)
   - [**.Default setting**](#defaultsetting)
 * [**.ctcopy**](#ctcopy)
 
@@ -62,7 +62,7 @@ Webpack configuration file, use default configuration if no configuration is pos
 
 code
 
-```
+```js
 
 module.exports = {
   getConfig({ webpack,curModule,plugins }) {
@@ -86,12 +86,22 @@ module.exports = {
 
 **  .defaultSetting **
 
-* js/jsx parsing      
-* css/less parsing      
-* css/less packaged into a file      
-* Image Resolution      
-* Font parsing      
-* HappyPack Multicore Compilation      
-* cache-loader      
-* extensions autocomplete      
+* js/jsx parsing
+
+* ts/tsx parsing
+      
+* css/less parsing
+      
+* css/less packaged into a file
+      
+* Image Resolution
+      
+* Font parsing
+      
+* HappyPack Multicore Compilation
+      
+* cache-loader
+      
+* extensions autocomplete
+      
 * The splitChunks of node_modules is a vendor
