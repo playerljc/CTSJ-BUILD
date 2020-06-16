@@ -23,7 +23,7 @@ let index = 0;
  */
 function cpTask() {
   return new Promise((resolve, reject) => {
-    const command = process.platform === "win32" ? `${commandPath}cp-cli.cmd` : `${commandPath}cp-cli`;
+    const command = process.platform === "win32" ? `cp-cli.cmd` : `cp-cli`;
     const cpProcess = spawn(
       command,
       args.getArgs(),

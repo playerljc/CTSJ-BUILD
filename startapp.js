@@ -18,7 +18,7 @@ let define;
  */
 function corssenvTask() {
   return new Promise((resolve, reject) => {
-    const command = process.platform === "win32" ? `${commandPath}cross-env.cmd` : `${commandPath}cross-env`;
+    const command = process.platform === "win32" ? `cross-env.cmd` : `cross-env`;
     const crossenvProcess = spawn(command, ['REAP_PATH=dev', 'NODE_ENV=development'], {
       cwd: codePath,
       encoding: 'utf-8',
@@ -81,7 +81,7 @@ function corssenvTask() {
  */
 function webpackServiceTask() {
   return new Promise((resolve, reject) => {
-    const command = process.platform === "win32" ? `${commandPath}webpack-dev-server.cmd` : `${commandPath}webpack-dev-server`;
+    const command = process.platform === "win32" ? `webpack-dev-server.cmd` : `webpack-dev-server`;
     const babelProcess = spawn(
       command,
       [

@@ -70,7 +70,7 @@ function copySrcTask() {
  */
 function corssenvTask() {
   return new Promise((resolve, reject) => {
-    const command = process.platform === "win32" ? `${commandPath}cross-env.cmd` : `${commandPath}cross-env`;
+    const command = process.platform === "win32" ? `cross-env.cmd` : `cross-env`;
     const crossenvProcess = spawn(
       command,
       ['REAP_PATH=prod', 'NODE_ENV=production'],
@@ -101,7 +101,7 @@ function corssenvTask() {
  */
 function webpackTask() {
   return new Promise((resolve, reject) => {
-    const command = process.platform === "win32" ? `${commandPath}webpack.cmd` : `${commandPath}webpack`;
+    const command = process.platform === "win32" ? `webpack.cmd` : `webpack`;
     const babelProcess = spawn(
       command,
       [
