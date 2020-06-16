@@ -1,15 +1,15 @@
-const {spawn} = require('child_process');
-const path = require('path');
+const { spawn } = require("child_process");
+const path = require("path");
 // 运行脚本的路径
 const runtimePath = process.cwd();
 // 脚本所在的路径
 const codePath = __dirname;
-const commandPath = path.join(codePath, 'node_modules', '.bin', path.sep);
+const commandPath = path.join(codePath, "node_modules", ".bin", path.sep);
 
 // buildpackage生成的目录名称
-const generateDirName = 'lib';
+const generateDirName = "lib";
 // buildpackage原始名称
-const srcDirName = 'src';
+const srcDirName = "src";
 
 // 代码输出路径
 const outputPath = path.join(runtimePath, generateDirName);
@@ -35,21 +35,21 @@ const tasks = [
  */
 function clearTask() {
   return new Promise((resolve, reject) => {
-    const command = process.platform === "win32" ? `${commandPath}rimraf.cmd` : `${commandPath}rimraf`;
+    const command = process.platform === "win32" ? `rimraf.cmd` : `rimraf`;
     const rimrafProcess = spawn(command, [outputPath], {
       cwd: codePath,
-      encoding: 'utf-8',
+      encoding: "utf-8"
     });
 
-    rimrafProcess.stdout.on('data', (data) => {
+    rimrafProcess.stdout.on("data", data => {
       console.log(`stdout: ${data}`);
     });
 
-    rimrafProcess.stderr.on('data', (data) => {
+    rimrafProcess.stderr.on("data", data => {
       console.log(`stderr: ${data}`);
     });
 
-    rimrafProcess.on('close', (code) => {
+    rimrafProcess.on("close", code => {
       console.log(`rimrafClose：${code}`);
       resolve();
     });
@@ -63,32 +63,33 @@ function clearTask() {
  */
 function babelTask() {
   return new Promise((resolve, reject) => {
-    const command = process.platform === "win32" ? `${commandPath}babel.cmd` : `${commandPath}babel`;
+    const command = process.platform === "win32" ? `babel.cmd` : `babel`;
     const babelProcess = spawn(
       command,
       [
         // 编译的目录
         compilePath,
-        '-d',
+        "-d",
         // 输出的目录
         outputPath,
-        '--ignore',
-        '__tests__'
+        "--ignore",
+        "__tests__"
       ],
       {
         cwd: codePath,
-        encoding: 'utf-8',
-      });
+        encoding: "utf-8"
+      }
+    );
 
-    babelProcess.stdout.on('data', (data) => {
+    babelProcess.stdout.on("data", data => {
       console.log(`stdout: ${data}`);
     });
 
-    babelProcess.stderr.on('data', (data) => {
+    babelProcess.stderr.on("data", data => {
       console.log(`stderr: ${data}`);
     });
 
-    babelProcess.on('close', (code) => {
+    babelProcess.on("close", code => {
       console.log(`babelClose：${code}`);
       resolve();
     });
@@ -101,32 +102,32 @@ function babelTask() {
  */
 function gulpTask() {
   return new Promise((resolve, reject) => {
-    const command = process.platform === "win32" ? `${commandPath}gulp.cmd` : `${commandPath}gulp`;
+    const command = process.platform === "win32" ? `gulp.cmd` : `gulp`;
     const gulpProcess = spawn(
       command,
       [
-        '--outputpath',
+        "--outputpath",
         // 输出路径
         path.join(outputPath, path.sep),
-        '--compilepath',
+        "--compilepath",
         // 编译目录
         path.join(compilePath, path.sep)
       ],
       {
         cwd: codePath,
-        encoding: 'utf-8',
+        encoding: "utf-8"
       }
     );
 
-    gulpProcess.stdout.on('data', (data) => {
+    gulpProcess.stdout.on("data", data => {
       console.log(`stdout: ${data}`);
     });
 
-    gulpProcess.stderr.on('data', (data) => {
+    gulpProcess.stderr.on("data", data => {
       console.log(`stderr: ${data}`);
     });
 
-    gulpProcess.on('close', (code) => {
+    gulpProcess.on("close", code => {
       console.log(`gulpTaskClose：${code}`);
       resolve();
     });
@@ -144,19 +145,20 @@ function loopTask() {
     } else {
       const task = tasks[index++];
       if (task) {
-        task().then(() => {
-          loopTask().then(() => {
-            resolve();
+        task()
+          .then(() => {
+            loopTask().then(() => {
+              resolve();
+            });
+          })
+          .catch(error => {
+            reject(error);
           });
-        }).catch((error) => {
-          reject(error);
-        });
       } else {
         reject();
       }
     }
   });
-
 }
 
 module.exports = {
@@ -168,7 +170,7 @@ module.exports = {
     if (srcPath) {
       // 指定了编译目录
 
-      if(path.isAbsolute(srcPath)) {
+      if (path.isAbsolute(srcPath)) {
         // 是绝对路径
         compilePath = srcPath;
       } else {
@@ -181,11 +183,13 @@ module.exports = {
     }
     // console.log('buildpackage-srcPath----------------------', srcPath);
 
-    loopTask().then(() => {
-      console.log('finish');
-      process.exit();
-    }).catch((error) => {
-      console.log(error);
-    });
+    loopTask()
+      .then(() => {
+        console.log("finish");
+        process.exit();
+      })
+      .catch(error => {
+        console.log(error);
+      });
   }
 };

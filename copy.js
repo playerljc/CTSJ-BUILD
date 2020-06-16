@@ -4,16 +4,16 @@
  * src - 原始目录
  * targetsrc 目标目录
  */
-const path = require('path');
-const {spawn} = require('child_process');
-const args = require('./commandArgs');
+const path = require("path");
+const { spawn } = require("child_process");
+const args = require("./commandArgs");
 
 // 运行脚本的路径
 const runtimePath = process.cwd();
 
 // 脚本的路径
 const codePath = __dirname;
-const commandPath = path.join(codePath, 'node_modules', '.bin', path.sep);
+const commandPath = path.join(codePath, "node_modules", ".bin", path.sep);
 const tasks = [cpTask];
 let index = 0;
 
@@ -23,28 +23,22 @@ let index = 0;
  */
 function cpTask() {
   return new Promise((resolve, reject) => {
-    const command = process.platform === "win32" ? `${commandPath}cp-cli.cmd` : `${commandPath}cp-cli`;
-    const cpProcess = spawn(
-      command,
-      args.getArgs(),
-      {
-        cwd: runtimePath,
-        encoding: 'utf-8',
-      }
-    );
+    const command = process.platform === "win32" ? `cp-cli.cmd` : `cp-cli`;
+    const cpProcess = spawn(command, args.getArgs(), {
+      cwd: runtimePath,
+      encoding: "utf-8"
+    });
 
-    cpProcess.stdout.on('data', (data) => {
+    cpProcess.stdout.on("data", data => {
       console.log(`stdout: ${data}`);
     });
 
-    cpProcess.stderr.on('data', (data) => {
+    cpProcess.stderr.on("data", data => {
       console.log(`stderr: ${data}`);
     });
 
-    cpProcess.on('close', (code) => {
+    cpProcess.on("close", code => {
       console.log(`cpClose：${code}`);
-
-
 
       resolve();
     });
@@ -62,24 +56,27 @@ function loopTask() {
     } else {
       const task = tasks[index++];
       if (task) {
-        task().then(() => {
-          loopTask().then(() => {
-            resolve();
+        task()
+          .then(() => {
+            loopTask().then(() => {
+              resolve();
+            });
+          })
+          .catch(error => {
+            reject(error);
           });
-        }).catch((error) => {
-          reject(error);
-        });
       } else {
         reject();
       }
     }
   });
-
 }
 
-loopTask().then(() => {
-  console.log('finish');
-  process.exit();
-}).catch((error) => {
-  console.log(error);
-});
+loopTask()
+  .then(() => {
+    console.log("finish");
+    process.exit();
+  })
+  .catch(error => {
+    console.log(error);
+  });
