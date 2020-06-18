@@ -9,7 +9,7 @@ const srcPath = runtimePath.substring(0, runtimePath.lastIndexOf(path.sep));
 const codePath = __dirname;
 // ctbuild.cmd或者ctbuild.sh所在路径
 const commandPath = path.join(codePath, "node_modules", ".bin", path.sep);
-
+const { getEnv } = require("util");
 // 配置文件所在路径
 let configPath;
 // [packageName].bundle.js
@@ -80,7 +80,8 @@ function corssenvTask() {
       ["REAP_PATH=prod", "NODE_ENV=production"],
       {
         cwd: codePath,
-        encoding: "utf-8"
+        encoding: "utf-8",
+        env: getEnv(commandPath),
       }
     );
 
@@ -126,7 +127,8 @@ function webpackTask() {
       ],
       {
         cwd: codePath,
-        encoding: "utf-8"
+        encoding: "utf-8",
+        env: getEnv(commandPath),
       }
     );
 

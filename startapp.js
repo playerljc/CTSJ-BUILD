@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 const path = require("path");
 const { spawn } = require("child_process");
+const { getEnv } = require("util");
 // 运行命令的路径
 const runtimePath = process.cwd();
 // build.js所在的路径
@@ -25,7 +26,8 @@ function corssenvTask() {
       ["REAP_PATH=dev", "NODE_ENV=development"],
       {
         cwd: codePath,
-        encoding: "utf-8"
+        encoding: "utf-8",
+        env: getEnv(commandPath),
       }
     );
 
@@ -107,7 +109,8 @@ function webpackServiceTask() {
       ],
       {
         cwd: codePath,
-        encoding: "utf-8"
+        encoding: "utf-8",
+        env: getEnv(commandPath),
       }
     );
 

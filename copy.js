@@ -7,7 +7,7 @@
 const path = require("path");
 const { spawn } = require("child_process");
 const args = require("./commandArgs");
-
+const { getEnv } = require("util");
 // 运行脚本的路径
 const runtimePath = process.cwd();
 
@@ -26,7 +26,8 @@ function cpTask() {
     const command = process.platform === "win32" ? `cp-cli.cmd` : `cp-cli`;
     const cpProcess = spawn(command, args.getArgs(), {
       cwd: runtimePath,
-      encoding: "utf-8"
+      encoding: "utf-8",
+      env: getEnv(commandPath),
     });
 
     cpProcess.stdout.on("data", data => {
