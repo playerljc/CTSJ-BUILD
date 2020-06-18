@@ -5,7 +5,7 @@ const runtimePath = process.cwd();
 // 脚本所在的路径
 const codePath = __dirname;
 const commandPath = path.join(codePath, "node_modules", ".bin", path.sep);
-const { getEnv } = require("util");
+const { getEnv } = require("./util");
 
 // buildpackage生成的目录名称
 const generateDirName = "lib";

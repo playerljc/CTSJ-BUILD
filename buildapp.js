@@ -7,7 +7,7 @@ const runtimePath = process.cwd();
 const codePath = __dirname;
 // ctbuild.cmd或者ctbuild.sh所在路径
 const commandPath = path.join(codePath, "node_modules", ".bin", path.sep);
-const { getEnv } = require("util");
+const { getEnv } = require("./util");
 // 配置文件所在路径
 let configPath;
 let define;
