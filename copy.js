@@ -6,6 +6,7 @@
  */
 const path = require('path');
 const {spawn} = require('child_process');
+const { getEnv } = require("util");
 const args = require('./commandArgs');
 
 // 运行脚本的路径
@@ -30,6 +31,7 @@ function cpTask() {
       {
         cwd: runtimePath,
         encoding: 'utf-8',
+        env: getEnv(commandPath),
       }
     );
 

@@ -1,5 +1,6 @@
 const { spawn } = require("child_process");
 const path = require("path");
+const { getEnv } = require("util");
 // 运行脚本的路径
 const runtimePath = process.cwd();
 // 脚本所在的路径
@@ -38,7 +39,8 @@ function clearTask() {
     const command = process.platform === "win32" ? `rimraf.cmd` : `rimraf`;
     const rimrafProcess = spawn(command, [outputPath], {
       cwd: codePath,
-      encoding: "utf-8"
+      encoding: "utf-8",
+      env: getEnv(commandPath)
     });
 
     rimrafProcess.stdout.on("data", data => {
@@ -63,13 +65,11 @@ function clearTask() {
  */
 function tscTask() {
   return new Promise((resolve, reject) => {
-    const command =
-      process.platform === "win32"
-        ? `${commandPath}tsc.cmd`
-        : `${commandPath}tsc`;
+    const command = process.platform === "win32" ? `tsc.cmd` : `tsc`;
     const tscProcess = spawn(command, ["-p", runtimePath], {
       cwd: codePath,
-      encoding: "utf-8"
+      encoding: "utf-8",
+      env: getEnv(commandPath)
     });
 
     tscProcess.stdout.on("data", data => {
@@ -93,10 +93,7 @@ function tscTask() {
  */
 function gulpTask() {
   return new Promise((resolve, reject) => {
-    const command =
-      process.platform === "win32"
-        ? `gulp.cmd`
-        : `gulp`;
+    const command = process.platform === "win32" ? `gulp.cmd` : `gulp`;
     const gulpProcess = spawn(
       command,
       [
@@ -109,7 +106,8 @@ function gulpTask() {
       ],
       {
         cwd: codePath,
-        encoding: "utf-8"
+        encoding: "utf-8",
+        env: getEnv(commandPath)
       }
     );
 

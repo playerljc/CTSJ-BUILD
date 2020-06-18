@@ -1,5 +1,6 @@
 const { spawn } = require("child_process");
 const path = require("path");
+const { getEnv } = require("util");
 // 运行脚本的路径
 const runtimePath = process.cwd();
 // 脚本所在的路径
@@ -38,7 +39,8 @@ function clearTask() {
     const command = process.platform === "win32" ? `rimraf.cmd` : `rimraf`;
     const rimrafProcess = spawn(command, [outputPath], {
       cwd: codePath,
-      encoding: "utf-8"
+      encoding: "utf-8",
+      env: getEnv(commandPath)
     });
 
     rimrafProcess.stdout.on("data", data => {
@@ -82,7 +84,8 @@ function babelTask() {
       ],
       {
         cwd: codePath,
-        encoding: "utf-8"
+        encoding: "utf-8",
+        env: getEnv(commandPath)
       }
     );
 
@@ -120,7 +123,8 @@ function gulpTask() {
       ],
       {
         cwd: codePath,
-        encoding: "utf-8"
+        encoding: "utf-8",
+        env: getEnv(commandPath)
       }
     );
 
