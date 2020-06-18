@@ -6,7 +6,7 @@
  */
 const path = require('path');
 const {spawn} = require('child_process');
-const { getEnv } = require("util");
+const { getEnv } = require("./util");
 const args = require('./commandArgs');
 
 // 运行脚本的路径
