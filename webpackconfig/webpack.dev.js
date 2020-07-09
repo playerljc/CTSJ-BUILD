@@ -29,6 +29,8 @@ const curModule = merge(common.config, {
     clientLogLevel: 'none', //不再输出繁琐的信息
     historyApiFallback: true,
     overlay: true, //浏览器全屏显示错误信息
+    hot: true, // 启动模块热更新 HMR
+    open: true // 开启自动打开浏览器页面
   },
   plugins: [
     new webpack.DefinePlugin({
@@ -39,6 +41,8 @@ const curModule = merge(common.config, {
         }
       }
     }),
+    new webpack.NamedModulesPlugin(),
+    new webpack.HotModuleReplacementPlugin(),
   ]
 });
 
