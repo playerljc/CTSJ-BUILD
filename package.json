@@ -1,6 +1,6 @@
 {
   "name": "@ctsj/build",
-  "version": "1.0.33",
+  "version": "1.0.34",
   "description": "一个基于webpack的打包工具",
   "bin": {
     "ctbuild": "./build.js",
@@ -40,6 +40,11 @@
   },
   "bugs": {
     "url": "https://github.com/playerljc/CTSJ-BUILD/issues"
+  },
+  "devDependencies": {
+    "vue": "^2.6.10",
+    "vue-loader": "^15.7.1",
+    "vue-template-compiler": "^2.6.10"
   },
   "dependencies": {
     "@babel/cli": "^7.1.5",
@@ -87,9 +92,6 @@
     "style-loader": "^1.0.0",
     "uglifyjs-webpack-plugin": "^2.0.1",
     "url-loader": "^2.1.0",
-    "vue": "^2.6.10",
-    "vue-loader": "^15.7.1",
-    "vue-template-compiler": "^2.6.10",
     "webpack": "^4.20.2",
     "webpack-cli": "^3.1.2",
     "webpack-dev-middleware": "^3.4.0",

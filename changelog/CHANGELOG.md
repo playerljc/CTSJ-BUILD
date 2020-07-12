@@ -1,3 +1,11 @@
+# 1.0.34
+
+***
+
+2020/07/12
+
+* 修复output中has的问题(HotModuleReplacementPlugin插件引起的问题)
+
 # 1.0.33
 
 ***
