@@ -54,8 +54,8 @@ module.exports = {
      * 出口
      */
     output: {
-      filename: '[name].[chunkhash].bundle.js',
-      chunkFilename: '[name].[chunkhash].bundle.js',
+      filename: process.env.NODE_ENV === 'production' ? '[name].[chunkhash].bundle.js' : '[name].[hash].bundle.js',
+      chunkFilename: process.env.NODE_ENV === 'production' ? '[name].[chunkhash].bundle.js' : '[name].[hash].bundle.js',
       path: path.resolve(runtimePath, 'dist'),
       publicPath: '/',
     },
