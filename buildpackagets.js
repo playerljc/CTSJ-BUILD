@@ -1,16 +1,16 @@
-const { spawn } = require("child_process");
-const path = require("path");
-const { getEnv } = require("./util");
+const { spawn } = require('child_process');
+const path = require('path');
+const { getEnv } = require('./util');
 // 运行脚本的路径
 const runtimePath = process.cwd();
 // 脚本所在的路径
 const codePath = __dirname;
-const commandPath = path.join(codePath, "node_modules", ".bin", path.sep);
+const commandPath = path.join(codePath, 'node_modules', '.bin', path.sep);
 
 // buildpackage生成的目录名称
-const generateDirName = "lib";
+const generateDirName = 'lib';
 // buildpackage原始名称
-const srcDirName = "src";
+const srcDirName = 'src';
 
 // 代码输出路径
 const outputPath = path.join(runtimePath, generateDirName);
@@ -26,7 +26,7 @@ const tasks = [
   // tsc转换，转换typescript
   tscTask,
   // 样式
-  gulpTask
+  gulpTask,
 ];
 
 /**
@@ -36,22 +36,22 @@ const tasks = [
  */
 function clearTask() {
   return new Promise((resolve, reject) => {
-    const command = process.platform === "win32" ? `rimraf.cmd` : `rimraf`;
+    const command = process.platform === 'win32' ? `rimraf.cmd` : `rimraf`;
     const rimrafProcess = spawn(command, [outputPath], {
       cwd: codePath,
-      encoding: "utf-8",
-      env: getEnv(commandPath)
+      encoding: 'utf-8',
+      env: getEnv(commandPath),
     });
 
-    rimrafProcess.stdout.on("data", data => {
+    rimrafProcess.stdout.on('data', (data) => {
       console.log(`stdout: ${data}`);
     });
 
-    rimrafProcess.stderr.on("data", data => {
+    rimrafProcess.stderr.on('data', (data) => {
       console.log(`stderr: ${data}`);
     });
 
-    rimrafProcess.on("close", code => {
+    rimrafProcess.on('close', (code) => {
       console.log(`rimrafClose：${code}`);
       resolve();
     });
@@ -65,22 +65,22 @@ function clearTask() {
  */
 function tscTask() {
   return new Promise((resolve, reject) => {
-    const command = process.platform === "win32" ? `tsc.cmd` : `tsc`;
-    const tscProcess = spawn(command, ["-p", runtimePath], {
+    const command = process.platform === 'win32' ? `tsc.cmd` : `tsc`;
+    const tscProcess = spawn(command, ['-p', runtimePath], {
       cwd: codePath,
-      encoding: "utf-8",
-      env: getEnv(commandPath)
+      encoding: 'utf-8',
+      env: getEnv(commandPath),
     });
 
-    tscProcess.stdout.on("data", data => {
+    tscProcess.stdout.on('data', (data) => {
       console.log(`stdout: ${data}`);
     });
 
-    tscProcess.stderr.on("data", data => {
+    tscProcess.stderr.on('data', (data) => {
       console.log(`stderr: ${data}`);
     });
 
-    tscProcess.on("close", code => {
+    tscProcess.on('close', (code) => {
       console.log(`tscClose：${code}`);
       resolve();
     });
@@ -93,33 +93,33 @@ function tscTask() {
  */
 function gulpTask() {
   return new Promise((resolve, reject) => {
-    const command = process.platform === "win32" ? `gulp.cmd` : `gulp`;
+    const command = process.platform === 'win32' ? `gulp.cmd` : `gulp`;
     const gulpProcess = spawn(
       command,
       [
-        "--outputpath",
+        '--outputpath',
         // 输出路径
         path.join(outputPath, path.sep),
-        "--compilepath",
+        '--compilepath',
         // 编译目录
-        path.join(compilePath, path.sep)
+        path.join(compilePath, path.sep),
       ],
       {
         cwd: codePath,
-        encoding: "utf-8",
-        env: getEnv(commandPath)
-      }
+        encoding: 'utf-8',
+        env: getEnv(commandPath),
+      },
     );
 
-    gulpProcess.stdout.on("data", data => {
+    gulpProcess.stdout.on('data', (data) => {
       console.log(`stdout: ${data}`);
     });
 
-    gulpProcess.stderr.on("data", data => {
+    gulpProcess.stderr.on('data', (data) => {
       console.log(`stderr: ${data}`);
     });
 
-    gulpProcess.on("close", code => {
+    gulpProcess.on('close', (code) => {
       console.log(`gulpTaskClose：${code}`);
       resolve();
     });
@@ -143,7 +143,7 @@ function loopTask() {
               resolve();
             });
           })
-          .catch(error => {
+          .catch((error) => {
             reject(error);
           });
       } else {
@@ -177,11 +177,11 @@ module.exports = {
 
     loopTask()
       .then(() => {
-        console.log("finish");
+        console.log('finish');
         process.exit();
       })
-      .catch(error => {
+      .catch((error) => {
         console.log(error);
       });
-  }
+  },
 };

@@ -7,22 +7,17 @@ const commandConfig = require('./commandConfig');
 program.version(packageJson.version);
 
 Object.keys(commandConfig).forEach((command) => {
-  const {
-    alias,
-    description,
-    options = [],
-    action
-  } = commandConfig[command];
+  const { alias, description, options = [], action } = commandConfig[command];
 
-  let commandHandler = program
+  const commandHandler = program
     .command(command)
     .alias(alias)
     .description(description)
     .action(action);
 
-  options.forEach(({command: optionCommand, description: optionDescription}) => {
+  options.forEach(({ command: optionCommand, description: optionDescription }) => {
     commandHandler.option(optionCommand, optionDescription);
-  })
+  });
 });
 
 program.parse(process.argv);

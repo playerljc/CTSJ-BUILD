@@ -5,8 +5,8 @@
  * targetsrc 目标目录
  */
 const path = require('path');
-const {spawn} = require('child_process');
-const { getEnv } = require("./util");
+const { spawn } = require('child_process');
+const { getEnv } = require('./util');
 const args = require('./commandArgs');
 
 // 运行脚本的路径
@@ -24,16 +24,12 @@ let index = 0;
  */
 function cpTask() {
   return new Promise((resolve, reject) => {
-    const command = process.platform === "win32" ? `cp-cli.cmd` : `cp-cli`;
-    const cpProcess = spawn(
-      command,
-      args.getArgs(),
-      {
-        cwd: runtimePath,
-        encoding: 'utf-8',
-        env: getEnv(commandPath),
-      }
-    );
+    const command = process.platform === 'win32' ? `cp-cli.cmd` : `cp-cli`;
+    const cpProcess = spawn(command, args.getArgs(), {
+      cwd: runtimePath,
+      encoding: 'utf-8',
+      env: getEnv(commandPath),
+    });
 
     cpProcess.stdout.on('data', (data) => {
       console.log(`stdout: ${data}`);
@@ -45,7 +41,6 @@ function cpTask() {
 
     cpProcess.on('close', (code) => {
       console.log(`cpClose：${code}`);
-
 
       resolve();
     });
@@ -63,24 +58,27 @@ function loopTask() {
     } else {
       const task = tasks[index++];
       if (task) {
-        task().then(() => {
-          loopTask().then(() => {
-            resolve();
+        task()
+          .then(() => {
+            loopTask().then(() => {
+              resolve();
+            });
+          })
+          .catch((error) => {
+            reject(error);
           });
-        }).catch((error) => {
-          reject(error);
-        });
       } else {
         reject();
       }
     }
   });
-
 }
 
-loopTask().then(() => {
-  console.log('finish');
-  process.exit();
-}).catch((error) => {
-  console.log(error);
-});
+loopTask()
+  .then(() => {
+    console.log('finish');
+    process.exit();
+  })
+  .catch((error) => {
+    console.log(error);
+  });

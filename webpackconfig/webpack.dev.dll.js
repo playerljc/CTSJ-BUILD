@@ -5,12 +5,12 @@ const runtimePath = process.argv[5];
 
 module.exports = {
   entry: {
-    'commons': [path.join(runtimePath,'src','commons')]
+    commons: [path.join(runtimePath, 'src', 'commons')],
   },
   output: {
     path: path.join(runtimePath, 'src', 'assets', 'dll'),
     filename: '[name].js',
-    library: '[name]_[hash]'
+    library: '[name]_[hash]',
   },
   mode: 'development',
   plugins: [
@@ -21,5 +21,5 @@ module.exports = {
   ],
   resolve: {
     extensions: ['.js', '.jsx'],
-  }
+  },
 };

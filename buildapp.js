@@ -1,13 +1,13 @@
 #!/usr/bin/env node
-const path = require("path");
-const { spawn } = require("child_process");
-const { getEnv } = require("./util");
+const path = require('path');
+const { spawn } = require('child_process');
+const { getEnv } = require('./util');
 // 运行命令的路径
 const runtimePath = process.cwd();
 // build.js所在的路径
 const codePath = __dirname;
 // ctbuild.cmd或者ctbuild.sh所在路径
-const commandPath = path.join(codePath, "node_modules", ".bin", path.sep);
+const commandPath = path.join(codePath, 'node_modules', '.bin', path.sep);
 // 配置文件所在路径
 let configPath;
 let define;
@@ -18,27 +18,22 @@ let define;
  */
 function corssenvTask() {
   return new Promise((resolve, reject) => {
-    const command =
-      process.platform === "win32" ? `cross-env.cmd` : `cross-env`;
-    const crossenvProcess = spawn(
-      command,
-      ["REAP_PATH=prod", "NODE_ENV=production"],
-      {
-        cwd: codePath,
-        encoding: "utf-8",
-        env: getEnv(commandPath)
-      }
-    );
+    const command = process.platform === 'win32' ? `cross-env.cmd` : `cross-env`;
+    const crossenvProcess = spawn(command, ['REAP_PATH=prod', 'NODE_ENV=production'], {
+      cwd: codePath,
+      encoding: 'utf-8',
+      env: getEnv(commandPath),
+    });
 
-    crossenvProcess.stdout.on("data", data => {
+    crossenvProcess.stdout.on('data', (data) => {
       console.log(`stdout: ${data}`);
     });
 
-    crossenvProcess.stderr.on("data", data => {
+    crossenvProcess.stderr.on('data', (data) => {
       console.log(`stderr: ${data}`);
     });
 
-    crossenvProcess.on("close", code => {
+    crossenvProcess.on('close', (code) => {
       console.log(`crossenvClose：${code}`);
       resolve();
     });
@@ -87,21 +82,21 @@ function corssenvTask() {
  */
 function webpackTask() {
   return new Promise((resolve, reject) => {
-    const command = process.platform === "win32" ? `webpack.cmd` : `webpack`;
+    const command = process.platform === 'win32' ? `webpack.cmd` : `webpack`;
     const babelProcess = spawn(
       command,
       [
-        "--open",
-        "--config",
-        path.join("webpackconfig", "webpack.prod.js"),
-        "--progress",
-        "--colors",
-        "--runtimepath",
+        '--open',
+        '--config',
+        path.join('webpackconfig', 'webpack.prod.js'),
+        '--progress',
+        '--colors',
+        '--runtimepath',
         path.join(runtimePath, path.sep),
-        "--customconfig",
+        '--customconfig',
         configPath,
-        "--define",
-        define.join(" ")
+        '--define',
+        define.join(' '),
         // '--profile',
         // '--json',
         // '>',
@@ -109,27 +104,27 @@ function webpackTask() {
       ],
       {
         cwd: codePath,
-        encoding: "utf-8",
-        env: getEnv(commandPath)
-      }
+        encoding: 'utf-8',
+        env: getEnv(commandPath),
+      },
     );
 
-    babelProcess.stdout.on("data", data => {
+    babelProcess.stdout.on('data', (data) => {
       console.log(`stdout: ${data}`);
     });
 
-    babelProcess.stderr.on("data", data => {
+    babelProcess.stderr.on('data', (data) => {
       console.log(`stderr: ${data}`);
     });
 
-    babelProcess.on("close", code => {
+    babelProcess.on('close', (code) => {
       console.log(`webpackTaskClose：${code}`);
       resolve();
     });
   });
 }
 
-const tasks = [corssenvTask, /*prodDllTask,*/ webpackTask];
+const tasks = [corssenvTask, /* prodDllTask, */ webpackTask];
 let index = 0;
 
 /**
@@ -149,7 +144,7 @@ function loopTask() {
               resolve();
             });
           })
-          .catch(error => {
+          .catch((error) => {
             reject(error);
           });
       } else {
@@ -165,7 +160,7 @@ module.exports = {
    * @param {String} - ctbuildConfigPath
    * ctbuild.config.js配置文件的路径，如果没有指定则会寻找命令运行目录下的ctbuild.config.js文件
    */
-  build: ({ config: ctbuildConfigPath = "", define: defineMap }) => {
+  build: ({ config: ctbuildConfigPath = '', define: defineMap }) => {
     if (ctbuildConfigPath) {
       if (path.isAbsolute(ctbuildConfigPath)) {
         configPath = ctbuildConfigPath;
@@ -173,18 +168,18 @@ module.exports = {
         configPath = path.join(runtimePath, ctbuildConfigPath);
       }
     } else {
-      configPath = path.join(runtimePath, "ctbuild.config.js");
+      configPath = path.join(runtimePath, 'ctbuild.config.js');
     }
 
     define = defineMap;
 
     loopTask()
       .then(() => {
-        console.log("finish");
+        console.log('finish');
         process.exit();
       })
-      .catch(error => {
+      .catch((error) => {
         console.log(error);
       });
-  }
+  },
 };

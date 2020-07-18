@@ -1,3 +1,21 @@
+# 2.0.11
+
+***
+
+2020/07/18
+
+* 加入@corejs3
+* 加入postcss
+* 细节上优化
+
+# 2.0.10
+
+***
+
+2020/07/12
+
+* 修复output中has的问题(HotModuleReplacementPlugin插件引起的问题)
+
 # 2.0.9
 
 ***
