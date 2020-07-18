@@ -30,7 +30,6 @@ const APP_PATH = path.resolve(runtimePath, 'src'); // 项目src目录
 module.exports = {
   plugins: {
     HtmlWebpackPlugin,
-    HtmlWebpackPlugin,
     MiniCssExtractPlugin,
     // LessPluginCleanCSS,
     // LessPluginAutoPrefix,
@@ -42,8 +41,14 @@ module.exports = {
       index: path.join(runtimePath, 'src', 'index.js'), // `${runtimePath}src\\index.js`,
     },
     output: {
-      filename: `${packagename}.bundle.js`,
-      chunkFilename: `${packagename}.bundle.js`,
+      filename:
+        process.env.NODE_ENV === 'production'
+          ? '[name].[chunkhash].bundle.js'
+          : '[name].[hash].bundle.js',
+      chunkFilename:
+        process.env.NODE_ENV === 'production'
+          ? '[name].[chunkhash].bundle.js'
+          : '[name].[hash].bundle.js',
       path: path.resolve(runtimePath, 'umd'),
       publicPath: '/',
       library: `${packagename}`,
@@ -79,7 +84,16 @@ module.exports = {
           {
             loader: 'babel-loader',
             query: {
-              presets: ['@babel/preset-env', '@babel/preset-react'],
+              presets: [
+                [
+                  '@babel/preset-env',
+                  {
+                    useBuiltIns: 'usage',
+                    corejs: { version: 3, proposals: true },
+                  },
+                ],
+                '@babel/preset-react',
+              ],
               plugins: [
                 '@babel/plugin-transform-runtime',
                 '@babel/plugin-syntax-dynamic-import',
@@ -126,6 +140,12 @@ module.exports = {
               config: {
                 path: getPostCssConfigPath(runtimePath),
               },
+            },
+          },
+          {
+            loader: 'less-loader',
+            query: {
+              javascriptEnabled: true,
             },
           },
           // {

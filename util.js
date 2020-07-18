@@ -10,7 +10,7 @@ module.exports = {
    * 获取env
    * @param commandPath
    */
-  getEnv (commandPath) {
+  getEnv(commandPath) {
     const obj = {};
 
     if (process.env && process.env.Path && process.env.Path.indexOf(commandPath) === -1) {
@@ -26,8 +26,7 @@ module.exports = {
   getPostCssConfigPath(runtimePath) {
     if (fs.existsSync(path.join(runtimePath, 'postcss.config.js'))) {
       return path.join(runtimePath, 'postcss.config.js');
-    } 
-      return path.join(__dirname, 'postcss.config.js');
-    
+    }
+    return path.join(__dirname, 'postcss.config.js');
   },
 };
