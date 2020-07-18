@@ -6,11 +6,7 @@ dist
 
 dist.zip
 
-antd
-
 coverage
-
-package-lock.json
 
 test
 

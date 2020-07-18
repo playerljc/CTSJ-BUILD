@@ -1,81 +1,98 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Title</title>
-</head>
-<body>
-<h1>CTSJ-BUILD</h1>
-<h2>A webpack packaging tool</h2>
-<ul>
-  <li>
-    <h3>.ctbuild</h3>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Title</title>
+  </head>
+  <body>
+    <h1>CTSJ-BUILD</h1>
+    <h2>A webpack packaging tool</h2>
     <ul>
-      <li><a href="#startapp"><h4>.startapp</h4></a></li>
-      <li><a href="#buildapp"><h4>.buildapp</h4></a></li>
-      <li><a href="#buildumd"><h4>.buildumd</h4></a></li>
-      <li><a href="#buildpackage"><h4>.buildpackage</h4></a></li>
-      <li><a href="#config"><h4>ctbuild.config.js</h4></a></li>
-      <li><a href="#defaultSetting"><h4>.Default setting</h4></a></li>
+      <li>
+        <h3>.ctbuild</h3>
+        <ul>
+          <li>
+            <a href="#startapp"><h4>.startapp</h4></a>
+          </li>
+          <li>
+            <a href="#buildapp"><h4>.buildapp</h4></a>
+          </li>
+          <li>
+            <a href="#buildumd"><h4>.buildumd</h4></a>
+          </li>
+          <li>
+            <a href="#buildpackage"><h4>.buildpackage</h4></a>
+          </li>
+          <li>
+            <a href="#config"><h4>ctbuild.config.js</h4></a>
+          </li>
+          <li>
+            <a href="#defaultSetting"><h4>.Default setting</h4></a>
+          </li>
+        </ul>
+      </li>
+      <li>
+        <a href="#ctcopy"><h3>.ctcopy</h3></a>
+      </li>
     </ul>
-  </li>
-  <li>
-    <a href="#ctcopy"><h3>.ctcopy</h3></a>
-  </li>
-</ul>
 
-<h3 id="startapp">.startapp</h3>
-<p>Developed form of operation</p>
-<p>Options:</p>
-<ul>
-  <li>-c, --config &lt;path&gt; ctbuild.config.js configuration file location, if not specified, read ctbuild.config.js
-    in the directory where the command is located
-  </li>
-  <li>
-    -d, --define &lt;path&gt; custom params split ","
-  </li>
-</ul>
+    <h3 id="startapp">.startapp</h3>
+    <p>Developed form of operation</p>
+    <p>Options:</p>
+    <ul>
+      <li>
+        -c, --config &lt;path&gt; ctbuild.config.js configuration file location, if not specified,
+        read ctbuild.config.js in the directory where the command is located
+      </li>
+      <li>
+        -d, --define &lt;path&gt; custom params split ","
+      </li>
+    </ul>
 
-<h3 id="buildapp">.buildapp</h3>
-<p>Production environment packaging</p>
-<p>Options:</p>
-<ul>
-  <li>-c, --config &lt;path&gt; ctbuild.config.js configuration file location, if not specified, read ctbuild.config.js
-    in the directory where the command is located
-  </li>
-  <li>
-    -d, --define &lt;path&gt; custom params split ","
-  </li>
-</ul>
+    <h3 id="buildapp">.buildapp</h3>
+    <p>Production environment packaging</p>
+    <p>Options:</p>
+    <ul>
+      <li>
+        -c, --config &lt;path&gt; ctbuild.config.js configuration file location, if not specified,
+        read ctbuild.config.js in the directory where the command is located
+      </li>
+      <li>
+        -d, --define &lt;path&gt; custom params split ","
+      </li>
+    </ul>
 
-<h3 id="buildumd">.buildumd</h3>
-<p>Production environment umd package</p>
-<p>Options:</p>
-<ul>
-  <li>-c, --config &lt;path&gt; ctbuild.config.js configuration file location, if not specified, read ctbuild.config.js
-    in the directory where the command is located
-  </li>
-  <li>-p, --packagename &lt;name&gt; package name,The prefix name of the js file after packaging, If not specified, it
-    is packagename
-  </li>
-  <li>
-    -d, --define &lt;path&gt; custom params split ","
-  </li>
-</ul>
+    <h3 id="buildumd">.buildumd</h3>
+    <p>Production environment umd package</p>
+    <p>Options:</p>
+    <ul>
+      <li>
+        -c, --config &lt;path&gt; ctbuild.config.js configuration file location, if not specified,
+        read ctbuild.config.js in the directory where the command is located
+      </li>
+      <li>
+        -p, --packagename &lt;name&gt; package name,The prefix name of the js file after packaging,
+        If not specified, it is packagename
+      </li>
+      <li>
+        -d, --define &lt;path&gt; custom params split ","
+      </li>
+    </ul>
 
-<h3 id="buildpackage">.buildpackage</h3>
-<p>Packaged into npm package</p>
-<p>Options:</p>
-<ul>
-  <li>-p, --srcpath &lt;path&gt; Packaged directory, if not specified, is the src folder under the running directory
-  </li>
-</ul>
+    <h3 id="buildpackage">.buildpackage</h3>
+    <p>Packaged into npm package</p>
+    <p>Options:</p>
+    <ul>
+      <li>
+        -p, --srcpath &lt;path&gt; Packaged directory, if not specified, is the src folder under the
+        running directory
+      </li>
+    </ul>
 
-
-<h3 id="config">.ctbuild.config.js</h3>
-<p>Webpack configuration file, use default configuration if no configuration is possible</p>
-<div>code</div>
-<pre>
+    <h3 id="config">.ctbuild.config.js</h3>
+    <p>Webpack configuration file, use default configuration if no configuration is possible</p>
+    <div>code</div>
+    <pre>
     <code>
 module.exports = {
   getConfig({ webpack,curModule,plugins }) {
@@ -84,53 +101,54 @@ module.exports = {
 };
     </code>
   </pre>
-<ul>
-  <li>
-    <p>webpack</p>
-    <p>Webpack native object</p>
-  </li>
-  <li>
-    <p>curModule</p>
-    <p>Default configuration object</p>
-  </li>
-  <li>
-    <p>plugins</p>
-    <p>Default webpack plugin set</p>
-    <p>These plugins include：</p>
     <ul>
-      <li>HtmlWebpackPlugin</li>
-      <li>MiniCssExtractPlugin</li>
-      <li>CopyWebpackPlugin</li>
-      <li>HtmlWebpackIncludeAssetsPlugin</li>
-      <li>LessPluginCleanCSS</li>
-      <li>LessPluginAutoPrefix</li>
+      <li>
+        <p>webpack</p>
+        <p>Webpack native object</p>
+      </li>
+      <li>
+        <p>curModule</p>
+        <p>Default configuration object</p>
+      </li>
+      <li>
+        <p>plugins</p>
+        <p>Default webpack plugin set</p>
+        <p>These plugins include：</p>
+        <ul>
+          <li>HtmlWebpackPlugin</li>
+          <li>MiniCssExtractPlugin</li>
+          <li>CopyWebpackPlugin</li>
+          <li>HtmlWebpackIncludeAssetsPlugin</li>
+          <li>LessPluginCleanCSS</li>
+          <li>LessPluginAutoPrefix</li>
+        </ul>
+      </li>
     </ul>
-  </li>
-</ul>
-<p>.The user can perform a merge operation on the curModule, all operations are webpack configuration items, and finally
-  return，Note that if you use webpack objects and plugins, you need to use the values provided by the webpack and
-  plugins provided in the parameters.</p>
+    <p>
+      .The user can perform a merge operation on the curModule, all operations are webpack
+      configuration items, and finally return，Note that if you use webpack objects and plugins, you
+      need to use the values provided by the webpack and plugins provided in the parameters.
+    </p>
 
+    <h3 id="defaultSetting">.defaultSetting</h3>
+    <ul>
+      <li>js/jsx parsing</li>
 
-<h3 id="defaultSetting">.defaultSetting</h3>
-<ul>
-  <li>js/jsx parsing</li>
-      
-  <li>css/less parsing</li>
-      
-  <li>css/less packaged into a file</li>
-      
-  <li>Image Resolution</li>
-      
-  <li>Font parsing</li>
-      
-  <li>HappyPack Multicore Compilation</li>
-      
-  <li>cache-loader</li>
-      
-  <li>extensions autocomplete</li>
-      
-  <li>The splitChunks of node_modules is a vendor</li>
-</ul>
-</body>
+      <li>css/less parsing</li>
+
+      <li>css/less packaged into a file</li>
+
+      <li>Image Resolution</li>
+
+      <li>Font parsing</li>
+
+      <li>HappyPack Multicore Compilation</li>
+
+      <li>cache-loader</li>
+
+      <li>extensions autocomplete</li>
+
+      <li>The splitChunks of node_modules is a vendor</li>
+    </ul>
+  </body>
 </html>

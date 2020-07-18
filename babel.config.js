@@ -1,14 +1,20 @@
 const presets = [
-  "@babel/preset-env",
-  "@babel/preset-react",
+  [
+    '@babel/preset-env',
+    {
+      useBuiltIns: 'usage',
+      corejs: { version: 3, proposals: true },
+    },
+  ],
+  '@babel/preset-react',
 ];
 
 const plugins = [
-  "@babel/plugin-transform-runtime",
+  '@babel/plugin-transform-runtime',
   '@babel/plugin-syntax-dynamic-import',
-  "@babel/plugin-proposal-function-bind",
+  '@babel/plugin-proposal-function-bind',
   '@babel/plugin-proposal-optional-chaining',
-  ['@babel/plugin-proposal-decorators',{ legacy: true }],
+  ['@babel/plugin-proposal-decorators', { legacy: true }],
   ['@babel/plugin-proposal-class-properties', { loose: true }],
   // "transform-vue-jsx",
   // [
@@ -22,4 +28,4 @@ const plugins = [
   // }*/],
 ];
 
-module.exports = {presets, plugins};
+module.exports = { presets, plugins };

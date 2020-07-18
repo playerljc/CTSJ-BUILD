@@ -2,8 +2,8 @@ const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const LessPluginCleanCSS = require('less-plugin-clean-css');
-const LessPluginAutoPrefix = require('less-plugin-autoprefix');
+// const LessPluginCleanCSS = require('less-plugin-clean-css');
+// const LessPluginAutoPrefix = require('less-plugin-autoprefix');
 const HappyPack = require('happypack');
 const WebpackBar = require('webpackbar');
 // const ProgressBarPlugin = require('progress-bar-webpack-plugin');
@@ -12,6 +12,8 @@ const WebpackBar = require('webpackbar');
 
 const runtimePath = process.argv[8];
 const packagename = process.argv[10];
+
+const { getPostCssConfigPath } = require('../util');
 
 // const extractLess = new ExtractTextPlugin({
 //   filename: (getPath) => {
@@ -30,14 +32,14 @@ module.exports = {
     HtmlWebpackPlugin,
     HtmlWebpackPlugin,
     MiniCssExtractPlugin,
-    LessPluginCleanCSS,
-    LessPluginAutoPrefix,
+    // LessPluginCleanCSS,
+    // LessPluginAutoPrefix,
     // ExtractTextPlugin,
     // VueLoaderPlugin
   },
   config: {
     entry: {
-      index: path.join(runtimePath, 'src', 'index.js'),//`${runtimePath}src\\index.js`,
+      index: path.join(runtimePath, 'src', 'index.js'), // `${runtimePath}src\\index.js`,
     },
     output: {
       filename: `${packagename}.bundle.js`,
@@ -45,7 +47,7 @@ module.exports = {
       path: path.resolve(runtimePath, 'umd'),
       publicPath: '/',
       library: `${packagename}`,
-      libraryTarget: 'umd'
+      libraryTarget: 'umd',
     },
     plugins: [
       // 请确保引入这个插件！
@@ -53,12 +55,12 @@ module.exports = {
       new HtmlWebpackPlugin({
         title: '',
         filename: 'index.html',
-        template: path.join(runtimePath, 'index.html'),//`${runtimePath}\\index.html`,
-        hash: true,//防止缓存
+        template: path.join(runtimePath, 'index.html'), // `${runtimePath}\\index.html`,
+        hash: true, // 防止缓存
         minify: {
-          removeAttributeQuotes: true//压缩 去掉引号
+          removeAttributeQuotes: true, // 压缩 去掉引号
         },
-        chunks: ["index"]
+        chunks: ['index'],
       }),
       new webpack.HashedModuleIdsPlugin(),
       // extractLess,
@@ -77,44 +79,68 @@ module.exports = {
           {
             loader: 'babel-loader',
             query: {
-              presets: [
-                '@babel/preset-env',
-                '@babel/preset-react'
-              ],
+              presets: ['@babel/preset-env', '@babel/preset-react'],
               plugins: [
                 '@babel/plugin-transform-runtime',
-                "@babel/plugin-syntax-dynamic-import",
-                "@babel/plugin-proposal-function-bind",
-                "@babel/plugin-proposal-class-properties"
-              ]
-            }
-          }],
+                '@babel/plugin-syntax-dynamic-import',
+                '@babel/plugin-proposal-function-bind',
+                '@babel/plugin-proposal-class-properties',
+              ],
+            },
+          },
+        ],
       }),
       new HappyPack({
         id: 'css',
         loaders: [
           'cache-loader',
-          'css-loader'
+          {
+            loader: 'css-loader',
+            options: {
+              importLoaders: 1,
+            },
+          },
+          {
+            loader: 'postcss-loader',
+            options: {
+              config: {
+                path: getPostCssConfigPath(runtimePath),
+              },
+            },
+          },
         ],
       }),
       new HappyPack({
         id: 'less',
         loaders: [
           'cache-loader',
-          'css-loader',
           {
-            loader: "less-loader",
-            query: {
-              javascriptEnabled: true,
-              plugins: [
-                new LessPluginCleanCSS({advanced: true}),
-                new LessPluginAutoPrefix({add: false, remove: false, browsers: ['last 2 versions']})
-              ]
-            }
-          }
+            loader: 'css-loader',
+            options: {
+              importLoaders: 1,
+            },
+          },
+          {
+            loader: 'postcss-loader',
+            options: {
+              config: {
+                path: getPostCssConfigPath(runtimePath),
+              },
+            },
+          },
+          // {
+          //   loader: "less-loader",
+          //   query: {
+          //     javascriptEnabled: true,
+          //     plugins: [
+          //       new LessPluginCleanCSS({advanced: true}),
+          //       new LessPluginAutoPrefix({add: false, remove: false, browsers: ['last 2 versions']})
+          //     ]
+          //   }
+          // }
         ],
       }),
-      new WebpackBar({ reporters: [ 'profile'], profile: true }),
+      new WebpackBar({ reporters: ['profile'], profile: true }),
     ],
     // optimization: {
     //   runtimeChunk: 'single',
@@ -134,9 +160,7 @@ module.exports = {
           test: /\.m?jsx?$/,
           exclude: /(node_modules|bower_components)/,
           // include: [APP_PATH],
-          use: [
-            'happypack/loader?id=babel'
-          ]
+          use: ['happypack/loader?id=babel'],
         },
         {
           test: /\.css$/,
@@ -147,7 +171,7 @@ module.exports = {
           // })
           use: [
             process.env.NODE_ENV === 'development' ? 'style-loader' : MiniCssExtractPlugin.loader,
-            'happypack/loader?id=css'
+            'happypack/loader?id=css',
           ],
         },
         {
@@ -156,7 +180,7 @@ module.exports = {
           use: [
             process.env.NODE_ENV === 'development' ? 'style-loader' : MiniCssExtractPlugin.loader,
             'happypack/loader?id=less',
-          ]
+          ],
           //   ExtractTextPlugin.extract({
           //   use: [{
           //     loader: "css-loader"
@@ -174,44 +198,42 @@ module.exports = {
         },
         {
           test: /\.(png|svg|jpg|gif|ico)$/,
-          use: [{
-            loader: 'url-loader',
-            options: {
-              limit: 1024,
+          use: [
+            {
+              loader: 'url-loader',
+              options: {
+                limit: 1024,
+              },
             },
-          }]
+          ],
         },
         {
           test: /\.(woff|woff2|eot|ttf|otf)$/,
-          use: [{
-            loader: 'url-loader',
-            options: {
-              limit: 1024,
+          use: [
+            {
+              loader: 'url-loader',
+              options: {
+                limit: 1024,
+              },
             },
-          }]
+          ],
         },
         {
           test: /\.(csv|tsv)$/,
-          use: [
-            'csv-loader'
-          ]
+          use: ['csv-loader'],
         },
         {
           test: /\.xml$/,
-          use: [
-            'xml-loader'
-          ]
+          use: ['xml-loader'],
         },
         {
           test: /\.ejs/,
-          loader: [
-            'ejs-loader?variable=data'
-          ]
-        }
-      ]
+          loader: ['ejs-loader?variable=data'],
+        },
+      ],
     },
     resolve: {
-      extensions: ['.js', '.jsx', '.less', '.css', '.json'], //后缀名自动补全
-    }
-  }
+      extensions: ['.js', '.jsx', '.less', '.css', '.json'], // 后缀名自动补全
+    },
+  },
 };

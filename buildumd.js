@@ -1,6 +1,6 @@
 #!/usr/bin/env node
-const path = require("path");
-const { spawn } = require("child_process");
+const path = require('path');
+const { spawn } = require('child_process');
 // 运行命令的路径
 const runtimePath = process.cwd();
 // 运行命令的路径去掉/
@@ -8,8 +8,8 @@ const srcPath = runtimePath.substring(0, runtimePath.lastIndexOf(path.sep));
 // build.js所在的路径
 const codePath = __dirname;
 // ctbuild.cmd或者ctbuild.sh所在路径
-const commandPath = path.join(codePath, "node_modules", ".bin", path.sep);
-const { getEnv } = require("./util");
+const commandPath = path.join(codePath, 'node_modules', '.bin', path.sep);
+const { getEnv } = require('./util');
 // 配置文件所在路径
 let configPath;
 // [packageName].bundle.js
@@ -24,43 +24,32 @@ function copySrcTask() {
   return new Promise((resolve, reject) => {
     const commands = {
       win32: {
-        command: "xcopy",
-        params: [
-          path.join(srcPath, "src"),
-          path.join(runtimePath, "src"),
-          "/e",
-          "/i",
-          "/y"
-        ]
+        command: 'xcopy',
+        params: [path.join(srcPath, 'src'), path.join(runtimePath, 'src'), '/e', '/i', '/y'],
       },
       linux: {
-        command: "cp",
-        params: [
-          "-r",
-          "-f",
-          path.join(srcPath, "src"),
-          path.join(runtimePath, "src")
-        ]
-      }
+        command: 'cp',
+        params: ['-r', '-f', path.join(srcPath, 'src'), path.join(runtimePath, 'src')],
+      },
     };
 
     const { command, params } =
-      process.platform === "win32" ? commands["win32"] : commands["linux"];
+      process.platform === 'win32' ? commands['win32'] : commands['linux'];
 
     const copyProcess = spawn(command, params, {
       cwd: codePath,
-      encoding: "utf-8"
+      encoding: 'utf-8',
     });
 
-    copyProcess.stdout.on("data", data => {
+    copyProcess.stdout.on('data', (data) => {
       console.log(`stdout: ${data}`);
     });
 
-    copyProcess.stderr.on("data", data => {
+    copyProcess.stderr.on('data', (data) => {
       console.log(`stderr: ${data}`);
     });
 
-    copyProcess.on("close", code => {
+    copyProcess.on('close', (code) => {
       console.log(`crossenvClose：${code}`);
       resolve();
     });
@@ -73,27 +62,22 @@ function copySrcTask() {
  */
 function corssenvTask() {
   return new Promise((resolve, reject) => {
-    const command =
-      process.platform === "win32" ? `cross-env.cmd` : `cross-env`;
-    const crossenvProcess = spawn(
-      command,
-      ["REAP_PATH=prod", "NODE_ENV=production"],
-      {
-        cwd: codePath,
-        encoding: "utf-8",
-        env: getEnv(commandPath),
-      }
-    );
+    const command = process.platform === 'win32' ? `cross-env.cmd` : `cross-env`;
+    const crossenvProcess = spawn(command, ['REAP_PATH=prod', 'NODE_ENV=production'], {
+      cwd: codePath,
+      encoding: 'utf-8',
+      env: getEnv(commandPath),
+    });
 
-    crossenvProcess.stdout.on("data", data => {
+    crossenvProcess.stdout.on('data', (data) => {
       console.log(`stdout: ${data}`);
     });
 
-    crossenvProcess.stderr.on("data", data => {
+    crossenvProcess.stderr.on('data', (data) => {
       console.log(`stderr: ${data}`);
     });
 
-    crossenvProcess.on("close", code => {
+    crossenvProcess.on('close', (code) => {
       console.log(`crossenvClose：${code}`);
       resolve();
     });
@@ -106,41 +90,41 @@ function corssenvTask() {
  */
 function webpackTask() {
   return new Promise((resolve, reject) => {
-    const command = process.platform === "win32" ? `webpack.cmd` : `webpack`;
+    const command = process.platform === 'win32' ? `webpack.cmd` : `webpack`;
     const babelProcess = spawn(
       command,
       [
-        "--open",
-        "--config",
-        path.join("webpackconfig", "webpack.umd.js"),
-        "--progress",
-        "--colors",
+        '--open',
+        '--config',
+        path.join('webpackconfig', 'webpack.umd.js'),
+        '--progress',
+        '--colors',
 
-        "--runtimepath",
+        '--runtimepath',
         path.join(runtimePath, path.sep),
-        "--packagename",
+        '--packagename',
         packageName,
-        "--customconfig",
+        '--customconfig',
         configPath,
-        "--define",
-        define.join(" ")
+        '--define',
+        define.join(' '),
       ],
       {
         cwd: codePath,
-        encoding: "utf-8",
+        encoding: 'utf-8',
         env: getEnv(commandPath),
-      }
+      },
     );
 
-    babelProcess.stdout.on("data", data => {
+    babelProcess.stdout.on('data', (data) => {
       console.log(`stdout: ${data}`);
     });
 
-    babelProcess.stderr.on("data", data => {
+    babelProcess.stderr.on('data', (data) => {
       console.log(`stderr: ${data}`);
     });
 
-    babelProcess.on("close", code => {
+    babelProcess.on('close', (code) => {
       console.log(`webpackTaskClose：${code}`);
       resolve();
     });
@@ -192,7 +176,7 @@ function loopTask() {
               resolve();
             });
           })
-          .catch(error => {
+          .catch((error) => {
             reject(error);
           });
       } else {
@@ -203,11 +187,7 @@ function loopTask() {
 }
 
 module.exports = {
-  build: ({
-    config: ctbuildConfigPath = "",
-    packagename = "packagename",
-    define: defineMap
-  }) => {
+  build: ({ config: ctbuildConfigPath = '', packagename = 'packagename', define: defineMap }) => {
     if (ctbuildConfigPath) {
       if (path.isAbsolute(ctbuildConfigPath)) {
         configPath = ctbuildConfigPath;
@@ -215,7 +195,7 @@ module.exports = {
         configPath = path.join(runtimePath, ctbuildConfigPath);
       }
     } else {
-      configPath = path.join(runtimePath, "ctbuild.config.js");
+      configPath = path.join(runtimePath, 'ctbuild.config.js');
     }
 
     packageName = packagename;
@@ -224,11 +204,11 @@ module.exports = {
 
     loopTask()
       .then(() => {
-        console.log("finish");
+        console.log('finish');
         process.exit();
       })
-      .catch(error => {
+      .catch((error) => {
         console.log(error);
       });
-  }
+  },
 };
