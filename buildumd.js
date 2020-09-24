@@ -33,8 +33,7 @@ function copySrcTask() {
       },
     };
 
-    const { command, params } =
-      process.platform === 'win32' ? commands['win32'] : commands['linux'];
+    const { command, params } = process.platform === 'win32' ? commands.win32 : commands.linux;
 
     const copyProcess = spawn(command, params, {
       cwd: codePath,
@@ -156,7 +155,7 @@ function webpackTask() {
 //   });
 // }
 
-const tasks = [copySrcTask, /*corssenvTask, */ webpackTask /*, removeSrcTask*/];
+const tasks = [copySrcTask, /* corssenvTask, */ webpackTask /* , removeSrcTask */];
 let index = 0;
 
 /**

@@ -9,7 +9,7 @@ program.version(packageJson.version);
 Object.keys(commandConfig).forEach((command) => {
   const { alias, description, options = [], action } = commandConfig[command];
 
-  let commandHandler = program
+  const commandHandler = program
     .command(command)
     .alias(alias)
     .description(description)

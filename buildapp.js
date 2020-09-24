@@ -128,7 +128,7 @@ function webpackTask() {
   });
 }
 
-const tasks = [corssenvTask, /*prodDllTask,*/ webpackTask];
+const tasks = [corssenvTask, /* prodDllTask, */ webpackTask];
 let index = 0;
 
 /**
