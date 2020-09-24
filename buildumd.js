@@ -34,8 +34,7 @@ function copySrcTask() {
       },
     };
 
-    const { command, params } =
-      process.platform === 'win32' ? commands.win32 : commands.linux;
+    const { command, params } = process.platform === 'win32' ? commands.win32 : commands.linux;
 
     const copyProcess = spawn(command, params, {
       cwd: codePath,
