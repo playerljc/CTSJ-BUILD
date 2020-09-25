@@ -109,9 +109,9 @@ function webpackTask() {
       },
     );
 
-    console.log('-----------env-start-----------');
-    console.log(process.env);
-    console.log('-----------env-end-------------');
+    // console.log('-----------env-start-----------');
+    // console.log(process.env);
+    // console.log('-----------env-end-------------');
 
     babelProcess.stdout.on('data', (data) => {
       console.log(`stdout: ${data}`);

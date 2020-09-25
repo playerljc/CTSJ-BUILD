@@ -1,24 +1,19 @@
-// const path = require('path');
 const webpack = require('webpack');
 const merge = require('webpack-merge');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const common = require('./webpack.common.js');
 const commandArgs = require('../commandArgs');
+const projectConfigMerge = require('./config/index.js');
 
 const argsMap = commandArgs.initCommandArgs();
 
-// const runtimePath = argsMap.get('--runtimepath')[0];
+const runtimePath = process.argv[8];
+
 const customConfigPath = argsMap.get('--customconfig')[0];
-let customModule;
-// if (customConfig !== 'undefined') {
-//   customConfigPath = path.join(runtimePath, customConfig);
-// }
-// else {
-//   customConfigPath = path.join(runtimePath,'ctbuild.config.js');
-// }
 
 // --runtimepath
 // --customconfig
+
 const curModule = merge(common.config, {
   mode: 'production',
   plugins: [
@@ -34,34 +29,31 @@ const curModule = merge(common.config, {
   ],
 });
 
-// if (customConfigPath) {
-//   customModule = require(customConfigPath);
-//   if (customModule && customModule.getConfig) {
-//     customModule = customModule.getConfig({
-//       // webpack
-//       webpack,
-//       // 已经配置好的module
-//       curModule,
-//       // plugins
-//       plugins: common.plugins,
-//     });
-//   }
-// }
-//
-// module.exports = merge(curModule, customModule || {});
-
 const define = argsMap.get('--define')[0] || '';
 
+let customModule;
 if (customConfigPath) {
   customModule = require(customConfigPath);
-  if (customModule && customModule.getConfig) {
-    customModule.getConfig({
-      webpack,
-      curModule,
-      plugins: common.plugins,
-      define: commandArgs.toCommandArgs(define),
-    });
-  }
+}
+
+const projectConfigMergeParams = {
+  curModule,
+  runtimePath,
+  plugins: common.plugins,
+  webpack,
+};
+if(customModule && customModule.getTheme) {
+  projectConfigMergeParams.theme = customModule.getTheme();
+}
+projectConfigMerge(projectConfigMergeParams);
+
+if (customModule && customModule.getConfig) {
+  customModule.getConfig({
+    webpack,
+    curModule,
+    plugins: common.plugins,
+    define: commandArgs.toCommandArgs(define),
+  });
 }
 
 module.exports = curModule;

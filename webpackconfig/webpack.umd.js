@@ -7,16 +7,8 @@ const commandArgs = require('../commandArgs');
 
 const argsMap = commandArgs.initCommandArgs();
 
-// const runtimePath = argsMap.get('--runtimepath')[0];
 const customConfigPath = argsMap.get('--customconfig')[0];
 let customModule;
-// if (customConfig !== 'undefined') {
-//   customConfigPath = path.join(runtimePath, customConfig);
-// }
-// else {
-//   customConfigPath = path.join(runtimePath,'ctbuild.config.js');
-// }
-
 // --runtimepath
 // --customconfig
 const curModule = merge(common.config, {
@@ -33,19 +25,6 @@ const curModule = merge(common.config, {
     }),
   ],
 });
-
-// if (customConfigPath) {
-//   customModule = require(customConfigPath);
-//   if (customModule && customModule.getConfig) {
-//     customModule = customModule.getConfig({
-//       webpack,
-//       curModule,
-//       plugins: common.plugins
-//     });
-//   }
-// }
-//
-// module.exports = merge(curModule, customModule || {});
 
 const define = argsMap.get('--define')[0] || '';
 

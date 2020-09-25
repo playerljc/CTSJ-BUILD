@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 #!/usr/bin/env node
 
 /**
