@@ -44,7 +44,9 @@
   "devDependencies": {
     "@umijs/fabric": "^2.0.8",
     "eslint": "^7.4.0",
-    "prettier": "^2.0.5"
+    "prettier": "^2.0.5",
+    "thread-loader": "^3.0.0",
+    "webpack-bundle-analyzer": "^3.9.0"
   },
   "dependencies": {
     "@babel/cli": "^7.1.5",
@@ -75,7 +77,6 @@
     "gulp": "^3.9.1",
     "gulp-sourcemaps": "^2.6.4",
     "gulp-uglify": "^3.0.1",
-    "happypack": "^5.0.1",
     "html-webpack-include-assets-plugin": "^1.0.6",
     "html-webpack-plugin": "^4.0.0-beta.2",
     "json-loader": "^0.5.7",
