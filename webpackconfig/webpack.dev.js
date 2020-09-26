@@ -28,18 +28,7 @@ let webpackConfig = merge(common.config, {
     hot: true, // 启动模块热更新 HMR
     open: true, // 开启自动打开浏览器页面
   },
-  plugins: [
-    new webpack.DefinePlugin({
-      process: {
-        env: {
-          NODE_ENV: JSON.stringify('development'),
-          REAP_PATH: JSON.stringify(process.env.REAP_PATH),
-        },
-      },
-    }),
-    new webpack.NamedModulesPlugin(),
-    new webpack.HotModuleReplacementPlugin(),
-  ],
+  plugins: [new webpack.NamedModulesPlugin(), new webpack.HotModuleReplacementPlugin()],
 });
 
 // 附加的参数
