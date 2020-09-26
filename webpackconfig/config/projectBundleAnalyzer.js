@@ -2,8 +2,8 @@ const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 
 /**
  * 依赖的分析
- * @param curModule
+ * @param webpackConfig
  */
-module.exports = function ({ curModule }) {
-  curModule.plugins.push(new BundleAnalyzerPlugin());
+module.exports = function ({ webpackConfig }) {
+  webpackConfig.plugins.push(new BundleAnalyzerPlugin());
 };
