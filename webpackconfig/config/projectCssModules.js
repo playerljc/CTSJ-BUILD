@@ -14,7 +14,7 @@ module.exports = function ({ webpackConfig, plugins, theme = {} }) {
     test: /\.less$/,
     include: [/node_modules/],
     use: [
-      process.env.NODE_ENV === 'development' ? 'style-loader' : plugins.MiniCssExtractPlugin.loader,
+      process.env.mode === 'development' ? 'style-loader' : plugins.MiniCssExtractPlugin.loader,
       'cache-loader',
       'thread-loader',
       {

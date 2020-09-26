@@ -17,17 +17,7 @@ const runtimePath = process.argv[8];
 // webpack的配置
 let webpackConfig = merge(common.config, {
   mode: 'production',
-  plugins: [
-    new CleanWebpackPlugin(),
-    new webpack.DefinePlugin({
-      process: {
-        env: {
-          NODE_ENV: JSON.stringify('production'),
-          REAP_PATH: JSON.stringify(process.env.REAP_PATH),
-        },
-      },
-    }),
-  ],
+  plugins: [new CleanWebpackPlugin()],
 });
 
 // 附加的参数
