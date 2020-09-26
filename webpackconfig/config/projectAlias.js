@@ -2,10 +2,10 @@ const path = require('path');
 
 /**
  * 加入工程的alias
- * @param curModule
+ * @param webpackConfig
  */
-module.exports = function ({ curModule, runtimePath }) {
-  curModule.resolve.alias = {
+module.exports = function ({ webpackConfig, runtimePath }) {
+  webpackConfig.resolve.alias = {
     '@': path.join(runtimePath, 'src'),
   };
 };
