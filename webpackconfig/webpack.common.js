@@ -6,6 +6,7 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 const HtmlWebpackIncludeAssetsPlugin = require('html-webpack-include-assets-plugin');
 const WebpackBar = require('webpackbar');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
 const Util = require('../util');
 
 const runtimePath = process.argv[8];
@@ -32,17 +33,18 @@ module.exports = {
      */
     output: {
       filename:
-        process.env.NODE_ENV === 'production'
+        process.env.mode === 'production'
           ? '[name].[chunkhash].bundle.js'
           : '[name].[hash].bundle.js',
       chunkFilename:
-        process.env.NODE_ENV === 'production'
+        process.env.mode === 'production'
           ? '[name].[chunkhash].bundle.js'
           : '[name].[hash].bundle.js',
       path: path.resolve(runtimePath, 'dist'),
       publicPath: '/',
     },
     plugins: [
+      new webpack.optimize.ModuleConcatenationPlugin(),
       new HtmlWebpackPlugin({
         title: '',
         filename: 'index.html',
@@ -70,6 +72,12 @@ module.exports = {
       new WebpackBar({ reporters: ['profile'], profile: true }),
     ],
     optimization: {
+      minimize: true,
+      minimizer: [
+        new TerserPlugin({
+          sourceMap: process.env.mode !== 'production',
+        }),
+      ],
       runtimeChunk: 'single',
       splitChunks: {
         cacheGroups: {
@@ -87,7 +95,6 @@ module.exports = {
           test: /\.m?jsx?$/,
           exclude: /(node_modules|bower_components)/,
           include: [APP_PATH],
-          // use: ['happypack/loader?id=babel'],
           use: [
             'cache-loader',
             'thread-loader',
@@ -119,7 +126,6 @@ module.exports = {
           test: /\.m?tsx?$/,
           exclude: /(node_modules|bower_components)/,
           include: [APP_PATH],
-          // use: ['happypack/loader?id=ts'],
           use: [
             'cache-loader',
             'thread-loader',
@@ -146,8 +152,7 @@ module.exports = {
             /normalize.css/,
           ],
           use: [
-            process.env.NODE_ENV === 'development' ? 'style-loader' : MiniCssExtractPlugin.loader,
-            // 'happypack/loader?id=css',
+            process.env.mode === 'development' ? 'style-loader' : MiniCssExtractPlugin.loader,
             'cache-loader',
             'thread-loader',
             {
@@ -170,9 +175,9 @@ module.exports = {
           test: /\.less$/,
           include: [APP_PATH, /normalize.less/],
           use: [
-            process.env.NODE_ENV === 'development' ? 'style-loader' : MiniCssExtractPlugin.loader,
-            // 'happypack/loader?id=less',
+            process.env.mode === 'development' ? 'style-loader' : MiniCssExtractPlugin.loader,
             'cache-loader',
+            'thread-loader',
             {
               loader: 'css-loader',
               options: {

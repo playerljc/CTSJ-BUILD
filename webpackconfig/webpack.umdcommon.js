@@ -4,6 +4,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const WebpackBar = require('webpackbar');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
 const Util = require('../util');
 
 const runtimePath = process.argv[8];
@@ -29,11 +30,11 @@ module.exports = {
      */
     output: {
       filename:
-        process.env.NODE_ENV === 'production'
+        process.env.mode === 'production'
           ? '[name].[chunkhash].bundle.js'
           : '[name].[hash].bundle.js',
       chunkFilename:
-        process.env.NODE_ENV === 'production'
+        process.env.mode === 'production'
           ? '[name].[chunkhash].bundle.js'
           : '[name].[hash].bundle.js',
       path: path.resolve(runtimePath, 'umd'),
@@ -42,6 +43,7 @@ module.exports = {
       libraryTarget: 'umd',
     },
     plugins: [
+      new webpack.optimize.ModuleConcatenationPlugin(),
       // 请确保引入这个插件！
       new HtmlWebpackPlugin({
         title: '',
@@ -66,6 +68,8 @@ module.exports = {
       new WebpackBar({ reporters: ['profile'], profile: true }),
     ],
     optimization: {
+      minimize: true,
+      minimizer: [new TerserPlugin()],
       runtimeChunk: 'single',
       splitChunks: {
         cacheGroups: {
@@ -83,7 +87,6 @@ module.exports = {
           test: /\.m?jsx?$/,
           exclude: /(node_modules|bower_components)/,
           // include: [APP_PATH],
-          // use: ['happypack/loader?id=babel'],
           use: [
             'cache-loader',
             'thread-loader',
@@ -115,7 +118,6 @@ module.exports = {
           test: /\.m?tsx?$/,
           exclude: /(node_modules|bower_components)/,
           include: [APP_PATH],
-          // use: ['happypack/loader?id=ts'],
           use: [
             'cache-loader',
             'thread-loader',
@@ -133,8 +135,7 @@ module.exports = {
           test: /\.css$/,
           include: [APP_PATH, /highlight.js/, /photoswipe.css/, /default-skin.css/],
           use: [
-            process.env.NODE_ENV === 'development' ? 'style-loader' : MiniCssExtractPlugin.loader,
-            // 'happypack/loader?id=css',
+            process.env.mode === 'development' ? 'style-loader' : MiniCssExtractPlugin.loader,
             'cache-loader',
             'thread-loader',
             {
@@ -157,8 +158,7 @@ module.exports = {
           test: /\.less$/,
           include: [APP_PATH, /normalize.less/],
           use: [
-            process.env.NODE_ENV === 'development' ? 'style-loader' : MiniCssExtractPlugin.loader,
-            // 'happypack/loader?id=less',
+            process.env.mode === 'development' ? 'style-loader' : MiniCssExtractPlugin.loader,
             'cache-loader',
             'thread-loader',
             {
