@@ -1,6 +1,6 @@
 /**
  * 工程的evn变量
- * @param curModule
+ * @param webpackConfig
  */
 module.exports = function ({ webpackConfig, webpack }) {
   const keys = Object.getOwnPropertyNames(process.env);
