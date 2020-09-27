@@ -1,5 +1,3 @@
-const path = require('path');
-
 /**
  * cssModules
  * @param webpackConfig
