@@ -4,6 +4,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const HtmlWebpackIncludeAssetsPlugin = require('html-webpack-include-assets-plugin');
+const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const WebpackBar = require('webpackbar');
 const TerserPlugin = require('terser-webpack-plugin');
 const Util = require('../util');
@@ -11,6 +12,8 @@ const Util = require('../util');
 const runtimePath = process.argv[8];
 const APP_PATH = path.resolve(runtimePath, 'src'); // 项目src目录
 const { getPostCssConfigPath } = require('../util');
+
+const { mode } = process.env;
 
 module.exports = {
   plugins: {
@@ -31,14 +34,9 @@ module.exports = {
      * 出口
      */
     output: {
-      filename:
-        process.env.mode === 'production'
-          ? '[name].[chunkhash].bundle.js'
-          : '[name].[hash].bundle.js',
+      filename: mode === 'production' ? '[name].[chunkhash].bundle.js' : '[name].[hash].bundle.js',
       chunkFilename:
-        process.env.mode === 'production'
-          ? '[name].[chunkhash].bundle.js'
-          : '[name].[hash].bundle.js',
+        mode === 'production' ? '[name].[chunkhash].bundle.js' : '[name].[hash].bundle.js',
       path: path.resolve(runtimePath, 'dist'),
       publicPath: '/',
     },
@@ -56,8 +54,8 @@ module.exports = {
       }),
       new webpack.HashedModuleIdsPlugin(),
       new MiniCssExtractPlugin({
-        filename: '[name].css',
-        chunkFilename: '[id].css',
+        filename: mode === 'development' ? '[name].css' : '[name].[hash].css',
+        chunkFilename: mode === 'development' ? '[id].css' : '[id].[hash].css',
         ignoreOrder: false,
       }),
       new webpack.ProvidePlugin({
@@ -70,8 +68,9 @@ module.exports = {
       minimize: true,
       minimizer: [
         new TerserPlugin({
-          sourceMap: process.env.mode !== 'production',
+          sourceMap: mode !== 'production',
         }),
+        new OptimizeCSSAssetsPlugin({}),
       ],
       runtimeChunk: 'single',
       splitChunks: {
@@ -130,7 +129,14 @@ module.exports = {
             /normalize.css/,
           ],
           use: [
-            process.env.mode === 'development' ? 'style-loader' : MiniCssExtractPlugin.loader,
+            mode === 'development'
+              ? 'style-loader'
+              : {
+                  loader: MiniCssExtractPlugin.loader,
+                  options: {
+                    hmr: mode === 'development',
+                  },
+                },
             'cache-loader',
             'thread-loader',
             {
@@ -153,7 +159,14 @@ module.exports = {
           test: /\.less$/,
           include: [APP_PATH, /normalize.less/],
           use: [
-            process.env.mode === 'development' ? 'style-loader' : MiniCssExtractPlugin.loader,
+            mode === 'development'
+              ? 'style-loader'
+              : {
+                  loader: MiniCssExtractPlugin.loader,
+                  options: {
+                    hmr: mode === 'development',
+                  },
+                },
             'cache-loader',
             'thread-loader',
             {

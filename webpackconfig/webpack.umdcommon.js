@@ -2,6 +2,7 @@ const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const WebpackBar = require('webpackbar');
 const TerserPlugin = require('terser-webpack-plugin');
 const Util = require('../util');
@@ -10,6 +11,8 @@ const runtimePath = process.argv[8];
 const packagename = process.argv[10];
 const APP_PATH = path.resolve(runtimePath, 'src'); // 项目src目录
 const { getPostCssConfigPath } = require('../util');
+
+const { mode } = process.env;
 
 module.exports = {
   plugins: {
@@ -28,14 +31,9 @@ module.exports = {
      * 出口
      */
     output: {
-      filename:
-        process.env.mode === 'production'
-          ? '[name].[chunkhash].bundle.js'
-          : '[name].[hash].bundle.js',
+      filename: mode === 'production' ? '[name].[chunkhash].bundle.js' : '[name].[hash].bundle.js',
       chunkFilename:
-        process.env.mode === 'production'
-          ? '[name].[chunkhash].bundle.js'
-          : '[name].[hash].bundle.js',
+        mode === 'production' ? '[name].[chunkhash].bundle.js' : '[name].[hash].bundle.js',
       path: path.resolve(runtimePath, 'umd'),
       publicPath: '/',
       library: `${packagename}`,
@@ -56,15 +54,15 @@ module.exports = {
       }),
       new webpack.HashedModuleIdsPlugin(),
       new MiniCssExtractPlugin({
-        filename: '[name].css',
-        chunkFilename: '[id].css',
+        ilename: mode === 'development' ? '[name].css' : '[name].[hash].css',
+        chunkFilename: mode === 'development' ? '[id].css' : '[id].[hash].css',
         ignoreOrder: false,
       }),
       new WebpackBar({ reporters: ['profile'], profile: true }),
     ],
     optimization: {
       minimize: true,
-      minimizer: [new TerserPlugin()],
+      minimizer: [new TerserPlugin(), new OptimizeCSSAssetsPlugin({})],
       runtimeChunk: 'single',
       splitChunks: {
         cacheGroups: {
@@ -113,7 +111,7 @@ module.exports = {
           test: /\.css$/,
           include: [APP_PATH, /highlight.js/, /photoswipe.css/, /default-skin.css/],
           use: [
-            process.env.mode === 'development' ? 'style-loader' : MiniCssExtractPlugin.loader,
+            mode === 'development' ? 'style-loader' : MiniCssExtractPlugin.loader,
             'cache-loader',
             'thread-loader',
             {
@@ -136,7 +134,7 @@ module.exports = {
           test: /\.less$/,
           include: [APP_PATH, /normalize.less/],
           use: [
-            process.env.mode === 'development' ? 'style-loader' : MiniCssExtractPlugin.loader,
+            mode === 'development' ? 'style-loader' : MiniCssExtractPlugin.loader,
             'cache-loader',
             'thread-loader',
             {
