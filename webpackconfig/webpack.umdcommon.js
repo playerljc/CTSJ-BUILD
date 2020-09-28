@@ -2,6 +2,7 @@ const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const WebpackBar = require('webpackbar');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
@@ -11,6 +12,8 @@ const runtimePath = process.argv[8];
 const packagename = process.argv[10];
 const APP_PATH = path.resolve(runtimePath, 'src'); // 项目src目录
 const { getPostCssConfigPath } = require('../util');
+
+const { mode } = process.env;
 
 module.exports = {
   plugins: {
@@ -57,8 +60,8 @@ module.exports = {
       }),
       new webpack.HashedModuleIdsPlugin(),
       new MiniCssExtractPlugin({
-        filename: '[name].css',
-        chunkFilename: '[id].css',
+        filename: mode === 'development' ? '[name].css' : '[name].[hash].css',
+        chunkFilename: mode === 'development' ? '[id].css' : '[id].[hash].css',
         ignoreOrder: false,
       }),
       new ForkTsCheckerWebpackPlugin({
@@ -69,7 +72,7 @@ module.exports = {
     ],
     optimization: {
       minimize: true,
-      minimizer: [new TerserPlugin()],
+      minimizer: [new TerserPlugin(), new OptimizeCSSAssetsPlugin({})],
       runtimeChunk: 'single',
       splitChunks: {
         cacheGroups: {
