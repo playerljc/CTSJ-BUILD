@@ -1,8 +1,10 @@
+const { getPostCssConfigPath } = require('../../util');
+
 /**
  * cssModules
  * @param webpackConfig
  */
-module.exports = function ({ webpackConfig, plugins, theme = {} }) {
+module.exports = function ({ webpackConfig, plugins, theme = {}, runtimePath }) {
   // include的APP_PATH中的less文件使用cssModules
   webpackConfig.module.rules[3].use[3].options.modules = true;
   webpackConfig.module.rules[3].use[5].query.modifyVars = theme;
@@ -23,6 +25,11 @@ module.exports = function ({ webpackConfig, plugins, theme = {} }) {
       },
       {
         loader: 'postcss-loader',
+        options: {
+          config: {
+            path: getPostCssConfigPath(runtimePath),
+          },
+        },
       },
       {
         loader: 'less-loader',
