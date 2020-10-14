@@ -32,14 +32,8 @@ module.exports = {
      * 出口
      */
     output: {
-      filename:
-        process.env.mode === 'production'
-          ? '[name].[chunkhash].bundle.js'
-          : '[name].[hash].bundle.js',
-      chunkFilename:
-        process.env.mode === 'production'
-          ? '[name].[chunkhash].bundle.js'
-          : '[name].[hash].bundle.js',
+      filename: `${packagename}.bundle.js`,
+      // chunkFilename:`${packagename}.bundle.js`,
       path: path.resolve(runtimePath, 'umd'),
       publicPath: '/',
       library: `${packagename}`,
@@ -60,8 +54,8 @@ module.exports = {
       }),
       new webpack.HashedModuleIdsPlugin(),
       new MiniCssExtractPlugin({
-        filename: mode === 'development' ? '[name].css' : '[name].[hash].css',
-        chunkFilename: mode === 'development' ? '[id].css' : '[id].[hash].css',
+        filename: `${packagename}.min.css`,
+        // chunkFilename: `${packagename}.min.css`,
         ignoreOrder: false,
       }),
       new ForkTsCheckerWebpackPlugin({
@@ -73,16 +67,16 @@ module.exports = {
     optimization: {
       minimize: true,
       minimizer: [new TerserPlugin(), new OptimizeCSSAssetsPlugin({})],
-      runtimeChunk: 'single',
-      splitChunks: {
-        cacheGroups: {
-          vendor: {
-            test: /[\\/]node_modules[\\/]/,
-            name: 'vendors',
-            chunks: 'all',
-          },
-        },
-      },
+      // runtimeChunk: 'single',
+      // splitChunks: {
+      //   cacheGroups: {
+      //     vendor: {
+      //       test: /[\\/]node_modules[\\/]/,
+      //       name: 'vendors',
+      //       chunks: 'all',
+      //     },
+      //   },
+      // },
     },
     module: {
       rules: [
