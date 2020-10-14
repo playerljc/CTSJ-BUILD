@@ -1,6 +1,6 @@
 {
   "name": "@ctsj/build",
-  "version": "3.0.2",
+  "version": "3.0.3",
   "description": "一个基于webpack的打包工具",
   "bin": {
     "ctbuild": "./build.js",
@@ -40,6 +40,9 @@
   },
   "bugs": {
     "url": "https://github.com/playerljc/CTSJ-BUILD/issues"
+  },
+  "resolutions": {
+    "graceful-fs": "4.2.2"
   },
   "devDependencies": {
     "@umijs/fabric": "^2.0.8",
