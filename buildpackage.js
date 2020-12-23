@@ -1,5 +1,6 @@
-const {spawn} = require('child_process');
+const { spawn } = require('child_process');
 const path = require('path');
+const { getEnv } = require('./util');
 // 运行脚本的路径
 const runtimePath = process.cwd();
 // 脚本所在的路径
@@ -25,7 +26,7 @@ const tasks = [
   // babel转换，转换js
   babelTask,
   // 样式
-  gulpTask
+  gulpTask,
 ];
 
 /**
@@ -35,10 +36,11 @@ const tasks = [
  */
 function clearTask() {
   return new Promise((resolve, reject) => {
-    const command = process.platform === "win32" ? `${commandPath}rimraf.cmd` : `${commandPath}rimraf`;
+    const command = process.platform === 'win32' ? `rimraf.cmd` : `rimraf`;
     const rimrafProcess = spawn(command, [outputPath], {
       cwd: codePath,
       encoding: 'utf-8',
+      env: getEnv(commandPath),
     });
 
     rimrafProcess.stdout.on('data', (data) => {
@@ -63,7 +65,7 @@ function clearTask() {
  */
 function babelTask() {
   return new Promise((resolve, reject) => {
-    const command = process.platform === "win32" ? `${commandPath}babel.cmd` : `${commandPath}babel`;
+    const command = process.platform === 'win32' ? `babel.cmd` : `babel`;
     const babelProcess = spawn(
       command,
       [
@@ -78,12 +80,14 @@ function babelTask() {
         // '.js,.jsx,.ts,.tsx',
 
         '--ignore',
-        '__tests__'
+        '__tests__',
       ],
       {
         cwd: codePath,
         encoding: 'utf-8',
-      });
+        env: getEnv(commandPath),
+      },
+    );
 
     babelProcess.stdout.on('data', (data) => {
       console.log(`stdout: ${data}`);
@@ -106,7 +110,7 @@ function babelTask() {
  */
 function gulpTask() {
   return new Promise((resolve, reject) => {
-    const command = process.platform === "win32" ? `${commandPath}gulp.cmd` : `${commandPath}gulp`;
+    const command = process.platform === 'win32' ? `gulp.cmd` : `gulp`;
     const gulpProcess = spawn(
       command,
       [
@@ -115,12 +119,13 @@ function gulpTask() {
         path.join(outputPath, path.sep),
         '--compilepath',
         // 编译目录
-        path.join(compilePath, path.sep)
+        path.join(compilePath, path.sep),
       ],
       {
         cwd: codePath,
         encoding: 'utf-8',
-      }
+        env: getEnv(commandPath),
+      },
     );
 
     gulpProcess.stdout.on('data', (data) => {
@@ -149,19 +154,20 @@ function loopTask() {
     } else {
       const task = tasks[index++];
       if (task) {
-        task().then(() => {
-          loopTask().then(() => {
-            resolve();
+        task()
+          .then(() => {
+            loopTask().then(() => {
+              resolve();
+            });
+          })
+          .catch((error) => {
+            reject(error);
           });
-        }).catch((error) => {
-          reject(error);
-        });
       } else {
         reject();
       }
     }
   });
-
 }
 
 module.exports = {
@@ -186,11 +192,13 @@ module.exports = {
     }
     // console.log('buildpackage-srcPath----------------------', srcPath);
 
-    loopTask().then(() => {
-      console.log('finish');
-      process.exit();
-    }).catch((error) => {
-      console.log(error);
-    });
-  }
+    loopTask()
+      .then(() => {
+        console.log('finish');
+        process.exit();
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  },
 };

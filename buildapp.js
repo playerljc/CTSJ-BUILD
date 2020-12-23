@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 const path = require('path');
-const {spawn} = require('child_process');
+const { spawn } = require('child_process');
+const { getEnv } = require('./util');
 // 运行命令的路径
 const runtimePath = process.cwd();
 // build.js所在的路径
@@ -17,10 +18,11 @@ let define;
  */
 function corssenvTask() {
   return new Promise((resolve, reject) => {
-    const command = process.platform === "win32" ? `${commandPath}cross-env.cmd` : `${commandPath}cross-env`;
+    const command = process.platform === 'win32' ? `cross-env.cmd` : `cross-env`;
     const crossenvProcess = spawn(command, ['REAP_PATH=prod', 'NODE_ENV=production'], {
       cwd: codePath,
       encoding: 'utf-8',
+      env: getEnv(commandPath),
     });
 
     crossenvProcess.stdout.on('data', (data) => {
@@ -80,7 +82,7 @@ function corssenvTask() {
  */
 function webpackTask() {
   return new Promise((resolve, reject) => {
-    const command = process.platform === "win32" ? `${commandPath}webpack.cmd` : `${commandPath}webpack`;
+    const command = process.platform === 'win32' ? `webpack.cmd` : `webpack`;
     const babelProcess = spawn(
       command,
       [
@@ -103,7 +105,9 @@ function webpackTask() {
       {
         cwd: codePath,
         encoding: 'utf-8',
-      });
+        env: getEnv(commandPath),
+      },
+    );
 
     babelProcess.stdout.on('data', (data) => {
       console.log(`stdout: ${data}`);
@@ -120,7 +124,7 @@ function webpackTask() {
   });
 }
 
-const tasks = [corssenvTask, /*prodDllTask,*/ webpackTask];
+const tasks = [corssenvTask, /* prodDllTask, */ webpackTask];
 let index = 0;
 
 /**
@@ -134,19 +138,20 @@ function loopTask() {
     } else {
       const task = tasks[index++];
       if (task) {
-        task().then(() => {
-          loopTask().then(() => {
-            resolve();
+        task()
+          .then(() => {
+            loopTask().then(() => {
+              resolve();
+            });
+          })
+          .catch((error) => {
+            reject(error);
           });
-        }).catch((error) => {
-          reject(error);
-        });
       } else {
         reject();
       }
     }
   });
-
 }
 
 module.exports = {
@@ -155,24 +160,26 @@ module.exports = {
    * @param {String} - ctbuildConfigPath
    * ctbuild.config.js配置文件的路径，如果没有指定则会寻找命令运行目录下的ctbuild.config.js文件
    */
-  build: ({config:ctbuildConfigPath = '', define: defineMap}) => {
-    if(ctbuildConfigPath) {
-      if(path.isAbsolute(ctbuildConfigPath)) {
+  build: ({ config: ctbuildConfigPath = '', define: defineMap }) => {
+    if (ctbuildConfigPath) {
+      if (path.isAbsolute(ctbuildConfigPath)) {
         configPath = ctbuildConfigPath;
       } else {
         configPath = path.join(runtimePath, ctbuildConfigPath);
       }
     } else {
-      configPath = path.join(runtimePath,'ctbuild.config.js');
+      configPath = path.join(runtimePath, 'ctbuild.config.js');
     }
 
     define = defineMap;
 
-    loopTask().then(() => {
-      console.log('finish');
-      process.exit();
-    }).catch((error) => {
-      console.log(error);
-    });
-  }
+    loopTask()
+      .then(() => {
+        console.log('finish');
+        process.exit();
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  },
 };

@@ -1,63 +1,23 @@
-// const path = require('path');
-const webpack = require('webpack');
 const merge = require('webpack-merge');
-const common = require('./webpack.umdcommon.js');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-const commandArgs = require('../commandArgs');
-const argsMap = commandArgs.initCommandArgs();
+const webpackBase = require('./webpack.base');
+const common = require('./webpack.umdcommon.js');
 
-// const runtimePath = argsMap.get('--runtimepath')[0];
-let customConfigPath = argsMap.get('--customconfig')[0];
-let customModule;
-// if (customConfig !== 'undefined') {
-//   customConfigPath = path.join(runtimePath, customConfig);
-// }
-// else {
-//   customConfigPath = path.join(runtimePath,'ctbuild.config.js');
-// }
+const runtimePath = process.argv[10];
 
 // --runtimepath
 // --customconfig
-const curModule = merge(common.config, {
+
+// webpack的配置
+let webpackConfig = merge(common.config, {
   mode: 'production',
-  plugins: [
-    new CleanWebpackPlugin(),
-    new webpack.DefinePlugin({
-      'process': {
-        'env': {
-          'NODE_ENV': JSON.stringify('production'),
-          'REAP_PATH': JSON.stringify(process.env.REAP_PATH),
-        }
-      }
-    }),
-  ]
+  plugins: [new CleanWebpackPlugin()],
 });
 
-// if (customConfigPath) {
-//   customModule = require(customConfigPath);
-//   if (customModule && customModule.getConfig) {
-//     customModule = customModule.getConfig({
-//       webpack,
-//       curModule,
-//       plugins: common.plugins
-//     });
-//   }
-// }
-//
-// module.exports = merge(curModule, customModule || {});
+webpackConfig = webpackBase({
+  webpackConfig,
+  runtimePath,
+});
 
-const define = argsMap.get('--define')[0] || '';
-
-if (customConfigPath) {
-  customModule = require(customConfigPath);
-  if (customModule && customModule.getConfig) {
-    customModule.getConfig({
-      webpack,
-      curModule,
-      plugins: common.plugins,
-      define: commandArgs.toCommandArgs(define)
-    });
-  }
-}
-
-module.exports = curModule;
+// 得到最终的配置
+module.exports = webpackConfig;

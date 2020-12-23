@@ -1,6 +1,12 @@
 const presets = [
-  "@babel/preset-env",
-  "@babel/preset-react",
+  [
+    '@babel/preset-env',
+    {
+      useBuiltIns: 'usage',
+      corejs: { version: 3, proposals: true },
+    },
+  ],
+  '@babel/preset-react',
   // TODO: babel.config.js 中babel对typescript的支持
   // [
   //   "@babel/preset-typescript",
@@ -12,9 +18,12 @@ const presets = [
 ];
 
 const plugins = [
-  "@babel/plugin-transform-runtime",
-  "@babel/plugin-proposal-function-bind",
-  "@babel/plugin-proposal-class-properties",
+  '@babel/plugin-transform-runtime',
+  '@babel/plugin-syntax-dynamic-import',
+  '@babel/plugin-proposal-function-bind',
+  '@babel/plugin-proposal-optional-chaining',
+  ['@babel/plugin-proposal-decorators', { legacy: true }],
+  ['@babel/plugin-proposal-class-properties', { loose: true }],
   // "transform-vue-jsx",
   // [
   //   "import",
@@ -27,4 +36,4 @@ const plugins = [
   // }*/],
 ];
 
-module.exports = {presets, plugins};
+module.exports = { presets, plugins };

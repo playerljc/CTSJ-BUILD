@@ -34,10 +34,10 @@ module.exports = {
   toCommandArgs(command = '') {
     const commandArr = command.split(' ');
     const map = new Map();
-    commandArr.forEach(t => {
+    commandArr.forEach((t) => {
       const itemArr = t.split('=');
       map.set(itemArr[0], itemArr[1]);
     });
     return map;
-  }
+  },
 };

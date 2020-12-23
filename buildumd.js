@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 const path = require('path');
-const {spawn} = require('child_process');
+const { spawn } = require('child_process');
+const { getEnv } = require('./util');
 // 运行命令的路径
 const runtimePath = process.cwd();
 // 运行命令的路径去掉/
@@ -23,31 +24,23 @@ let define;
 function copySrcTask() {
   return new Promise((resolve, reject) => {
     const commands = {
-      'win32': {
+      win32: {
         command: 'xcopy',
-        params: [
-          path.join(srcPath, 'src'),
-          path.join(runtimePath, 'src'),
-          '/e', '/i', '/y'
-        ]
+        params: [path.join(srcPath, 'src'), path.join(runtimePath, 'src'), '/e', '/i', '/y'],
       },
-      'linux': {
+      linux: {
         command: 'cp',
-        params: [
-          '-r', '-f',
-          path.join(srcPath, 'src'),
-          path.join(runtimePath, 'src'),
-        ]
-      }
+        params: ['-r', '-f', path.join(srcPath, 'src'), path.join(runtimePath, 'src')],
+      },
     };
 
-    const {command, params} = process.platform === "win32" ? commands['win32'] : commands['linux'];
+    const { command, params } = process.platform === 'win32' ? commands.win32 : commands.linux;
 
-    const copyProcess = spawn(
-      command, params, {
-        cwd: codePath,
-        encoding: 'utf-8',
-      });
+    const copyProcess = spawn(command, params, {
+      cwd: codePath,
+      encoding: 'utf-8',
+      env: getEnv(commandPath),
+    });
 
     copyProcess.stdout.on('data', (data) => {
       console.log(`stdout: ${data}`);
@@ -70,15 +63,12 @@ function copySrcTask() {
  */
 function corssenvTask() {
   return new Promise((resolve, reject) => {
-    const command = process.platform === "win32" ? `${commandPath}cross-env.cmd` : `${commandPath}cross-env`;
-    const crossenvProcess = spawn(
-      command,
-      ['REAP_PATH=prod', 'NODE_ENV=production'],
-      {
-        cwd: codePath,
-        encoding: 'utf-8',
-      }
-    );
+    const command = process.platform === 'win32' ? `cross-env.cmd` : `cross-env`;
+    const crossenvProcess = spawn(command, ['REAP_PATH=prod', 'NODE_ENV=production'], {
+      cwd: codePath,
+      encoding: 'utf-8',
+      env: getEnv(commandPath),
+    });
 
     crossenvProcess.stdout.on('data', (data) => {
       console.log(`stdout: ${data}`);
@@ -101,7 +91,7 @@ function corssenvTask() {
  */
 function webpackTask() {
   return new Promise((resolve, reject) => {
-    const command = process.platform === "win32" ? `${commandPath}webpack.cmd` : `${commandPath}webpack`;
+    const command = process.platform === 'win32' ? `webpack.cmd` : `webpack`;
     const babelProcess = spawn(
       command,
       [
@@ -123,7 +113,9 @@ function webpackTask() {
       {
         cwd: codePath,
         encoding: 'utf-8',
-      });
+        env: getEnv(commandPath),
+      },
+    );
 
     babelProcess.stdout.on('data', (data) => {
       console.log(`stdout: ${data}`);
@@ -165,7 +157,7 @@ function webpackTask() {
 //   });
 // }
 
-const tasks = [copySrcTask, /*corssenvTask, */webpackTask/*, removeSrcTask*/];
+const tasks = [copySrcTask, /* corssenvTask, */ webpackTask /* , removeSrcTask */];
 let index = 0;
 
 /**
@@ -179,28 +171,24 @@ function loopTask() {
     } else {
       const task = tasks[index++];
       if (task) {
-        task().then(() => {
-          loopTask().then(() => {
-            resolve();
+        task()
+          .then(() => {
+            loopTask().then(() => {
+              resolve();
+            });
+          })
+          .catch((error) => {
+            reject(error);
           });
-        }).catch((error) => {
-          reject(error);
-        });
       } else {
         reject();
       }
     }
   });
-
 }
 
 module.exports = {
-  build: ({
-            config: ctbuildConfigPath = '',
-            packagename = 'packagename',
-            define: defineMap
-          }
-  ) => {
+  build: ({ config: ctbuildConfigPath = '', packagename = 'packagename', define: defineMap }) => {
     if (ctbuildConfigPath) {
       if (path.isAbsolute(ctbuildConfigPath)) {
         configPath = ctbuildConfigPath;
@@ -215,11 +203,13 @@ module.exports = {
 
     define = defineMap;
 
-    loopTask().then(() => {
-      console.log('finish');
-      process.exit();
-    }).catch((error) => {
-      console.log(error);
-    });
-  }
+    loopTask()
+      .then(() => {
+        console.log('finish');
+        process.exit();
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  },
 };
