@@ -1,3 +1,12 @@
+# 3.0.4
+
+***
+
+2020/12/25
+
+* loader中的cache-loader和thread-loader区分开发和生产环境
+* css和js混淆区分生产和开发环境
+
 # 3.0.3
 
 ***
