@@ -1,3 +1,12 @@
+# 4.0.4
+
+***
+
+2020/12/25
+
+* loader中的cache-loader和thread-loader区分开发和生产环境
+* css和js混淆区分生产和开发环境
+
 # 4.0.3
 
 ***
@@ -5,6 +14,7 @@
 2020/10/14
 
 * umd修改
+* cssModules加入localIdentName
 
 # 4.0.2
 
