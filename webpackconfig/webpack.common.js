@@ -15,6 +15,10 @@ const { getPostCssConfigPath } = require('../util');
 
 const { mode } = process.env;
 
+const isDev = mode === 'development';
+
+const devLoaders = isDev ? [] : ['cache-loader', 'thread-loader'];
+
 module.exports = {
   plugins: {
     HtmlWebpackPlugin,
@@ -65,13 +69,15 @@ module.exports = {
       new WebpackBar({ reporters: ['profile'], profile: true }),
     ],
     optimization: {
-      minimize: true,
-      minimizer: [
-        new TerserPlugin({
-          sourceMap: mode !== 'production',
-        }),
-        new OptimizeCSSAssetsPlugin({}),
-      ],
+      minimize: !isDev, // true,
+      minimizer: isDev
+        ? []
+        : [
+            new TerserPlugin({
+              sourceMap: mode !== 'production',
+            }),
+            new OptimizeCSSAssetsPlugin({}),
+          ],
       runtimeChunk: 'single',
       splitChunks: {
         cacheGroups: {
@@ -89,9 +95,7 @@ module.exports = {
           test: /\.m?jsx?$/,
           exclude: /(node_modules|bower_components)/,
           include: [APP_PATH],
-          use: [
-            'cache-loader',
-            'thread-loader',
+          use: devLoaders.concat([
             {
               loader: 'babel-loader',
               query: {
@@ -114,7 +118,7 @@ module.exports = {
                 cacheDirectory: true,
               },
             },
-          ],
+          ]),
         },
         {
           test: /\.css$/,
@@ -137,23 +141,24 @@ module.exports = {
                     hmr: mode === 'development',
                   },
                 },
-            'cache-loader',
-            'thread-loader',
-            {
-              loader: 'css-loader',
-              options: {
-                importLoaders: 1,
-              },
-            },
-            {
-              loader: 'postcss-loader',
-              options: {
-                config: {
-                  path: getPostCssConfigPath(runtimePath),
+          ]
+            .concat(devLoaders)
+            .concat([
+              {
+                loader: 'css-loader',
+                options: {
+                  importLoaders: 1,
                 },
               },
-            },
-          ],
+              {
+                loader: 'postcss-loader',
+                options: {
+                  config: {
+                    path: getPostCssConfigPath(runtimePath),
+                  },
+                },
+              },
+            ]),
         },
         {
           test: /\.less$/,
@@ -167,29 +172,30 @@ module.exports = {
                     hmr: mode === 'development',
                   },
                 },
-            'cache-loader',
-            'thread-loader',
-            {
-              loader: 'css-loader',
-              options: {
-                importLoaders: 1,
-              },
-            },
-            {
-              loader: 'postcss-loader',
-              options: {
-                config: {
-                  path: getPostCssConfigPath(runtimePath),
+          ]
+            .concat(devLoaders)
+            .concat([
+              {
+                loader: 'css-loader',
+                options: {
+                  importLoaders: 1,
                 },
               },
-            },
-            {
-              loader: 'less-loader',
-              query: {
-                javascriptEnabled: true,
+              {
+                loader: 'postcss-loader',
+                options: {
+                  config: {
+                    path: getPostCssConfigPath(runtimePath),
+                  },
+                },
               },
-            },
-          ],
+              {
+                loader: 'less-loader',
+                query: {
+                  javascriptEnabled: true,
+                },
+              },
+            ]),
         },
         {
           test: /\.(png|svg|jpg|gif|ico)$/,
