@@ -14,6 +14,8 @@ const { getPostCssConfigPath } = require('../util');
 
 const { mode } = process.env;
 
+const isDev = mode === 'development';
+
 module.exports = {
   plugins: {
     HtmlWebpackPlugin,
@@ -110,7 +112,7 @@ module.exports = {
           test: /\.css$/,
           include: [APP_PATH, /highlight.js/, /photoswipe.css/, /default-skin.css/],
           use: [
-            mode === 'development' ? 'style-loader' : MiniCssExtractPlugin.loader,
+            isDev ? 'style-loader' : MiniCssExtractPlugin.loader,
             'cache-loader',
             'thread-loader',
             {
@@ -133,7 +135,7 @@ module.exports = {
           test: /\.less$/,
           include: [APP_PATH, /normalize.less/],
           use: [
-            mode === 'development' ? 'style-loader' : MiniCssExtractPlugin.loader,
+            isDev ? 'style-loader' : MiniCssExtractPlugin.loader,
             'cache-loader',
             'thread-loader',
             {

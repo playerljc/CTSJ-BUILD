@@ -58,8 +58,8 @@ module.exports = {
       }),
       new webpack.HashedModuleIdsPlugin(),
       new MiniCssExtractPlugin({
-        filename: mode === 'development' ? '[name].css' : '[name].[hash].css',
-        chunkFilename: mode === 'development' ? '[id].css' : '[id].[hash].css',
+        filename: isDev ? '[name].css' : '[name].[hash].css',
+        chunkFilename: isDev ? '[id].css' : '[id].[hash].css',
         ignoreOrder: false,
       }),
       new webpack.ProvidePlugin({
@@ -133,12 +133,12 @@ module.exports = {
             /normalize.css/,
           ],
           use: [
-            mode === 'development'
+            isDev
               ? 'style-loader'
               : {
                   loader: MiniCssExtractPlugin.loader,
                   options: {
-                    hmr: mode === 'development',
+                    hmr: isDev,
                   },
                 },
           ]
@@ -164,12 +164,12 @@ module.exports = {
           test: /\.less$/,
           include: [APP_PATH, /normalize.less/],
           use: [
-            mode === 'development'
+            isDev
               ? 'style-loader'
               : {
                   loader: MiniCssExtractPlugin.loader,
                   options: {
-                    hmr: mode === 'development',
+                    hmr: isDev,
                   },
                 },
           ]

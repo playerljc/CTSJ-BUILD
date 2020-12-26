@@ -29,9 +29,11 @@ module.exports = function ({ webpackConfig, runtimePath }) {
     webpack,
     defineArgs,
   };
+
   if (customWebpackConfig && customWebpackConfig.getTheme) {
     projectWebpackConfigMergeParams.theme = customWebpackConfig.getTheme();
   }
+
   projectWebpackConfigMerge(projectWebpackConfigMergeParams);
 
   // 用户基于webpackconfig和projectconfig的配置进行二次配置
@@ -47,6 +49,7 @@ module.exports = function ({ webpackConfig, runtimePath }) {
   // 是否进行打包分析
   if (defineArgs.get('analysis')) {
     const smp = new SpeedMeasurePlugin();
+
     webpackConfig = smp.wrap(webpackConfig);
   }
 

@@ -24,8 +24,10 @@ const map = {
 
 module.exports = function ({ defineArgs, ...others }) {
   const keys = Object.getOwnPropertyNames(map);
+
   keys.forEach((key) => {
     const exists = defineArgs.has(key);
+
     if (exists) {
       map[key].handler({ ...others, val: defineArgs.get(key) });
     }
