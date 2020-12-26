@@ -16,7 +16,7 @@ let webpackConfig = merge(common.config, {
     publicPath: '/',
     host: 'localhost',
     compress: true,
-    port: 8000,
+    // port: 8000,
     clientLogLevel: 'none', // 不再输出繁琐的信息
     historyApiFallback: true,
     overlay: true, // 浏览器全屏显示错误信息
