@@ -11,6 +11,20 @@ function getEvnSplit() {
 
 module.exports = {
   /**
+   * slash
+   * @param input - {string}
+   * @return {Array}
+   */
+  slash(input) {
+    const isExtendedLengthPath = /^\\\\\?\\/.test(input);
+
+    if (isExtendedLengthPath) {
+      return input;
+    }
+
+    return input.replace(/\\/g, '/');
+  },
+  /**
    * 获取env
    * @param commandPath
    */
