@@ -1,4 +1,4 @@
-const { getPostCssConfigPath } = require('../../util');
+const { getPostCssConfigPath, slash } = require('../../util');
 
 /**
  * cssModules
@@ -12,7 +12,24 @@ module.exports = function ({ webpackConfig, plugins, theme = {}, runtimePath }) 
 
   if (isDev) {
     webpackConfig.module.rules[3].use[1].options.modules = {
-      localIdentName: '[path][name]__[local]--[hash:base64:5]',
+      // localIdentName: '[path][name]__[local]--[hash:base64:5]',
+      getLocalIdent: (context, localIdentName, localName) => {
+        const match = context.resourcePath.match(/src(.*)/);
+
+        if (match && match[1]) {
+          const path = match[1].replace('.less', '');
+
+          const arr = slash(path)
+            .split('/')
+            .filter((t) => t)
+            .map((a) => a.replace(/([A-Z])/g, '-$1'))
+            .map((a) => a.toLowerCase());
+
+          return `${arr.join('-')}-${localName}`.replace(/--/g, '-');
+        }
+
+        return localName;
+      },
     };
     webpackConfig.module.rules[3].use[3].query.modifyVars = theme;
   } else {
