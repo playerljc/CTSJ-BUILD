@@ -1,4 +1,4 @@
-const { getPostCssConfigPath, slash } = require('../../util');
+const { getPostCssConfigPath, slash, isDev } = require('../../util');
 
 /**
  * cssModules
@@ -6,11 +6,8 @@ const { getPostCssConfigPath, slash } = require('../../util');
  */
 module.exports = function ({ webpackConfig, plugins, theme = {}, runtimePath }) {
   // include的APP_PATH中的less文件使用cssModules
-  const { mode } = process.env;
 
-  const isDev = mode === 'development';
-
-  if (isDev) {
+  if (isDev()) {
     webpackConfig.module.rules[3].use[1].options.modules = {
       // localIdentName: '[path][name]__[local]--[hash:base64:5]',
       getLocalIdent: (context, localIdentName, localName) => {
@@ -42,7 +39,7 @@ module.exports = function ({ webpackConfig, plugins, theme = {}, runtimePath }) 
     test: /\.less$/,
     include: [/node_modules/],
     use: [
-      process.env.mode === 'development' ? 'style-loader' : plugins.MiniCssExtractPlugin.loader,
+      isDev() ? 'style-loader' : plugins.MiniCssExtractPlugin.loader,
       'cache-loader',
       'thread-loader',
       {

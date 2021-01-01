@@ -1,11 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-function getEvnSplit() {
-  return process.platform === 'win32' ? ';' : ':';
-}
-
-module.exports = {
+const Util = {
   /**
    * slash
    * @param input - {string}
@@ -66,4 +62,23 @@ module.exports = {
     const entryIndexName = index !== -1 ? `index${extensionNames[index]}` : 'index.js';
     return path.join(runtimePath, 'src', entryIndexName);
   },
+  isWin32() {
+    return process.platform === 'win32';
+  },
+  isDev() {
+    const { mode } = process.env;
+
+    return mode === 'development';
+  },
+  isProd() {
+    const { mode } = process.env;
+
+    return mode === 'production';
+  },
 };
+
+function getEvnSplit() {
+  return Util.isWin32() ? ';' : ':';
+}
+
+module.exports = Util;
