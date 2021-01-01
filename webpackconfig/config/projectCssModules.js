@@ -1,15 +1,11 @@
-const { getPostCssConfigPath, slash } = require('../../util');
+const { getPostCssConfigPath, slash, isDev } = require('../../util');
 
 /**
  * cssModules
  * @param webpackConfig
  */
 module.exports = function ({ webpackConfig, plugins, theme = {}, runtimePath }) {
-  const { mode } = process.env;
-
-  const isDev = mode === 'development';
-
-  if (isDev) {
+  if (isDev()) {
     webpackConfig.module.rules[2].use[1].options.modules = {
       // localIdentName: '[path][name]__[local]--[hash:base64:5]',
       getLocalIdent: (context, localIdentName, localName) => {
@@ -42,7 +38,7 @@ module.exports = function ({ webpackConfig, plugins, theme = {}, runtimePath }) 
     test: /\.less$/,
     include: [/node_modules/],
     use: [
-      process.env.mode === 'development' ? 'style-loader' : plugins.MiniCssExtractPlugin.loader,
+      isDev() ? 'style-loader' : plugins.MiniCssExtractPlugin.loader,
       'cache-loader',
       'thread-loader',
       {

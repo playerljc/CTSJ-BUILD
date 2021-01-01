@@ -7,17 +7,15 @@ const HtmlWebpackIncludeAssetsPlugin = require('html-webpack-include-assets-plug
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const WebpackBar = require('webpackbar');
 const TerserPlugin = require('terser-webpack-plugin');
+
 const Util = require('../util');
+const { getPostCssConfigPath, isDev, isProd } = require('../util');
 
 const runtimePath = process.argv[8];
+
 const APP_PATH = path.resolve(runtimePath, 'src'); // 项目src目录
-const { getPostCssConfigPath } = require('../util');
 
-const { mode } = process.env;
-
-const isDev = mode === 'development';
-
-const devLoaders = isDev ? [] : ['cache-loader', 'thread-loader'];
+const devLoaders = isDev() ? [] : ['cache-loader', 'thread-loader'];
 
 module.exports = {
   plugins: {
@@ -38,9 +36,8 @@ module.exports = {
      * 出口
      */
     output: {
-      filename: mode === 'production' ? '[name].[chunkhash].bundle.js' : '[name].[hash].bundle.js',
-      chunkFilename:
-        mode === 'production' ? '[name].[chunkhash].bundle.js' : '[name].[hash].bundle.js',
+      filename: isProd() ? '[name].[chunkhash].bundle.js' : '[name].[hash].bundle.js',
+      chunkFilename: isProd() ? '[name].[chunkhash].bundle.js' : '[name].[hash].bundle.js',
       path: path.resolve(runtimePath, 'dist'),
       publicPath: '/',
     },
@@ -58,8 +55,8 @@ module.exports = {
       }),
       new webpack.HashedModuleIdsPlugin(),
       new MiniCssExtractPlugin({
-        filename: isDev ? '[name].css' : '[name].[hash].css',
-        chunkFilename: isDev ? '[id].css' : '[id].[hash].css',
+        filename: isDev() ? '[name].css' : '[name].[hash].css',
+        chunkFilename: isDev() ? '[id].css' : '[id].[hash].css',
         ignoreOrder: false,
       }),
       new webpack.ProvidePlugin({
@@ -69,12 +66,12 @@ module.exports = {
       new WebpackBar({ reporters: ['profile'], profile: true }),
     ],
     optimization: {
-      minimize: !isDev, // true,
-      minimizer: isDev
+      minimize: !isDev(), // true,
+      minimizer: isDev()
         ? []
         : [
             new TerserPlugin({
-              sourceMap: mode !== 'production',
+              sourceMap: !isProd(),
             }),
             new OptimizeCSSAssetsPlugin({}),
           ],
@@ -133,12 +130,12 @@ module.exports = {
             /normalize.css/,
           ],
           use: [
-            isDev
+            isDev()
               ? 'style-loader'
               : {
                   loader: MiniCssExtractPlugin.loader,
                   options: {
-                    hmr: isDev,
+                    hmr: isDev(),
                   },
                 },
           ]
@@ -164,12 +161,12 @@ module.exports = {
           test: /\.less$/,
           include: [APP_PATH, /normalize.less/],
           use: [
-            isDev
+            isDev()
               ? 'style-loader'
               : {
                   loader: MiniCssExtractPlugin.loader,
                   options: {
-                    hmr: isDev,
+                    hmr: isDev(),
                   },
                 },
           ]

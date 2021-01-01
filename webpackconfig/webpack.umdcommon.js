@@ -6,15 +6,13 @@ const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const WebpackBar = require('webpackbar');
 const TerserPlugin = require('terser-webpack-plugin');
 const Util = require('../util');
+const { getPostCssConfigPath, isDev } = require('../util');
 
 const runtimePath = process.argv[8];
+
 const packagename = process.argv[10];
+
 const APP_PATH = path.resolve(runtimePath, 'src'); // 项目src目录
-const { getPostCssConfigPath } = require('../util');
-
-const { mode } = process.env;
-
-const isDev = mode === 'development';
 
 module.exports = {
   plugins: {
@@ -112,7 +110,7 @@ module.exports = {
           test: /\.css$/,
           include: [APP_PATH, /highlight.js/, /photoswipe.css/, /default-skin.css/],
           use: [
-            isDev ? 'style-loader' : MiniCssExtractPlugin.loader,
+            isDev() ? 'style-loader' : MiniCssExtractPlugin.loader,
             'cache-loader',
             'thread-loader',
             {
@@ -135,7 +133,7 @@ module.exports = {
           test: /\.less$/,
           include: [APP_PATH, /normalize.less/],
           use: [
-            isDev ? 'style-loader' : MiniCssExtractPlugin.loader,
+            isDev() ? 'style-loader' : MiniCssExtractPlugin.loader,
             'cache-loader',
             'thread-loader',
             {

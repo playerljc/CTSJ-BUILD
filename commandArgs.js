@@ -7,20 +7,27 @@ module.exports = {
    */
   initCommandArgs() {
     const map = new Map();
+
     const customArgs = process.argv.slice(2);
+
     let preArg;
+
     for (let i = 0; i < customArgs.length; i++) {
       const arg = customArgs[i];
+
       if (arg.startsWith('--')) {
         map.set(arg, []);
+
         preArg = arg;
       } else {
         const value = map.get(preArg);
+
         if (value) {
           value.push(arg);
         }
       }
     }
+
     return map;
   },
   getArgs() {
@@ -33,11 +40,15 @@ module.exports = {
    */
   toCommandArgs(command = '') {
     const commandArr = command.split(' ');
+
     const map = new Map();
+
     commandArr.forEach((t) => {
       const itemArr = t.split('=');
+
       map.set(itemArr[0], itemArr[1]);
     });
+
     return map;
   },
 };

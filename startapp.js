@@ -1,16 +1,26 @@
 #!/usr/bin/env node
 const path = require('path');
 const { spawn } = require('child_process');
-const { getEnv } = require('./util');
+const { getEnv, isWin32 } = require('./util');
+
 // 运行命令的路径
 const runtimePath = process.cwd();
+
 // build.js所在的路径
 const codePath = __dirname;
+
 // ctbuild.cmd或者ctbuild.sh所在路径
 const commandPath = path.join(codePath, 'node_modules', '.bin', path.sep);
+
 // 配置文件所在路径
 let configPath;
+
 let define;
+
+// startapp的tasks
+const tasks = [corssenvTask, /* devDllTask, */ webpackServiceTask];
+
+let index = 0;
 
 /**
  * corssenvTask
@@ -18,8 +28,8 @@ let define;
  * @return {Promise}
  */
 function corssenvTask() {
-  return new Promise((resolve, reject) => {
-    const command = process.platform === 'win32' ? `cross-env.cmd` : `cross-env`;
+  return new Promise((resolve) => {
+    const command = isWin32() ? `cross-env.cmd` : `cross-env`;
     const crossenvProcess = spawn(command, ['REAP_PATH=dev', 'NODE_ENV=development'], {
       cwd: codePath,
       encoding: 'utf-8',
@@ -82,8 +92,9 @@ function corssenvTask() {
  * @return {Promise}
  */
 function webpackServiceTask() {
-  return new Promise((resolve, reject) => {
-    const command = process.platform === 'win32' ? `webpack-dev-server.cmd` : `webpack-dev-server`;
+  return new Promise((resolve) => {
+    const command = isWin32() ? `webpack-dev-server.cmd` : `webpack-dev-server`;
+
     const babelProcess = spawn(
       command,
       [
@@ -121,10 +132,6 @@ function webpackServiceTask() {
   });
 }
 
-// startapp的tasks
-const tasks = [corssenvTask, /* devDllTask, */ webpackServiceTask];
-let index = 0;
-
 /**
  * loopTask
  * @return {Promise}
@@ -135,6 +142,7 @@ function loopTask() {
       resolve();
     } else {
       const task = tasks[index++];
+
       if (task) {
         task()
           .then(() => {

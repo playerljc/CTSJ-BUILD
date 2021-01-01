@@ -1,5 +1,6 @@
 const webpack = require('webpack');
 const SpeedMeasurePlugin = require('speed-measure-webpack-plugin');
+
 const common = require('./webpack.common.js');
 const commandArgs = require('../commandArgs');
 const projectWebpackConfigMerge = require('./config/index.js');
@@ -15,7 +16,9 @@ module.exports = function ({ webpackConfig, runtimePath }) {
 
   // 用户自定义配置文件的路径
   const customWebpackConfigPath = argsMap.get('--customconfig')[0];
+
   let customWebpackConfig;
+
   if (customWebpackConfigPath) {
     // 用户对webpackconfig对象进行修改形成用户自己的webpackconfig的配置对象里面有getTheme和getConfig
     customWebpackConfig = require(customWebpackConfigPath);

@@ -70,4 +70,21 @@ module.exports = {
     const entryIndexName = index !== -1 ? `index${extensionNames[index]}` : 'index.js';
     return path.join(runtimePath, 'src', entryIndexName);
   },
+  /**
+   * isWin32
+   * @return {boolean}
+   */
+  isWin32() {
+    return process.platform === 'win32';
+  },
+  isDev() {
+    const { mode } = process.env;
+
+    return mode === 'development';
+  },
+  isProd() {
+    const { mode } = process.env;
+
+    return mode === 'production';
+  },
 };
