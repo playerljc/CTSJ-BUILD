@@ -65,27 +65,29 @@ module.exports = {
       }),
       new WebpackBar({ reporters: ['profile'], profile: true }),
     ],
-    optimization: {
-      minimize: !isDev(), // true,
-      minimizer: isDev()
-        ? []
-        : [
-            new TerserPlugin({
-              sourceMap: !isProd(),
-            }),
-            new OptimizeCSSAssetsPlugin({}),
-          ],
-      runtimeChunk: 'single',
-      splitChunks: {
-        cacheGroups: {
-          vendor: {
-            test: /[\\/]node_modules[\\/]/,
-            name: 'vendors',
-            chunks: 'all',
+    optimization: isDev()
+      ? {}
+      : {
+          minimize: !isDev(), // true,
+          minimizer: isDev()
+            ? []
+            : [
+                new TerserPlugin({
+                  sourceMap: !isProd(),
+                }),
+                new OptimizeCSSAssetsPlugin({}),
+              ],
+          runtimeChunk: 'single',
+          splitChunks: {
+            cacheGroups: {
+              vendor: {
+                test: /[\\/]node_modules[\\/]/,
+                name: 'vendors',
+                chunks: 'all',
+              },
+            },
           },
         },
-      },
-    },
     module: {
       rules: [
         {
@@ -112,7 +114,7 @@ module.exports = {
                   '@babel/plugin-proposal-function-bind',
                   '@babel/plugin-proposal-class-properties',
                 ],
-                cacheDirectory: true,
+                cacheDirectory: isProd(),
               },
             },
           ]),
