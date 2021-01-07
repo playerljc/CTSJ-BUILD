@@ -1,14 +1,14 @@
-# A packaging tool based on Webpack
- - Can build and dev for host projects based on React and Less (support typescript)
- - Can build npm package except Vue (support typescript)
- - Can compile umd except for Vue's npm package
+#一个基于Webpack的打包工具
+ - 可以对基于React和Less的宿主工程进行build和dev(支持typescript)
+ - 可以对除了Vue的npm package进行build(支持typescript)
+ - 可以对除了Vue的npm package的umd编译
 
-# Install
+# 安装
 ```javascript
 npm install @ctsj/build --save-dev
 ```
 
-# Commands
+# 命令
 - [startapp](#startapp)
 - [buildapp](#buildapp)
 - [buildpackage](#buildpackage)
@@ -16,79 +16,79 @@ npm install @ctsj/build --save-dev
 - [buildumd](#buildumd)
 
 ### startapp
-Start the host project in development mode
-#### params：
+development模式启动宿主工程
+#### 参数：
 - -c,--config <path>
-##### The path of the configuration file (ctbuild.config.js) that the user redefines webpack. The default is the ctbuild.config.js file in the host project
+##### 用户对webpack进行重定义的配置文件(ctbuild.config.js)路径，默认是宿主工程中的ctbuild.config.js文件
 ```javascript
 ctbuild startapp -c /opt/mydir/;
 ```
 - -d,--define <path>
-##### Other parameters are divided by
+##### 其他的参数以,分割
 ```javascript
 ctbuild startapp --define skin=a,skin2=b
 ````
 
 ### buildapp
-Start the host project in production mode
+production模式启动宿主工程
 #### 参数：
 - -c,--config <path>
-##### The path of the configuration file (ctbuild.config.js) that the user redefines webpack. The default is the ctbuild.config.js file in the host project
+##### 用户对webpack进行重定义的配置文件(ctbuild.config.js)路径，默认是宿主工程中的ctbuild.config.js文件
 ```javascript
 ctbuild startapp -c /opt/mydir/;
 ```
 - -d,--define <path>
-##### Other parameters are divided by
+##### 其他的参数以,分割
 ```javascript
 ctbuild startapp --define skin=a,skin2=b
 ````
 
 ### buildpackage
-Compile npm package
+编译npm package
 - -p,-srcpath <path>
-##### It can be relative path and pair path, or not pass
+##### 可以是相对路径和对路径，也可以不传
 ```javascript
-// If you don't pass -p, compile the src directory under the script running path
+// 如果不传-p则编译脚本运行路径下的src目录
 ctbuild buildpackage
 ```
 
 ```javascript
-// If you pass an absolute path, compile this path
+// 如果传递的是绝对路径则编译这个路径
 ctbuild buildpackage -p c:/x/xxx
 ```
 
 ```javascript
-// If it is a relative path compile script running path + relative path
+// 如果是相对路径编译脚本运行路径+相对路径
 ctbuild buildpackage -p a/b/c
 ```
 
 ### buildpackagets
-Compile npm package with ts
-[Other same buildpackage](#buildpackage)
+用ts编译npm package
+[其他同buildpackage](#buildpackage)
 
 ### buildumd
-Compile npm package into umd
+将npm package编译成umd
 - -c,-config <path>
-##### The path of the configuration file (ctbuild.config.js) that the user redefines webpack. The default is the ctbuild.config.js file in the host project
+##### 用户对webpack进行重定义的配置文件(ctbuild.config.js)路径，默认是宿主工程中的ctbuild.config.js文件
 
 - -p,--packagename <name>
-##### packagename of umd
+##### umd的packagename
 
 - -d --define <path>
-##### Use other custom parameters, split
+##### 自定义的其他参数使用，分割
 
 
 ## ctbuild.config.js
-The function of this file is to allow users to redefine the already configured webpack configuration, as follows:
+此文件的作用是让用户对已经配置好的webpack配置进行重定义，内容如下：
 ```javascript
-// Need to export 2 methods
-// 1.getTheme, return the global variable of less
-// 2.getConfig parameter is an object, and the object has 4 properties
-// webpack: the original webpack object
-// webpackConfig: The configured webpack configuration object
-// plugins: plugin collection
-// define: custom parameters,
-// We only need to customize the webpackConfig object
+// 需要导出2个方法
+// 1.getTheme，返回less的全局变量
+// 2.getConfig参数有是一个对象，对象有4个属性
+// webpack: 原始的webpack对象
+// webpackConfig: 已经配置好的webpack配置对象
+// plugins: 插件集合
+// define: 自定义参数,
+// 我们只需要对webpackConfig对象进行自定义即可
 module.exports = {
   getTheme() {
     return modifyVars;
@@ -100,7 +100,7 @@ module.exports = {
 
 ```
 
-### WebpackConfig configuration
+### webpackConfig的配置
 ```javascript
 module.exports = {
   plugins: {
@@ -348,18 +348,18 @@ module.exports = {
 };
 ````
 
-### Default plugin list
+### 缺省的插件列表
  - HtmlWebpackPlugin,
  - MiniCssExtractPlugin,
  - CopyWebpackPlugin,
  - HtmlWebpackIncludeAssetsPlugin,
  
-### startapp, the default custom parameters of buildapp
+### startapp，buildapp的缺省自定义参数
 ```javascript
-ctbuild startapp --define alias=@,analysis=true,evnVars=true,cssModules=true,static=assets
+ctbuild startapp --define alias=@,analysis=true,evnVars=true,cssModules=true,static=assets 
 ```
-- alias=@src alias
-- analysis=true whether to start analysis
-- envVars=true Whether to inject env variables into the process
-- cssModules=true whether to start cssModules
-- static=assets static directory name is asstes by default
+ - alias=@ src的别名
+ - analysis=true 是否启动分析
+ - envVars=true 是否将env变量注入到process中
+ - cssModules=true 是否启动cssModules
+ - static=assets 静态目录名称默认是asstes
