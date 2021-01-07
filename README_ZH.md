@@ -353,3 +353,13 @@ module.exports = {
  - MiniCssExtractPlugin,
  - CopyWebpackPlugin,
  - HtmlWebpackIncludeAssetsPlugin,
+ 
+### startapp，buildapp的缺省自定义参数
+```javascript
+ctbuild startapp --define alias=@,analysis=true,evnVars=true,cssModules=true,static=assets 
+```
+ - alias=@ src的别名
+ - analysis=true 是否启动分析
+ - envVars=true 是否将env变量注入到process中
+ - cssModules=true 是否启动cssModules
+ - static=assets 静态目录名称默认是asstes

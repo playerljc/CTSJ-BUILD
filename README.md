@@ -353,3 +353,13 @@ module.exports = {
  - MiniCssExtractPlugin,
  - CopyWebpackPlugin,
  - HtmlWebpackIncludeAssetsPlugin,
+ 
+### startapp, the default custom parameters of buildapp
+```javascript
+ctbuild startapp --define alias=@,analysis=true,evnVars=true,cssModules=true,static=assets
+```
+- alias=@src alias
+- analysis=true whether to start analysis
+- envVars=true Whether to inject env variables into the process
+- cssModules=true whether to start cssModules
+- static=assets static directory name is asstes by default
