@@ -42,8 +42,7 @@ module.exports = {
       path: path.resolve(runtimePath, 'dist'),
       publicPath: '/',
     },
-    plugins: [
-      new webpack.optimize.ModuleConcatenationPlugin(),
+    plugins: (isProd() ? [new webpack.optimize.ModuleConcatenationPlugin()] : []).concat([
       new HtmlWebpackPlugin({
         title: '',
         filename: 'index.html',
@@ -69,7 +68,7 @@ module.exports = {
         checkSyntacticErrors: true,
       }),
       new WebpackBar({ reporters: ['profile'], profile: true }),
-    ],
+    ]),
     optimization: isDev()
       ? {}
       : {
