@@ -1,3 +1,11 @@
+# 3.0.6
+
+***
+
+2021/01/09
+
+* 去掉webpack.optimize.ModuleConcatenationPlugin()这个插件带来的dev模式下的副作用
+
 # 3.0.5
 
 ***
