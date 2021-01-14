@@ -1,6 +1,6 @@
 {
   "name": "@ctsj/build",
-  "version": "4.0.6",
+  "version": "4.0.7",
   "description": "一个基于webpack的打包工具",
   "bin": {
     "ctbuild": "./build.js",
