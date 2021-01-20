@@ -1,3 +1,11 @@
+# 4.0.8
+
+***
+
+2021/01/20
+
+* resolve.modules中去掉path.join(runtimePath, 'node_modules')的路径寻找，修改为在文件所在目录的node_modules进行寻找
+
 # 4.0.7
 
 ***
