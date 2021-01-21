@@ -1,6 +1,6 @@
 const { spawn } = require('child_process');
 const path = require('path');
-const { getEnv } = require('./util');
+const { getEnv, isWin32 } = require('./util');
 
 // 运行脚本的路径
 const runtimePath = process.cwd();

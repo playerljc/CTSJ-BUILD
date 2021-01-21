@@ -42,8 +42,7 @@ module.exports = {
       path: path.resolve(runtimePath, 'dist'),
       publicPath: '/',
     },
-    plugins: [
-      new webpack.optimize.ModuleConcatenationPlugin(),
+    plugins: (isProd() ? [new webpack.optimize.ModuleConcatenationPlugin()] : []).concat([
       new HtmlWebpackPlugin({
         title: '',
         filename: 'index.html',
@@ -69,7 +68,7 @@ module.exports = {
         checkSyntacticErrors: true,
       }),
       new WebpackBar({ reporters: ['profile'], profile: true }),
-    ],
+    ]),
     optimization: isDev()
       ? {}
       : {
@@ -257,7 +256,7 @@ module.exports = {
       ],
     },
     resolve: {
-      modules: [path.join(runtimePath, 'node_modules'), 'node_modules'],
+      modules: [/* path.join(runtimePath, 'node_modules'), */ 'node_modules'],
       extensions: ['.js', '.jsx', '.ts', '.tsx', '.css', '.less', '.sass', '.json'], // 后缀名自动补全
     },
   },

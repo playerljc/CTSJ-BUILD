@@ -1,3 +1,28 @@
+# 4.0.8
+
+***
+
+2021/01/20
+
+* resolve.modules中去掉path.join(runtimePath, 'node_modules')的路径寻找，修改为在文件所在目录的node_modules进行寻找
+* --define curResolveModule 加入第三方包的引入是否从宿主工程的node_modules中进行查找
+
+# 4.0.7
+
+***
+
+2021/01/14
+
+* 有的文件没有引入isWin32方法
+
+# 4.0.6
+
+***
+
+2021/01/09
+
+* 去掉webpack.optimize.ModuleConcatenationPlugin()这个插件带来的dev模式下的副作用
+
 # 4.0.5
 
 ***
