@@ -361,7 +361,7 @@ module.exports = {
  
 ### startapp，buildapp的缺省自定义参数
 ```javascript
-ctbuild startapp --define alias=@,analysis,evnVars,cssModules,static=assets,,curResolveModule
+ctbuild startapp --define alias=@,analysis,evnVars,cssModules,static=assets,curResolveModule
 ```
  - alias=@ src的别名
  - analysis=true 是否启动分析
