@@ -341,7 +341,7 @@ module.exports = {
       ],
     },
     resolve: {
-      modules: [path.join(runtimePath, 'node_modules'), 'node_modules'],
+      modules: ['node_modules'],
       extensions: ['.js', '.jsx', '.ts', '.tsx', '.css', '.less', '.sass', '.json'], // 后缀名自动补全
     },
   },
@@ -356,10 +356,11 @@ module.exports = {
  
 ### startapp, the default custom parameters of buildapp
 ```javascript
-ctbuild startapp --define alias=@,analysis=true,evnVars=true,cssModules=true,static=assets
+ctbuild startapp --define alias=@,analysis,evnVars,cssModules,static=assets,curResolveModule
 ```
 - alias=@src alias
-- analysis=true whether to start analysis
-- envVars=true Whether to inject env variables into the process
-- cssModules=true whether to start cssModules
+- analysis whether to start analysis
+- envVars Whether to inject env variables into the process
+- cssModules whether to start cssModules
 - static=assets static directory name is asstes by default
+- curResolveModule whether the appointment to join the third-party package is searched from the node_modules of the host project
