@@ -3,6 +3,9 @@ const { getPostCssConfigPath, slash, isDev } = require('../../util');
 /**
  * cssModules
  * @param webpackConfig
+ * @param plugins
+ * @param theme
+ * @param runtimePath
  */
 module.exports = function ({ webpackConfig, plugins, theme = {}, runtimePath }) {
   if (isDev()) {
