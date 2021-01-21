@@ -361,10 +361,11 @@ module.exports = {
  
 ### startapp，buildapp的缺省自定义参数
 ```javascript
-ctbuild startapp --define alias=@,analysis=true,evnVars=true,cssModules=true,static=assets
+ctbuild startapp --define alias=@,analysis,evnVars,cssModules,static=assets,curResolveModule
 ```
  - alias=@ src的别名
- - analysis=true 是否启动分析
- - envVars=true 是否将env变量注入到process中
+ - analysis 是否启动分析
+ - envVars 是否将env变量注入到process中
  - cssModules=true 是否启动cssModules
  - static=assets 静态目录名称默认是asstes
+ - curResolveModule 加入第三方包的引入是否从宿主工程的node_modules中进行查找
