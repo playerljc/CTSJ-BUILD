@@ -5,6 +5,7 @@
 2021/01/20
 
 * resolve.modules中去掉path.join(runtimePath, 'node_modules')的路径寻找，修改为在文件所在目录的node_modules进行寻找
+* --define curResolveModule 加入第三方包的引入是否从宿主工程的node_modules中进行查找
 
 # 4.0.7
 

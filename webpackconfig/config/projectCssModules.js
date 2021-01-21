@@ -3,6 +3,9 @@ const { getPostCssConfigPath, slash, isDev } = require('../../util');
 /**
  * cssModules
  * @param webpackConfig
+ * @param plugins
+ * @param theme
+ * @param runtimePath
  */
 module.exports = function ({ webpackConfig, plugins, theme = {}, runtimePath }) {
   // include的APP_PATH中的less文件使用cssModules

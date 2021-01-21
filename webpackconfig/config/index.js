@@ -3,6 +3,7 @@ const projectCssModules = require('./projectCssModules');
 const projectEvnVars = require('./projectEvnVars');
 const projectStatic = require('./projectStatic');
 const projectBundleAnalyzer = require('./projectBundleAnalyzer');
+const projectCurResolveModule = require('./projectCurResolveModule');
 
 const map = {
   analysis: {
@@ -19,6 +20,9 @@ const map = {
   },
   alias: {
     handler: projectAlias,
+  },
+  curResolveModule: {
+    handler: projectCurResolveModule,
   },
 };
 
