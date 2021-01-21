@@ -346,7 +346,7 @@ module.exports = {
       ],
     },
     resolve: {
-      modules: [path.join(runtimePath, 'node_modules'), 'node_modules'],
+      modules: ['node_modules'],
       extensions: ['.js', '.jsx', '.ts', '.tsx', '.css', '.less', '.sass', '.json'], // 后缀名自动补全
     },
   },
