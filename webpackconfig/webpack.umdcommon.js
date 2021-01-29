@@ -80,7 +80,6 @@ module.exports = {
           exclude: /(node_modules|bower_components)/,
           // include: [APP_PATH],
           use: [
-            'cache-loader',
             'thread-loader',
             {
               loader: 'babel-loader',
@@ -111,7 +110,6 @@ module.exports = {
           include: [APP_PATH, /highlight.js/, /photoswipe.css/, /default-skin.css/],
           use: [
             isDev() ? 'style-loader' : MiniCssExtractPlugin.loader,
-            'cache-loader',
             'thread-loader',
             {
               loader: 'css-loader',
@@ -134,7 +132,6 @@ module.exports = {
           include: [APP_PATH, /normalize.less/],
           use: [
             isDev() ? 'style-loader' : MiniCssExtractPlugin.loader,
-            'cache-loader',
             'thread-loader',
             {
               loader: 'css-loader',
