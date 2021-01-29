@@ -16,7 +16,7 @@ const runtimePath = process.argv[8];
 
 const APP_PATH = path.resolve(runtimePath, 'src'); // 项目src目录
 
-const devLoaders = isDev() ? [] : ['cache-loader', 'thread-loader'];
+const devLoaders = isDev() ? [] : ['thread-loader'];
 
 module.exports = {
   plugins: {
