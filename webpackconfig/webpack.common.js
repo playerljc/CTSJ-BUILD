@@ -56,7 +56,7 @@ module.exports = {
       new webpack.HashedModuleIdsPlugin(),
       new MiniCssExtractPlugin({
         filename: isDev() ? '[name].css' : '[name].[hash].css',
-        chunkFilename: isDev() ? '[id].css' : '[id].[hash].css',
+        chunkFilename: isDev() ? '[name].css' : '[name].[hash].css',
         ignoreOrder: false,
       }),
       new webpack.ProvidePlugin({
