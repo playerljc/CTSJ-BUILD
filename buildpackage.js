@@ -1,18 +1,14 @@
 const { spawn } = require('child_process');
 const path = require('path');
-const { getEnv, isWin32 } = require('./util');
-
 // 运行脚本的路径
 const runtimePath = process.cwd();
-
 // 脚本所在的路径
 const codePath = __dirname;
-
 const commandPath = path.join(codePath, 'node_modules', '.bin', path.sep);
+const { getEnv } = require('./util');
 
 // buildpackage生成的目录名称
 const generateDirName = 'lib';
-
 // buildpackage原始名称
 const srcDirName = 'src';
 
@@ -23,7 +19,6 @@ const outputPath = path.join(runtimePath, generateDirName);
 let compilePath;
 
 let index = 0;
-
 // buildpackage的所有任务
 const tasks = [
   // 清除生成目录
@@ -40,9 +35,8 @@ const tasks = [
  * @return {Promise}
  */
 function clearTask() {
-  return new Promise((resolve) => {
-    const command = isWin32() ? `rimraf.cmd` : `rimraf`;
-
+  return new Promise((resolve, reject) => {
+    const command = process.platform === 'win32' ? `rimraf.cmd` : `rimraf`;
     const rimrafProcess = spawn(command, [outputPath], {
       cwd: codePath,
       encoding: 'utf-8',
@@ -70,9 +64,8 @@ function clearTask() {
  * @return {Promise}
  */
 function babelTask() {
-  return new Promise((resolve) => {
-    const command = isWin32() ? `babel.cmd` : `babel`;
-
+  return new Promise((resolve, reject) => {
+    const command = process.platform === 'win32' ? `babel.cmd` : `babel`;
     const babelProcess = spawn(
       command,
       [
@@ -111,9 +104,8 @@ function babelTask() {
  * @return {Promise}
  */
 function gulpTask() {
-  return new Promise((resolve) => {
-    const command = isWin32() ? `gulp.cmd` : `gulp`;
-
+  return new Promise((resolve, reject) => {
+    const command = process.platform === 'win32' ? `gulp.cmd` : `gulp`;
     const gulpProcess = spawn(
       command,
       [

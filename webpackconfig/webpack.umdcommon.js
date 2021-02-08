@@ -2,158 +2,216 @@ const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+// const LessPluginCleanCSS = require('less-plugin-clean-css');
+// const LessPluginAutoPrefix = require('less-plugin-autoprefix');
+const HappyPack = require('happypack');
 const WebpackBar = require('webpackbar');
-const TerserPlugin = require('terser-webpack-plugin');
-const Util = require('../util');
-const { getPostCssConfigPath, isDev } = require('../util');
+// const ProgressBarPlugin = require('progress-bar-webpack-plugin');
+// const ExtractTextPlugin = require("extract-text-webpack-plugin");
+// const VueLoaderPlugin = require('vue-loader/lib/plugin');
 
 const runtimePath = process.argv[8];
-
 const packagename = process.argv[10];
 
+const { getPostCssConfigPath } = require('../util');
+
+// const extractLess = new ExtractTextPlugin({
+//   filename: (getPath) => {
+//     return getPath(`${packagename}.css`);
+//   },
+//   allChunks: true
+// });
+
+// console.log('umd-packagename', packagename);
+// console.log('umd-runtimePath', runtimePath);
 const APP_PATH = path.resolve(runtimePath, 'src'); // 项目src目录
+// console.log('umd-APP_PATH', APP_PATH);
 
 module.exports = {
   plugins: {
     HtmlWebpackPlugin,
     MiniCssExtractPlugin,
+    // LessPluginCleanCSS,
+    // LessPluginAutoPrefix,
+    // ExtractTextPlugin,
+    // VueLoaderPlugin
   },
   config: {
-    /**
-     * 入口
-     */
     entry: {
-      // 判断入口文件是.js,.jsx,.tsx
-      index: Util.getEntryIndex(runtimePath),
+      index: path.join(runtimePath, 'src', 'index.js'), // `${runtimePath}src\\index.js`,
     },
-    /**
-     * 出口
-     */
     output: {
-      filename: `${packagename}.bundle.js`,
-      // chunkFilename:`${packagename}.bundle.js`,
+      filename:
+        process.env.NODE_ENV === 'production'
+          ? '[name].[chunkhash].bundle.js'
+          : '[name].[hash].bundle.js',
+      chunkFilename:
+        process.env.NODE_ENV === 'production'
+          ? '[name].[chunkhash].bundle.js'
+          : '[name].[hash].bundle.js',
       path: path.resolve(runtimePath, 'umd'),
       publicPath: '/',
       library: `${packagename}`,
       libraryTarget: 'umd',
     },
     plugins: [
-      new webpack.optimize.ModuleConcatenationPlugin(),
       // 请确保引入这个插件！
+      // new VueLoaderPlugin(),
       new HtmlWebpackPlugin({
         title: '',
         filename: 'index.html',
-        template: path.join(runtimePath, 'index.html'),
+        template: path.join(runtimePath, 'index.html'), // `${runtimePath}\\index.html`,
         hash: true, // 防止缓存
         minify: {
-          removeAttributeQuotes: true,
+          removeAttributeQuotes: true, // 压缩 去掉引号
         },
         chunks: ['index'],
       }),
       new webpack.HashedModuleIdsPlugin(),
+      // extractLess,
       new MiniCssExtractPlugin({
-        filename: `${packagename}.min.css`,
-        // chunkFilename: `${packagename}.min.css`,
-        ignoreOrder: false,
+        // Options similar to the same options in webpackOptions.output
+        // all options are optional
+        filename: '[name].css',
+        chunkFilename: '[id].css',
+        ignoreOrder: false, // Enable to remove warnings about conflicting order
+      }),
+      // new ProgressBarPlugin(),
+      new HappyPack({
+        id: 'babel',
+        loaders: [
+          {
+            loader: 'babel-loader',
+            query: {
+              presets: [
+                [
+                  '@babel/preset-env',
+                  {
+                    useBuiltIns: 'usage',
+                    corejs: { version: 3, proposals: true },
+                  },
+                ],
+                '@babel/preset-react',
+              ],
+              plugins: [
+                '@babel/plugin-transform-runtime',
+                '@babel/plugin-syntax-dynamic-import',
+                '@babel/plugin-proposal-function-bind',
+                '@babel/plugin-proposal-class-properties',
+              ],
+            },
+          },
+        ],
+      }),
+      new HappyPack({
+        id: 'css',
+        loaders: [
+          {
+            loader: 'css-loader',
+            options: {
+              importLoaders: 1,
+            },
+          },
+          {
+            loader: 'postcss-loader',
+            options: {
+              config: {
+                path: getPostCssConfigPath(runtimePath),
+              },
+            },
+          },
+        ],
+      }),
+      new HappyPack({
+        id: 'less',
+        loaders: [
+          {
+            loader: 'css-loader',
+            options: {
+              importLoaders: 1,
+            },
+          },
+          {
+            loader: 'postcss-loader',
+            options: {
+              config: {
+                path: getPostCssConfigPath(runtimePath),
+              },
+            },
+          },
+          {
+            loader: 'less-loader',
+            query: {
+              javascriptEnabled: true,
+            },
+          },
+          // {
+          //   loader: "less-loader",
+          //   query: {
+          //     javascriptEnabled: true,
+          //     plugins: [
+          //       new LessPluginCleanCSS({advanced: true}),
+          //       new LessPluginAutoPrefix({add: false, remove: false, browsers: ['last 2 versions']})
+          //     ]
+          //   }
+          // }
+        ],
       }),
       new WebpackBar({ reporters: ['profile'], profile: true }),
     ],
-    optimization: {
-      minimize: true,
-      minimizer: [new TerserPlugin(), new OptimizeCSSAssetsPlugin({})],
-      // runtimeChunk: 'single',
-      // splitChunks: {
-      //   cacheGroups: {
-      //     vendor: {
-      //       test: /[\\/]node_modules[\\/]/,
-      //       name: 'vendors',
-      //       chunks: 'all',
-      //     },
-      //   },
-      // },
-    },
+    // optimization: {
+    //   runtimeChunk: 'single',
+    //   splitChunks: {
+    //     cacheGroups: {
+    //       vendor: {
+    //         test: /[\\/]node_modules[\\/]/,
+    //         name: 'vendors',
+    //         chunks: 'all'
+    //       }
+    //     }
+    //   }
+    // },
     module: {
       rules: [
         {
           test: /\.m?jsx?$/,
           exclude: /(node_modules|bower_components)/,
           // include: [APP_PATH],
-          use: [
-            'thread-loader',
-            {
-              loader: 'babel-loader',
-              query: {
-                presets: [
-                  [
-                    '@babel/preset-env',
-                    {
-                      useBuiltIns: 'usage',
-                      corejs: { version: 3, proposals: true },
-                    },
-                  ],
-                  '@babel/preset-react',
-                ],
-                plugins: [
-                  '@babel/plugin-transform-runtime',
-                  '@babel/plugin-syntax-dynamic-import',
-                  '@babel/plugin-proposal-function-bind',
-                  '@babel/plugin-proposal-class-properties',
-                ],
-                cacheDirectory: true,
-              },
-            },
-          ],
+          use: ['happypack/loader?id=babel'],
         },
         {
           test: /\.css$/,
           include: [APP_PATH, /highlight.js/, /photoswipe.css/, /default-skin.css/],
+          // use: ExtractTextPlugin.extract({
+          //   fallback: "style-loader",
+          //   use: "css-loader"
+          // })
           use: [
-            isDev() ? 'style-loader' : MiniCssExtractPlugin.loader,
-            'thread-loader',
-            {
-              loader: 'css-loader',
-              options: {
-                importLoaders: 1,
-              },
-            },
-            {
-              loader: 'postcss-loader',
-              options: {
-                config: {
-                  path: getPostCssConfigPath(runtimePath),
-                },
-              },
-            },
+            process.env.NODE_ENV === 'development' ? 'style-loader' : MiniCssExtractPlugin.loader,
+            'happypack/loader?id=css',
           ],
         },
         {
           test: /\.less$/,
           include: [APP_PATH, /normalize.less/],
           use: [
-            isDev() ? 'style-loader' : MiniCssExtractPlugin.loader,
-            'thread-loader',
-            {
-              loader: 'css-loader',
-              options: {
-                importLoaders: 1,
-              },
-            },
-            {
-              loader: 'postcss-loader',
-              options: {
-                config: {
-                  path: getPostCssConfigPath(runtimePath),
-                },
-              },
-            },
-            {
-              loader: 'less-loader',
-              query: {
-                javascriptEnabled: true,
-              },
-            },
+            process.env.NODE_ENV === 'development' ? 'style-loader' : MiniCssExtractPlugin.loader,
+            'happypack/loader?id=less',
           ],
+          //   ExtractTextPlugin.extract({
+          //   use: [{
+          //     loader: "css-loader"
+          //   }, {
+          //     loader: "less-loader",
+          //     options: {
+          //       plugins: [
+          //         new LessPluginCleanCSS({advanced: true}),
+          //         new LessPluginAutoPrefix({add: false, remove: false, browsers: ['last 2 versions']})
+          //       ]
+          //     }
+          //   }],
+          //   fallback: "style-loader"
+          // })
         },
         {
           test: /\.(png|svg|jpg|gif|ico)$/,
@@ -192,8 +250,7 @@ module.exports = {
       ],
     },
     resolve: {
-      modules: [/* path.join(runtimePath, 'node_modules'), */ 'node_modules'],
-      extensions: ['.js', '.jsx', '.ts', '.tsx', '.css', '.less', '.sass', '.json'], // 后缀名自动补全
+      extensions: ['.js', '.jsx', '.less', '.css', '.json'], // 后缀名自动补全
     },
   },
 };
