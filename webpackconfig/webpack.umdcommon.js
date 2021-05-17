@@ -39,6 +39,7 @@ module.exports = {
       publicPath: '/',
       library: `${packagename}`,
       libraryTarget: 'umd',
+      libraryExport: 'default'
     },
     plugins: [
       new webpack.optimize.ModuleConcatenationPlugin(),
@@ -86,7 +87,6 @@ module.exports = {
           exclude: /(node_modules|bower_components)/,
           // include: [APP_PATH],
           use: [
-            'cache-loader',
             'thread-loader',
             {
               loader: 'babel-loader',
@@ -94,9 +94,12 @@ module.exports = {
                 presets: [
                   [
                     '@babel/preset-env',
+                    // {
+                    //   useBuiltIns: 'usage',
+                    //   corejs: { version: 3, proposals: true },
+                    // },
                     {
-                      useBuiltIns: 'usage',
-                      corejs: { version: 3, proposals: true },
+                      useBuiltIns: 'entry',
                     },
                   ],
                   '@babel/preset-react',
@@ -117,7 +120,6 @@ module.exports = {
           exclude: /(node_modules|bower_components)/,
           include: [APP_PATH],
           use: [
-            'cache-loader',
             'thread-loader',
             {
               loader: 'ts-loader',
@@ -134,7 +136,6 @@ module.exports = {
           include: [APP_PATH, /highlight.js/, /photoswipe.css/, /default-skin.css/],
           use: [
             isDev() ? 'style-loader' : MiniCssExtractPlugin.loader,
-            'cache-loader',
             'thread-loader',
             {
               loader: 'css-loader',
@@ -157,7 +158,6 @@ module.exports = {
           include: [APP_PATH, /normalize.less/],
           use: [
             isDev() ? 'style-loader' : MiniCssExtractPlugin.loader,
-            'cache-loader',
             'thread-loader',
             {
               loader: 'css-loader',
