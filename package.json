@@ -6,28 +6,12 @@
     "ctbuild": "./build.js",
     "ctcopy": "./copy.js"
   },
-  "scripts": {
-    "devDll": "webpack --config webpack.dll.js",
-    "startapp": "cross-env REAP_PATH=dev webpack-dev-server --open --config webpack.dev.js",
-    "buildapp": "cross-env REAP_PATH=dev webpack --config webpack.prod.js",
-    "buildpackage": "rimraf lib && babel src -d lib/src --ignore __tests__ && gulp"
-  },
   "keywords": [
     "CTSJ-BUILD",
     "CTMobile-UI",
     "CTSJ-UI",
     "CTMobile",
-    "PC",
-    "mobile",
-    "webapp",
-    "SPA",
-    "Hybrid",
-    "Cordova",
-    "Android",
-    "iOS",
-    "Material",
     "playerljc",
-    "WebFramework",
     "webpack",
     "gulp",
     "babel"
