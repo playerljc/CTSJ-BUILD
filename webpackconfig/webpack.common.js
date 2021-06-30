@@ -97,7 +97,7 @@ module.exports = {
         {
           test: /\.m?jsx?$/,
           exclude: /(node_modules|bower_components)/,
-          include: [APP_PATH],
+          // include: [APP_PATH],
           use: devLoaders.concat([
             {
               loader: 'babel-loader',
@@ -126,7 +126,7 @@ module.exports = {
         {
           test: /\.m?tsx?$/,
           exclude: /(node_modules|bower_components)/,
-          include: [APP_PATH],
+          // include: [APP_PATH],
           use: devLoaders.concat([
             {
               loader: 'ts-loader',
