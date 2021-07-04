@@ -21,6 +21,7 @@ let customModule;
 // --customconfig
 const curModule = merge(common.config, {
   mode: 'production',
+  devtool: 'cheap-module-source-map',
   plugins: [
     new CleanWebpackPlugin(),
     new webpack.DefinePlugin({
