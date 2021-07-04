@@ -10,6 +10,7 @@ const runtimePath = process.argv[8];
 
 let webpackConfig = merge(common.config, {
   mode: 'production',
+  devtool: 'cheap-module-source-map',
   plugins: [new CleanWebpackPlugin()],
 });
 
