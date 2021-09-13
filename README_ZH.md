@@ -369,3 +369,4 @@ ctbuild startapp --define alias=@,analysis,evnVars,cssModules,static=assets,curR
  - cssModules 是否启动cssModules
  - static=assets 静态目录名称默认是asstes
  - curResolveModule 加入第三方包的引入是否从宿主工程的node_modules中进行查找
+ - disableStrict 是否禁用use strict

@@ -4,6 +4,7 @@ const projectEvnVars = require('./projectEvnVars');
 const projectStatic = require('./projectStatic');
 const projectBundleAnalyzer = require('./projectBundleAnalyzer');
 const projectCurResolveModule = require('./projectCurResolveModule');
+const projectDisableStrict = require('./projectDisableStrict');
 
 const map = {
   analysis: {
@@ -24,6 +25,9 @@ const map = {
   curResolveModule: {
     handler: projectCurResolveModule,
   },
+  disableStrict: {
+    handler: projectDisableStrict
+  }
 };
 
 module.exports = function ({ defineArgs, ...others }) {
