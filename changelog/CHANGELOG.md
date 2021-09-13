@@ -5,6 +5,7 @@
 2021/03/20
 
 * 修改util.js中的getEntryIndex方法
+* 加入disableStrict
 
 # 4.0.10
 

@@ -18,6 +18,26 @@ const APP_PATH = path.resolve(runtimePath, 'src'); // 项目src目录
 
 const devLoaders = isDev() ? [] : ['thread-loader'];
 
+const babelConfig = {
+  presets: [
+    [
+      '@babel/preset-env',
+      {
+        useBuiltIns: 'usage',
+        corejs: { version: 3, proposals: true },
+      },
+    ],
+    '@babel/preset-react',
+  ],
+  plugins: [
+    '@babel/plugin-transform-runtime',
+    '@babel/plugin-syntax-dynamic-import',
+    '@babel/plugin-proposal-function-bind',
+    '@babel/plugin-proposal-class-properties',
+  ],
+  cacheDirectory: isProd(),
+};
+
 module.exports = {
   plugins: {
     HtmlWebpackPlugin,
@@ -101,25 +121,7 @@ module.exports = {
           use: devLoaders.concat([
             {
               loader: 'babel-loader',
-              query: {
-                presets: [
-                  [
-                    '@babel/preset-env',
-                    {
-                      useBuiltIns: 'usage',
-                      corejs: { version: 3, proposals: true },
-                    },
-                  ],
-                  '@babel/preset-react',
-                ],
-                plugins: [
-                  '@babel/plugin-transform-runtime',
-                  '@babel/plugin-syntax-dynamic-import',
-                  '@babel/plugin-proposal-function-bind',
-                  '@babel/plugin-proposal-class-properties',
-                ],
-                cacheDirectory: isProd(),
-              },
+              query: babelConfig,
             },
           ]),
         },
@@ -128,6 +130,10 @@ module.exports = {
           exclude: /(node_modules|bower_components)/,
           // include: [APP_PATH],
           use: devLoaders.concat([
+            {
+              loader: 'babel-loader',
+              options: babelConfig,
+            },
             {
               loader: 'ts-loader',
               options: {

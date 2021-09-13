@@ -364,3 +364,4 @@ ctbuild startapp --define alias=@,analysis,evnVars,cssModules,static=assets,curR
 - cssModules=true whether to start cssModules
 - static=assets static directory name is asstes by default
 - curResolveModule whether the appointment to join the third-party package is searched from the node_modules of the host project
+- disableStrict Whether to disable use strict
