@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 #!/usr/bin/env node
 
 /**
@@ -7,14 +6,13 @@
  */
 const path = require('path');
 const { spawn } = require('child_process');
-const args = require('./commandArgs');
-const { getEnv } = require('./util');
+const args = require('../src/commandArgs');
+const { getEnv } = require('../src/util');
 // 运行脚本的路径
 const runtimePath = process.cwd();
 
 // 脚本的路径
-const codePath = __dirname;
-const commandPath = path.join(codePath, 'node_modules', '.bin', path.sep);
+const commandPath = path.join(__dirname, 'node_modules', '.bin', path.sep);
 const tasks = [cpTask];
 let index = 0;
 

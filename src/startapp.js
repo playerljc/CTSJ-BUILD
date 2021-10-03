@@ -10,7 +10,7 @@ const runtimePath = process.cwd();
 const codePath = __dirname;
 
 // ctbuild.cmd或者ctbuild.sh所在路径
-const commandPath = path.join(codePath, 'node_modules', '.bin', path.sep);
+const commandPath = path.join(codePath, '../', 'node_modules', '.bin', path.sep);
 
 // 配置文件所在路径
 let configPath;
@@ -31,7 +31,7 @@ function corssenvTask() {
   return new Promise((resolve) => {
     const command = isWin32() ? `cross-env.cmd` : `cross-env`;
     const crossenvProcess = spawn(command, ['REAP_PATH=dev', 'NODE_ENV=development'], {
-      cwd: codePath,
+      cwd: path.join(codePath, '../'),
       encoding: 'utf-8',
       env: getEnv(commandPath),
     });
@@ -100,18 +100,17 @@ function webpackServiceTask() {
       [
         '--open',
         '--config',
-        path.join('webpackconfig', 'webpack.dev.js'),
+        path.join(codePath, 'webpackconfig', 'webpack.dev.js'),
         '--progress',
-        '--colors',
-        '--runtimepath',
-        path.join(runtimePath, path.sep),
-        '--customconfig',
-        configPath,
-        '--define',
-        define.join(' '),
+        '--env',
+        [
+          `runtimepath=${path.join(runtimePath, path.sep)}`,
+          `customconfig=${configPath}`,
+          `define=${new Buffer(JSON.stringify(define)).toString('base64')}`
+        ].join(' '),
       ],
       {
-        cwd: codePath,
+        cwd: path.join(codePath, '../'),
         encoding: 'utf-8',
         env: getEnv(commandPath),
       },

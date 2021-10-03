@@ -3,15 +3,15 @@ const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
-const HtmlWebpackIncludeAssetsPlugin = require('html-webpack-include-assets-plugin');
+const HtmlWebpackTagsPlugin = require('html-webpack-tags-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const WebpackBar = require('webpackbar');
 const TerserPlugin = require('terser-webpack-plugin');
-
+const commandArgs = require('../commandArgs');
 const Util = require('../util');
 const { getPostCssConfigPath, isDev, isProd } = require('../util');
 
-const runtimePath = process.argv[8];
+const runtimePath = commandArgs.toCommandArgs(process.argv[8]).get('runtimepath');
 
 const APP_PATH = path.resolve(runtimePath, 'src'); // 项目src目录
 
@@ -22,7 +22,7 @@ module.exports = {
     HtmlWebpackPlugin,
     MiniCssExtractPlugin,
     CopyWebpackPlugin,
-    HtmlWebpackIncludeAssetsPlugin,
+    HtmlWebpackTagsPlugin,
   },
   config: {
     /**
@@ -36,10 +36,11 @@ module.exports = {
      * 出口
      */
     output: {
-      filename: isProd() ? '[name].[chunkhash].bundle.js' : '[name].[hash].bundle.js',
-      chunkFilename: isProd() ? '[name].[chunkhash].bundle.js' : '[name].[hash].bundle.js',
+      filename: isProd() ? '[name].[chunkhash].bundle.js' : '[name].[contenthash].bundle.js',
+      chunkFilename: isProd() ? '[name].[chunkhash].bundle.js' : '[name].[contenthash].bundle.js',
       path: path.resolve(runtimePath, 'dist'),
       publicPath: '/',
+      clean: true,
     },
     plugins: (isProd() ? [new webpack.optimize.ModuleConcatenationPlugin()] : []).concat([
       new HtmlWebpackPlugin({
@@ -52,10 +53,10 @@ module.exports = {
         },
         chunks: ['index'],
       }),
-      new webpack.HashedModuleIdsPlugin(),
+      // new webpack.HashedModuleIdsPlugin(),
       new MiniCssExtractPlugin({
-        filename: isDev() ? '[name].css' : '[name].[hash].css',
-        chunkFilename: isDev() ? '[name].css' : '[name].[hash].css',
+        filename: isDev() ? '[name].css' : '[name].[contenthash].css',
+        chunkFilename: isDev() ? '[name].css' : '[name].[contenthash].css',
         ignoreOrder: false,
       }),
       new webpack.ProvidePlugin({
@@ -65,7 +66,9 @@ module.exports = {
       new WebpackBar({ reporters: ['profile'], profile: true }),
     ]),
     optimization: isDev()
-      ? {}
+      ? {
+        splitChunks: false
+      }
       : {
           minimize: !isDev(), // true,
           minimizer: isDev()
@@ -96,7 +99,7 @@ module.exports = {
           use: devLoaders.concat([
             {
               loader: 'babel-loader',
-              query: {
+              options: {
                 presets: [
                   [
                     '@babel/preset-env',
@@ -151,9 +154,9 @@ module.exports = {
               {
                 loader: 'postcss-loader',
                 options: {
-                  config: {
-                    path: getPostCssConfigPath(runtimePath),
-                  },
+                  postcssOptions:{
+                    config: getPostCssConfigPath(runtimePath),
+                  }
                 },
               },
             ]),
@@ -182,15 +185,17 @@ module.exports = {
               {
                 loader: 'postcss-loader',
                 options: {
-                  config: {
-                    path: getPostCssConfigPath(runtimePath),
-                  },
+                  postcssOptions:{
+                    config: getPostCssConfigPath(runtimePath)
+                  }
                 },
               },
               {
                 loader: 'less-loader',
-                query: {
-                  javascriptEnabled: true,
+                options: {
+                  lessOptions: {
+                    javascriptEnabled: true,
+                  }
                 },
               },
             ]),
@@ -227,11 +232,22 @@ module.exports = {
         },
         {
           test: /\.ejs/,
-          loader: ['ejs-loader?variable=data'],
+          use:[
+            {
+              loader: 'ejs-loader',
+              options: {
+                variable: 'data',
+              },
+            },
+          ]
         },
         {
           test: /\.ya?ml$/,
           use: ['json-loader', 'yaml-loader'],
+        },
+        {
+          test: /\.md$/,
+          use: ['raw-loader'],
         },
       ],
     },

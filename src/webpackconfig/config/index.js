@@ -26,8 +26,8 @@ const map = {
     handler: projectCurResolveModule,
   },
   disableStrict: {
-    handler: projectDisableStrict
-  }
+    handler: projectDisableStrict,
+  },
 };
 
 module.exports = function ({ defineArgs, ...others }) {
@@ -35,7 +35,6 @@ module.exports = function ({ defineArgs, ...others }) {
 
   keys.forEach((key) => {
     const exists = defineArgs.has(key);
-
     if (exists) {
       map[key].handler({ ...others, val: defineArgs.get(key) });
     }

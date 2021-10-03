@@ -29,11 +29,15 @@ module.exports = function ({ webpackConfig, plugins, theme = {}, runtimePath }) 
         return localName;
       },
     };
-    webpackConfig.module.rules[2].use[3].query.modifyVars = theme;
+    webpackConfig.module.rules[2].use[3].options.lessOptions = {
+      modifyVars: theme
+    };
   } else {
     // include的APP_PATH中的less文件使用cssModules
     webpackConfig.module.rules[2].use[2].options.modules = true;
-    webpackConfig.module.rules[2].use[4].query.modifyVars = theme;
+    webpackConfig.module.rules[2].use[4].options.lessOptions = {
+      modifyVars: theme
+    };
   }
 
   // include是node_modules中的less文件不需要cssModules
@@ -52,16 +56,18 @@ module.exports = function ({ webpackConfig, plugins, theme = {}, runtimePath }) 
         {
           loader: 'postcss-loader',
           options: {
-            config: {
-              path: getPostCssConfigPath(runtimePath),
-            },
+            postcssOptions:{
+              config: getPostCssConfigPath(runtimePath),
+            }
           },
         },
         {
           loader: 'less-loader',
-          query: {
-            javascriptEnabled: true,
-            modifyVars: theme,
+          options: {
+            lessOptions: {
+              javascriptEnabled: true,
+              modifyVars: theme,
+            },
           },
         },
       ]),

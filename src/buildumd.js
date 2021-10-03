@@ -109,16 +109,22 @@ function webpackTask() {
         '--config',
         path.join('webpackconfig', 'webpack.umd.js'),
         '--progress',
-        '--colors',
+        '--env',
+        [
+          `runtimepath=${path.join(runtimePath, path.sep)}`,
+          `customconfig=${configPath}`,
+          `packagename=${packageName}`,
+          `define=${new Buffer(JSON.stringify(define)).toString('base64')}`
+        ].join(' ')
 
-        '--runtimepath',
-        path.join(runtimePath, path.sep),
-        '--packagename',
-        packageName,
-        '--customconfig',
-        configPath,
-        '--define',
-        define.join(' '),
+        // '--runtimepath',
+        // path.join(runtimePath, path.sep),
+        // '--packagename',
+        // packageName,
+        // '--customconfig',
+        // configPath,
+        // '--define',
+        // define.join(' '),
       ],
       {
         cwd: codePath,

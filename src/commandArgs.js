@@ -40,7 +40,6 @@ module.exports = {
    */
   toCommandArgs(command = '') {
     const commandArr = command.split(' ');
-
     const map = new Map();
 
     commandArr.forEach((t) => {

@@ -6,11 +6,14 @@ const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const WebpackBar = require('webpackbar');
 const TerserPlugin = require('terser-webpack-plugin');
 const Util = require('../util');
+const commandArgs = require('../commandArgs');
 const { getPostCssConfigPath, isDev } = require('../util');
 
-const runtimePath = process.argv[8];
+const customArgs = commandArgs.toCommandArgs(process.argv[8]);
 
-const packagename = process.argv[10];
+const runtimePath = customArgs.get('runtimepath');
+
+const packagename = customArgs.get('packagename');/*process.argv[10];*/
 
 const APP_PATH = path.resolve(runtimePath, 'src'); // 项目src目录
 
@@ -37,7 +40,8 @@ module.exports = {
       publicPath: '/',
       library: `${packagename}`,
       libraryTarget: 'umd',
-      libraryExport: 'default'
+      libraryExport: 'default',
+      clean: true,
     },
     plugins: [
       new webpack.optimize.ModuleConcatenationPlugin(),
@@ -84,7 +88,7 @@ module.exports = {
             'thread-loader',
             {
               loader: 'babel-loader',
-              query: {
+              options: {
                 presets: [
                   [
                     '@babel/preset-env',
@@ -124,9 +128,9 @@ module.exports = {
             {
               loader: 'postcss-loader',
               options: {
-                config: {
-                  path: getPostCssConfigPath(runtimePath),
-                },
+                postcssOptions:{
+                  config: getPostCssConfigPath(runtimePath),
+                }
               },
             },
           ],
@@ -146,15 +150,17 @@ module.exports = {
             {
               loader: 'postcss-loader',
               options: {
-                config: {
-                  path: getPostCssConfigPath(runtimePath),
-                },
+                postcssOptions:{
+                  config: getPostCssConfigPath(runtimePath),
+                }
               },
             },
             {
               loader: 'less-loader',
-              query: {
-                javascriptEnabled: true,
+              options: {
+                lessOptions: {
+                  javascriptEnabled: true,
+                }
               },
             },
           ],
@@ -192,6 +198,10 @@ module.exports = {
         {
           test: /\.ejs/,
           loader: ['ejs-loader?variable=data'],
+        },
+        {
+          test: /\.md$/,
+          use: 'raw-loader',
         },
       ],
     },
