@@ -10,7 +10,6 @@ const args = require('../src/commandArgs');
 const { getEnv } = require('../src/util');
 // 运行脚本的路径
 const runtimePath = process.cwd();
-
 // 脚本的路径
 const commandPath = path.join(__dirname, '../', 'node_modules', '.bin', path.sep);
 const tasks = [cpTask];

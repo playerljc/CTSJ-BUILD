@@ -113,8 +113,8 @@ function webpackTask() {
           `runtimepath=${path.join(runtimePath, path.sep)}`,
           `customconfig=${configPath}`,
           `packagename=${packageName}`,
-          `define=${Buffer.from(JSON.stringify(define)).toString('base64')}`
-        ].join(' ')
+          `define=${Buffer.from(JSON.stringify(define)).toString('base64')}`,
+        ].join(' '),
 
         // '--runtimepath',
         // path.join(runtimePath, path.sep),

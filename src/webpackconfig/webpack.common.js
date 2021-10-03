@@ -132,9 +132,6 @@ module.exports = {
               ? 'style-loader'
               : {
                   loader: MiniCssExtractPlugin.loader,
-                  // options: {
-                  //   hmr: isDev(),
-                  // },
                 },
             {
               loader: 'css-loader',
@@ -160,9 +157,6 @@ module.exports = {
               ? 'style-loader'
               : {
                   loader: MiniCssExtractPlugin.loader,
-                  // options: {
-                  //   hmr: isDev(),
-                  // },
                 },
             {
               loader: 'css-loader',

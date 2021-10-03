@@ -155,6 +155,7 @@ function loopTask() {
     if (index >= tasks.length) {
       resolve();
     } else {
+      // eslint-disable-next-line no-plusplus
       const task = tasks[index++];
       if (task) {
         task()
@@ -176,7 +177,7 @@ function loopTask() {
 module.exports = {
   /**
    * build
-   * @param {String} - srcPath
+   * @param srcPath
    */
   build(srcPath) {
     if (srcPath) {

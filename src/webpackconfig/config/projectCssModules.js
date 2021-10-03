@@ -30,13 +30,13 @@ module.exports = function ({ webpackConfig, plugins, theme = {}, runtimePath }) 
       },
     };
     webpackConfig.module.rules[2].use[3].options.lessOptions = {
-      modifyVars: theme
+      modifyVars: theme,
     };
   } else {
     // include的APP_PATH中的less文件使用cssModules
     webpackConfig.module.rules[2].use[1].options.modules = true;
     webpackConfig.module.rules[2].use[3].options.lessOptions = {
-      modifyVars: theme
+      modifyVars: theme,
     };
   }
 
@@ -55,9 +55,9 @@ module.exports = function ({ webpackConfig, plugins, theme = {}, runtimePath }) 
       {
         loader: 'postcss-loader',
         options: {
-          postcssOptions:{
+          postcssOptions: {
             config: getPostCssConfigPath(runtimePath),
-          }
+          },
         },
       },
       {

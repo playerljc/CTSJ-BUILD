@@ -12,7 +12,6 @@ const runtimePath = commandArgs.toCommandArgs(process.argv[10]).get('runtimepath
 let webpackConfig = merge(common.config, {
   mode: 'production',
   devtool: 'cheap-module-source-map',
-  // plugins: [new CleanWebpackPlugin()],
 });
 
 webpackConfig = webpackBase({
