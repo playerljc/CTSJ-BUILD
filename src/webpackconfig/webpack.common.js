@@ -4,14 +4,15 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const HtmlWebpackTagsPlugin = require('html-webpack-tags-plugin');
-const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const WebpackBar = require('webpackbar');
 const TerserPlugin = require('terser-webpack-plugin');
 const commandArgs = require('../commandArgs');
 const Util = require('../util');
 const { getPostCssConfigPath, isDev, isProd } = require('../util');
 
-const runtimePath = commandArgs.toCommandArgs(process.argv[8]).get('runtimepath');
+const argIndex = isDev() ? 8 : 6;
+const runtimePath = commandArgs.toCommandArgs(process.argv[argIndex]).get('runtimepath');
 
 const APP_PATH = path.resolve(runtimePath, 'src'); // 项目src目录
 
@@ -67,18 +68,11 @@ module.exports = {
     ]),
     optimization: isDev()
       ? {
-        splitChunks: false
-      }
+          splitChunks: false,
+        }
       : {
           minimize: !isDev(), // true,
-          minimizer: isDev()
-            ? []
-            : [
-                new TerserPlugin({
-                  sourceMap: !isProd(),
-                }),
-                new OptimizeCSSAssetsPlugin({}),
-              ],
+          minimizer: isDev() ? [] : [new TerserPlugin(), new CssMinimizerPlugin()],
           runtimeChunk: 'single',
           splitChunks: {
             cacheGroups: {
@@ -138,28 +132,25 @@ module.exports = {
               ? 'style-loader'
               : {
                   loader: MiniCssExtractPlugin.loader,
-                  options: {
-                    hmr: isDev(),
-                  },
+                  // options: {
+                  //   hmr: isDev(),
+                  // },
                 },
-          ]
-            .concat(devLoaders)
-            .concat([
-              {
-                loader: 'css-loader',
-                options: {
-                  importLoaders: 1,
+            {
+              loader: 'css-loader',
+              options: {
+                importLoaders: 1,
+              },
+            },
+            {
+              loader: 'postcss-loader',
+              options: {
+                postcssOptions: {
+                  config: getPostCssConfigPath(runtimePath),
                 },
               },
-              {
-                loader: 'postcss-loader',
-                options: {
-                  postcssOptions:{
-                    config: getPostCssConfigPath(runtimePath),
-                  }
-                },
-              },
-            ]),
+            },
+          ],
         },
         {
           test: /\.less$/,
@@ -169,58 +160,41 @@ module.exports = {
               ? 'style-loader'
               : {
                   loader: MiniCssExtractPlugin.loader,
-                  options: {
-                    hmr: isDev(),
-                  },
+                  // options: {
+                  //   hmr: isDev(),
+                  // },
                 },
-          ]
-            .concat(devLoaders)
-            .concat([
-              {
-                loader: 'css-loader',
-                options: {
-                  importLoaders: 1,
+            {
+              loader: 'css-loader',
+              options: {
+                importLoaders: 1,
+              },
+            },
+            {
+              loader: 'postcss-loader',
+              options: {
+                postcssOptions: {
+                  config: getPostCssConfigPath(runtimePath),
                 },
               },
-              {
-                loader: 'postcss-loader',
-                options: {
-                  postcssOptions:{
-                    config: getPostCssConfigPath(runtimePath)
-                  }
+            },
+            {
+              loader: 'less-loader',
+              options: {
+                lessOptions: {
+                  javascriptEnabled: true,
                 },
               },
-              {
-                loader: 'less-loader',
-                options: {
-                  lessOptions: {
-                    javascriptEnabled: true,
-                  }
-                },
-              },
-            ]),
+            },
+          ],
         },
         {
           test: /\.(png|svg|jpg|gif|ico)$/,
-          use: [
-            {
-              loader: 'url-loader',
-              options: {
-                limit: 1024,
-              },
-            },
-          ],
+          type: 'asset/resource',
         },
         {
           test: /\.(woff|woff2|eot|ttf|otf)$/,
-          use: [
-            {
-              loader: 'url-loader',
-              options: {
-                limit: 1024,
-              },
-            },
-          ],
+          type: 'asset/resource',
         },
         {
           test: /\.(csv|tsv)$/,
@@ -232,14 +206,14 @@ module.exports = {
         },
         {
           test: /\.ejs/,
-          use:[
+          use: [
             {
               loader: 'ejs-loader',
               options: {
                 variable: 'data',
               },
             },
-          ]
+          ],
         },
         {
           test: /\.ya?ml$/,

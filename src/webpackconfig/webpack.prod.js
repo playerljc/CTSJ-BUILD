@@ -2,8 +2,8 @@ const { merge } = require('webpack-merge');
 // const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const webpackBase = require('./webpack.base');
 const common = require('./webpack.common.js');
-
-const runtimePath = commandArgs.toCommandArgs(process.argv[8]).get('runtimepath');
+const commandArgs = require('../commandArgs');
+const runtimePath = commandArgs.toCommandArgs(process.argv[6]).get('runtimepath');
 
 // --runtimepath
 // --customconfig

@@ -8,7 +8,7 @@ const runtimePath = process.cwd();
 // 脚本所在的路径
 const codePath = __dirname;
 
-const commandPath = path.join(codePath, 'node_modules', '.bin', path.sep);
+const commandPath = path.join(codePath, '../', 'node_modules', '.bin', path.sep);
 
 // buildpackage生成的目录名称
 const generateDirName = 'lib';
@@ -44,7 +44,7 @@ function clearTask() {
     const command = isWin32() ? `rimraf.cmd` : `rimraf`;
 
     const rimrafProcess = spawn(command, [outputPath], {
-      cwd: codePath,
+      cwd: path.join(codePath, '../'),
       encoding: 'utf-8',
       env: getEnv(commandPath),
     });
@@ -85,7 +85,7 @@ function babelTask() {
         '__tests__',
       ],
       {
-        cwd: codePath,
+        cwd: path.join(codePath, '../'),
         encoding: 'utf-8',
         env: getEnv(commandPath),
       },
@@ -125,7 +125,7 @@ function gulpTask() {
         path.join(compilePath, path.sep),
       ],
       {
-        cwd: codePath,
+        cwd: path.join(codePath, '../'),
         encoding: 'utf-8',
         env: getEnv(commandPath),
       },

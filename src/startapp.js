@@ -106,7 +106,7 @@ function webpackServiceTask() {
         [
           `runtimepath=${path.join(runtimePath, path.sep)}`,
           `customconfig=${configPath}`,
-          `define=${new Buffer(JSON.stringify(define)).toString('base64')}`
+          `define=${Buffer.from(JSON.stringify(define)).toString('base64')}`
         ].join(' '),
       ],
       {

@@ -10,7 +10,7 @@ const runtimePath = process.cwd();
 const codePath = __dirname;
 
 // ctbuild.cmd或者ctbuild.sh所在路径
-const commandPath = path.join(codePath, 'node_modules', '.bin', path.sep);
+const commandPath = path.join(codePath, '../', 'node_modules', '.bin', path.sep);
 
 // 配置文件所在路径
 let configPath;
@@ -30,7 +30,7 @@ function corssenvTask() {
     const command = isWin32() ? `cross-env.cmd` : `cross-env`;
 
     const crossenvProcess = spawn(command, ['REAP_PATH=prod', 'NODE_ENV=production'], {
-      cwd: codePath,
+      cwd: path.join(codePath, '../'),
       encoding: 'utf-8',
       env: getEnv(commandPath),
     });
@@ -97,15 +97,14 @@ function webpackTask() {
     const babelProcess = spawn(
       command,
       [
-        '--open',
         '--config',
-        path.join('webpackconfig', 'webpack.prod.js'),
+        path.join(codePath, 'webpackconfig', 'webpack.prod.js'),
         '--progress',
         '--env',
         [
           `runtimepath=${path.join(runtimePath, path.sep)}`,
           `customconfig=${configPath}`,
-          `define=${new Buffer(JSON.stringify(define)).toString('base64')}`
+          `define=${Buffer.from(JSON.stringify(define)).toString('base64')}`
         ].join(' '),
         // '--profile',
         // '--json',
@@ -113,7 +112,7 @@ function webpackTask() {
         // path.join(runtimePath,'stats.json'),
       ],
       {
-        cwd: codePath,
+        cwd: path.join(codePath, '../'),
         encoding: 'utf-8',
         env: getEnv(commandPath),
       },

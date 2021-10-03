@@ -13,7 +13,7 @@ const srcPath = runtimePath.substring(0, runtimePath.lastIndexOf(path.sep));
 const codePath = __dirname;
 
 // ctbuild.cmd或者ctbuild.sh所在路径
-const commandPath = path.join(codePath, 'node_modules', '.bin', path.sep);
+const commandPath = path.join(codePath, '../', 'node_modules', '.bin', path.sep);
 
 // 配置文件所在路径
 let configPath;
@@ -47,7 +47,7 @@ function copySrcTask() {
     const { command, params } = isWin32() ? commands.win32 : commands.linux;
 
     const copyProcess = spawn(command, params, {
-      cwd: codePath,
+      cwd: path.join(codePath, '../'),
       encoding: 'utf-8',
     });
 
@@ -105,16 +105,15 @@ function webpackTask() {
     const babelProcess = spawn(
       command,
       [
-        '--open',
         '--config',
-        path.join('webpackconfig', 'webpack.umd.js'),
+        path.join(codePath, 'webpackconfig', 'webpack.umd.js'),
         '--progress',
         '--env',
         [
           `runtimepath=${path.join(runtimePath, path.sep)}`,
           `customconfig=${configPath}`,
           `packagename=${packageName}`,
-          `define=${new Buffer(JSON.stringify(define)).toString('base64')}`
+          `define=${Buffer.from(JSON.stringify(define)).toString('base64')}`
         ].join(' ')
 
         // '--runtimepath',
@@ -127,7 +126,7 @@ function webpackTask() {
         // define.join(' '),
       ],
       {
-        cwd: codePath,
+        cwd: path.join(codePath, '../'),
         encoding: 'utf-8',
         env: getEnv(commandPath),
       },

@@ -34,8 +34,8 @@ module.exports = function ({ webpackConfig, plugins, theme = {}, runtimePath }) 
     };
   } else {
     // include的APP_PATH中的less文件使用cssModules
-    webpackConfig.module.rules[2].use[2].options.modules = true;
-    webpackConfig.module.rules[2].use[4].options.lessOptions = {
+    webpackConfig.module.rules[2].use[1].options.modules = true;
+    webpackConfig.module.rules[2].use[3].options.lessOptions = {
       modifyVars: theme
     };
   }
@@ -44,32 +44,31 @@ module.exports = function ({ webpackConfig, plugins, theme = {}, runtimePath }) 
   webpackConfig.module.rules.push({
     test: /\.less$/,
     include: [/node_modules/],
-    use: [isDev() ? 'style-loader' : plugins.MiniCssExtractPlugin.loader]
-      .concat(isDev() ? [] : ['thread-loader'])
-      .concat([
-        {
-          loader: 'css-loader',
-          options: {
-            importLoaders: 1,
+    use: [
+      isDev() ? 'style-loader' : plugins.MiniCssExtractPlugin.loader,
+      {
+        loader: 'css-loader',
+        options: {
+          importLoaders: 1,
+        },
+      },
+      {
+        loader: 'postcss-loader',
+        options: {
+          postcssOptions:{
+            config: getPostCssConfigPath(runtimePath),
+          }
+        },
+      },
+      {
+        loader: 'less-loader',
+        options: {
+          lessOptions: {
+            javascriptEnabled: true,
+            modifyVars: theme,
           },
         },
-        {
-          loader: 'postcss-loader',
-          options: {
-            postcssOptions:{
-              config: getPostCssConfigPath(runtimePath),
-            }
-          },
-        },
-        {
-          loader: 'less-loader',
-          options: {
-            lessOptions: {
-              javascriptEnabled: true,
-              modifyVars: theme,
-            },
-          },
-        },
-      ]),
+      },
+    ],
   });
 };

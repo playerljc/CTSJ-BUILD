@@ -2,7 +2,7 @@ const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const WebpackBar = require('webpackbar');
 const TerserPlugin = require('terser-webpack-plugin');
 const Util = require('../util');
@@ -13,7 +13,7 @@ const customArgs = commandArgs.toCommandArgs(process.argv[8]);
 
 const runtimePath = customArgs.get('runtimepath');
 
-const packagename = customArgs.get('packagename');/*process.argv[10];*/
+const packagename = customArgs.get('packagename'); /*process.argv[10];*/
 
 const APP_PATH = path.resolve(runtimePath, 'src'); // 项目src目录
 
@@ -66,7 +66,7 @@ module.exports = {
     ],
     optimization: {
       minimize: true,
-      minimizer: [new TerserPlugin(), new OptimizeCSSAssetsPlugin({})],
+      minimizer: [new TerserPlugin(), new CssMinimizerPlugin()],
       // runtimeChunk: 'single',
       // splitChunks: {
       //   cacheGroups: {
@@ -117,8 +117,8 @@ module.exports = {
           test: /\.css$/,
           include: [APP_PATH, /highlight.js/, /photoswipe.css/, /default-skin.css/],
           use: [
+            // 'thread-loader',
             isDev() ? 'style-loader' : MiniCssExtractPlugin.loader,
-            'thread-loader',
             {
               loader: 'css-loader',
               options: {
@@ -128,9 +128,9 @@ module.exports = {
             {
               loader: 'postcss-loader',
               options: {
-                postcssOptions:{
+                postcssOptions: {
                   config: getPostCssConfigPath(runtimePath),
-                }
+                },
               },
             },
           ],
@@ -139,8 +139,8 @@ module.exports = {
           test: /\.less$/,
           include: [APP_PATH, /normalize.less/],
           use: [
+            // 'thread-loader',
             isDev() ? 'style-loader' : MiniCssExtractPlugin.loader,
-            'thread-loader',
             {
               loader: 'css-loader',
               options: {
@@ -150,9 +150,9 @@ module.exports = {
             {
               loader: 'postcss-loader',
               options: {
-                postcssOptions:{
+                postcssOptions: {
                   config: getPostCssConfigPath(runtimePath),
-                }
+                },
               },
             },
             {
@@ -160,32 +160,18 @@ module.exports = {
               options: {
                 lessOptions: {
                   javascriptEnabled: true,
-                }
+                },
               },
             },
           ],
         },
         {
           test: /\.(png|svg|jpg|gif|ico)$/,
-          use: [
-            {
-              loader: 'url-loader',
-              options: {
-                limit: 1024,
-              },
-            },
-          ],
+          type: 'asset/resource',
         },
         {
           test: /\.(woff|woff2|eot|ttf|otf)$/,
-          use: [
-            {
-              loader: 'url-loader',
-              options: {
-                limit: 1024,
-              },
-            },
-          ],
+          type: 'asset/resource',
         },
         {
           test: /\.(csv|tsv)$/,
@@ -197,7 +183,14 @@ module.exports = {
         },
         {
           test: /\.ejs/,
-          loader: ['ejs-loader?variable=data'],
+          use: [
+            {
+              loader: 'ejs-loader',
+              options: {
+                variable: 'data',
+              },
+            },
+          ],
         },
         {
           test: /\.md$/,

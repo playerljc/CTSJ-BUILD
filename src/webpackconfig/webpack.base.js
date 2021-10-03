@@ -14,7 +14,7 @@ module.exports = function ({ webpackConfig, runtimePath }) {
 
   // 附加的参数
   const defineArgs = commandArgs.toCommandArgs(
-    JSON.parse(new Buffer(env.get('define'), 'base64').toString() || '[]').join(' '),
+    JSON.parse(Buffer.from(env.get('define'), 'base64').toString() || '[]').join(' '),
   );
 
   // 用户自定义配置文件的路径
