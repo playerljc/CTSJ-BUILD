@@ -84,7 +84,7 @@ function babelTask() {
         '--minified',
         '-s',
         'true',
-        '--no-comments'
+        '--no-comments',
       ],
       {
         cwd: path.join(codePath, '../'),
