@@ -6,6 +6,7 @@ const commandArgs = require('./src/commandArgs');
 
 const copyexts = [
   'less',
+  'sass',
   'css',
   'svg',
   'jpg',
@@ -17,6 +18,13 @@ const copyexts = [
   'eot',
   'woff',
   'ttf',
+  'xml',
+  'yml',
+  'yaml',
+  'mp4',
+  'avi',
+  'mp3',
+  'rmvb',
 ];
 
 const argsMap = commandArgs.initCommandArgs();
