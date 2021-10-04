@@ -81,8 +81,10 @@ function babelTask() {
         '-d',
         // 输出的目录
         outputPath,
-        '--ignore',
-        '__tests__',
+        '--minified',
+        '-s',
+        'true',
+        '--no-comments'
       ],
       {
         cwd: path.join(codePath, '../'),

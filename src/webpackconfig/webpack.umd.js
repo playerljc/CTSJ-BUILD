@@ -3,7 +3,8 @@ const { merge } = require('webpack-merge');
 const webpackBase = require('./webpack.base');
 const common = require('./webpack.umdcommon.js');
 const commandArgs = require('../commandArgs');
-const runtimePath = commandArgs.toCommandArgs(process.argv[10]).get('runtimepath');
+
+const runtimePath = commandArgs.toCommandArgs(process.argv[6]).get('runtimepath');
 
 // --runtimepath
 // --customconfig
@@ -18,6 +19,8 @@ webpackConfig = webpackBase({
   webpackConfig,
   runtimePath,
 });
+
+console.log('webpackConfig', webpackConfig);
 
 // 得到最终的配置
 module.exports = webpackConfig;

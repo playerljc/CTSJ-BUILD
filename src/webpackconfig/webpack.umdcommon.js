@@ -9,7 +9,7 @@ const Util = require('../util');
 const commandArgs = require('../commandArgs');
 const { getPostCssConfigPath, isDev } = require('../util');
 
-const customArgs = commandArgs.toCommandArgs(process.argv[8]);
+const customArgs = commandArgs.toCommandArgs(process.argv[6]);
 
 const runtimePath = customArgs.get('runtimepath');
 
@@ -56,7 +56,7 @@ module.exports = {
         },
         chunks: ['index'],
       }),
-      new webpack.HashedModuleIdsPlugin(),
+      // new webpack.HashedModuleIdsPlugin(),
       new MiniCssExtractPlugin({
         filename: `${packagename}.min.css`,
         // chunkFilename: `${packagename}.min.css`,
@@ -92,13 +92,13 @@ module.exports = {
                 presets: [
                   [
                     '@babel/preset-env',
-                    // {
-                    //   useBuiltIns: 'usage',
-                    //   corejs: { version: 3, proposals: true },
-                    // },
                     {
                       useBuiltIns: 'entry',
+                      corejs: { version: 3, proposals: true },
                     },
+                    // {
+                    //   useBuiltIns: 'entry',
+                    // },
                   ],
                   '@babel/preset-react',
                 ],
@@ -106,7 +106,9 @@ module.exports = {
                   '@babel/plugin-transform-runtime',
                   '@babel/plugin-syntax-dynamic-import',
                   '@babel/plugin-proposal-function-bind',
-                  '@babel/plugin-proposal-class-properties',
+                  '@babel/plugin-proposal-optional-chaining',
+                  ['@babel/plugin-proposal-decorators', { legacy: true }],
+                  ['@babel/plugin-proposal-class-properties', { loose: false }],
                 ],
                 cacheDirectory: true,
               },
