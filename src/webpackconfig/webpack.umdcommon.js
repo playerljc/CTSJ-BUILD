@@ -63,8 +63,10 @@ module.exports = {
         ignoreOrder: false,
       }),
       new ForkTsCheckerWebpackPlugin({
-        tsconfig: path.join(runtimePath, 'tsconfig.json'),
-        checkSyntacticErrors: true,
+        typescript: {
+          configFile: path.join(runtimePath, 'tsconfig.json'),
+          // checkSyntacticErrors: true,
+        }
       }),
       new WebpackBar({ reporters: ['profile'], profile: true }),
     ],

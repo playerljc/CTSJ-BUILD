@@ -34,8 +34,8 @@ module.exports = function ({ webpackConfig, plugins, theme = {}, runtimePath }) 
       modifyVars: theme,
     };
   } else {
-    webpackConfig.module.rules[3].use[2].options.options.modules = true;
-    webpackConfig.module.rules[3].use[4].options.lessOptions = {
+    webpackConfig.module.rules[3].use[1].options.modules = true;
+    webpackConfig.module.rules[3].use[3].options.lessOptions = {
       modifyVars: theme,
     };
   }

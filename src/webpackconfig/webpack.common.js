@@ -86,8 +86,10 @@ module.exports = {
         $: 'jquery',
       }),
       new ForkTsCheckerWebpackPlugin({
-        tsconfig: path.join(runtimePath, 'tsconfig.json'),
-        checkSyntacticErrors: true,
+        typescript: {
+          configFile: path.join(runtimePath, 'tsconfig.json'),
+          // checkSyntacticErrors: true,
+        }
       }),
       new WebpackBar({ reporters: ['profile'], profile: true }),
     ]),

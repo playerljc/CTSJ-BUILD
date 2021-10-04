@@ -35,5 +35,6 @@ webpackConfig = webpackBase({
   runtimePath,
 });
 
+console.log('webpackConfig', webpackConfig);
 // 得到最终的配置
 module.exports = webpackConfig;

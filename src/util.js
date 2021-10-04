@@ -42,7 +42,7 @@ const Util = {
     if (fs.existsSync(path.join(runtimePath, 'postcss.config.js'))) {
       return path.join(runtimePath, 'postcss.config.js');
     }
-    return path.join(__dirname, 'postcss.config.js');
+    return path.join(__dirname, '../', 'postcss.config.js');
   },
   /**
    * getEntryIndex - 获取entry的index入口文件路径
