@@ -34,8 +34,8 @@ module.exports = {
   },
   /**
    * toCommandArgs
-   * @param {Array} - commandArr
    * @return {Map<String,String>}
+   * @param command
    */
   toCommandArgs(command = '') {
     const commandArr = command.split(' ');

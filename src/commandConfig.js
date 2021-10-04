@@ -6,8 +6,8 @@ const buildpackagets = require('./buildpackagets');
 
 /**
  * 将用","分割的define参数转换成key/value的map
- * @param {String} - define
  * @return Array
+ * @param define
  */
 function getDefineMap(define = '') {
   return define.split(',');

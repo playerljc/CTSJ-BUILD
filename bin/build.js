@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
 const program = require('commander');
-const packageJson = require('./package');
-const commandConfig = require('./commandConfig');
+const packageJson = require('../package');
+const commandConfig = require('../src/commandConfig');
 
 program.version(packageJson.version);
 

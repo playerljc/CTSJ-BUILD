@@ -9,12 +9,14 @@ const path = require('path');
  */
 module.exports = function ({ webpackConfig, plugins, runtimePath, val }) {
   webpackConfig.plugins.push(
-    new plugins.CopyWebpackPlugin([
-      {
-        from: path.join(runtimePath, val || 'assets'),
-        to: val || 'assets',
-        toType: 'dir',
-      },
-    ]),
+    new plugins.CopyWebpackPlugin({
+      patterns: [
+        {
+          from: path.join(runtimePath, val || 'assets'),
+          to: val || 'assets',
+          toType: 'dir',
+        },
+      ],
+    }),
   );
 };

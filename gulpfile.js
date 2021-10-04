@@ -2,9 +2,11 @@ const path = require('path');
 const gulp = require('gulp');
 const uglify = require('gulp-uglify');
 const sourceMap = require('gulp-sourcemaps');
+const commandArgs = require('./commandArgs');
 
 const copyexts = [
   'less',
+  'sass',
   'css',
   'svg',
   'jpg',
@@ -16,8 +18,14 @@ const copyexts = [
   'eot',
   'woff',
   'ttf',
+  'xml',
+  'yml',
+  'yaml',
+  'mp4',
+  'avi',
+  'mp3',
+  'rmvb',
 ];
-const commandArgs = require('./commandArgs');
 
 const argsMap = commandArgs.initCommandArgs();
 const outputpath = argsMap.get('--outputpath')[0];
@@ -52,4 +60,4 @@ gulp.task('minjs', () => {
     .pipe(gulp.dest(outputpath));
 });
 
-gulp.task('default', ['copy', 'minjs']);
+gulp.task('default', gulp.series('copy', 'minjs'));

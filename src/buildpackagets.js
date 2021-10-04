@@ -8,7 +8,7 @@ const runtimePath = process.cwd();
 // 脚本所在的路径
 const codePath = __dirname;
 
-const commandPath = path.join(codePath, 'node_modules', '.bin', path.sep);
+const commandPath = path.join(codePath, '../', 'node_modules', '.bin', path.sep);
 
 // buildpackage生成的目录名称
 const generateDirName = 'lib';
@@ -28,8 +28,8 @@ let index = 0;
 const tasks = [
   // 清除生成目录
   clearTask,
-  // babel转换，转换js
-  babelTask,
+  // tsc转换，转换typescript
+  tscTask,
   // 样式
   gulpTask,
 ];
@@ -44,7 +44,7 @@ function clearTask() {
     const command = isWin32() ? `rimraf.cmd` : `rimraf`;
 
     const rimrafProcess = spawn(command, [outputPath], {
-      cwd: codePath,
+      cwd: path.join(codePath, '../'),
       encoding: 'utf-8',
       env: getEnv(commandPath),
     });
@@ -65,47 +65,30 @@ function clearTask() {
 }
 
 /**
- * babelTask
+ * tscTask
  * 转换src到lib
  * @return {Promise}
  */
-function babelTask() {
+function tscTask() {
   return new Promise((resolve) => {
-    const command = isWin32() ? `babel.cmd` : `babel`;
+    const command = isWin32() ? `tsc.cmd` : `tsc`;
 
-    const babelProcess = spawn(
-      command,
-      [
-        // 编译的目录
-        compilePath,
-        '-d',
-        // 输出的目录
-        outputPath,
+    const tscProcess = spawn(command, ['-p', runtimePath], {
+      cwd: path.join(codePath, '../'),
+      encoding: 'utf-8',
+      env: getEnv(commandPath),
+    });
 
-        // TODO: 解析扩展名是ts,tsx的文件
-        // '-x',
-        // '.js,.jsx,.ts,.tsx',
-
-        '--ignore',
-        '__tests__',
-      ],
-      {
-        cwd: codePath,
-        encoding: 'utf-8',
-        env: getEnv(commandPath),
-      },
-    );
-
-    babelProcess.stdout.on('data', (data) => {
+    tscProcess.stdout.on('data', (data) => {
       console.log(`stdout: ${data}`);
     });
 
-    babelProcess.stderr.on('data', (data) => {
+    tscProcess.stderr.on('data', (data) => {
       console.log(`stderr: ${data}`);
     });
 
-    babelProcess.on('close', (code) => {
-      console.log(`babelClose：${code}`);
+    tscProcess.on('close', (code) => {
+      console.log(`tscClose：${code}`);
       resolve();
     });
   });
@@ -130,7 +113,7 @@ function gulpTask() {
         path.join(compilePath, path.sep),
       ],
       {
-        cwd: codePath,
+        cwd: path.join(codePath, '../'),
         encoding: 'utf-8',
         env: getEnv(commandPath),
       },
@@ -160,6 +143,7 @@ function loopTask() {
     if (index >= tasks.length) {
       resolve();
     } else {
+      // eslint-disable-next-line no-plusplus
       const task = tasks[index++];
       if (task) {
         task()
@@ -181,7 +165,7 @@ function loopTask() {
 module.exports = {
   /**
    * build
-   * @param {String} - srcPath
+   * @param srcPath
    */
   build(srcPath) {
     if (srcPath) {

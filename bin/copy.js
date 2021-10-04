@@ -6,19 +6,13 @@
  */
 const path = require('path');
 const { spawn } = require('child_process');
-const { getEnv, isWin32 } = require('./util');
-const args = require('./commandArgs');
-
+const args = require('../src/commandArgs');
+const { getEnv, isWin32 } = require('../src/util');
 // 运行脚本的路径
 const runtimePath = process.cwd();
-
 // 脚本的路径
-const codePath = __dirname;
-
-const commandPath = path.join(codePath, 'node_modules', '.bin', path.sep);
-
+const commandPath = path.join(__dirname, '../', 'node_modules', '.bin', path.sep);
 const tasks = [cpTask];
-
 let index = 0;
 
 /**
@@ -28,7 +22,6 @@ let index = 0;
 function cpTask() {
   return new Promise((resolve) => {
     const command = isWin32() ? `cp-cli.cmd` : `cp-cli`;
-
     const cpProcess = spawn(command, args.getArgs(), {
       cwd: runtimePath,
       encoding: 'utf-8',
@@ -60,6 +53,7 @@ function loopTask() {
     if (index >= tasks.length) {
       resolve();
     } else {
+      // eslint-disable-next-line no-plusplus
       const task = tasks[index++];
       if (task) {
         task()

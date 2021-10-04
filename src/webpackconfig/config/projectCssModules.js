@@ -9,7 +9,6 @@ const { getPostCssConfigPath, slash, isDev } = require('../../util');
  */
 module.exports = function ({ webpackConfig, plugins, theme = {}, runtimePath }) {
   // include的APP_PATH中的less文件使用cssModules
-
   if (isDev()) {
     webpackConfig.module.rules[3].use[1].options.modules = {
       // localIdentName: '[path][name]__[local]--[hash:base64:5]',
@@ -31,40 +30,45 @@ module.exports = function ({ webpackConfig, plugins, theme = {}, runtimePath }) 
         return localName;
       },
     };
-    webpackConfig.module.rules[3].use[3].query.modifyVars = theme;
+    webpackConfig.module.rules[3].use[3].options.lessOptions = {
+      modifyVars: theme,
+    };
   } else {
-    webpackConfig.module.rules[3].use[2].options.modules = true;
-    webpackConfig.module.rules[3].use[4].query.modifyVars = theme;
+    webpackConfig.module.rules[3].use[2].options.options.modules = true;
+    webpackConfig.module.rules[3].use[4].options.lessOptions = {
+      modifyVars: theme,
+    };
   }
 
   // include是node_modules中的less文件不需要cssModules
   webpackConfig.module.rules.push({
     test: /\.less$/,
     include: [/node_modules/],
-    use: [isDev() ? 'style-loader' : plugins.MiniCssExtractPlugin.loader]
-      .concat(isDev() ? [] : ['thread-loader'])
-      .concat([
-        {
-          loader: 'css-loader',
-          options: {
-            importLoaders: 1,
+    use: [
+      isDev() ? 'style-loader' : plugins.MiniCssExtractPlugin.loader,
+      {
+        loader: 'css-loader',
+        options: {
+          importLoaders: 1,
+        },
+      },
+      {
+        loader: 'postcss-loader',
+        options: {
+          postcssOptions: {
+            config: getPostCssConfigPath(runtimePath),
           },
         },
-        {
-          loader: 'postcss-loader',
-          options: {
-            config: {
-              path: getPostCssConfigPath(runtimePath),
-            },
-          },
-        },
-        {
-          loader: 'less-loader',
-          query: {
+      },
+      {
+        loader: 'less-loader',
+        options: {
+          lessOptions: {
             javascriptEnabled: true,
             modifyVars: theme,
           },
         },
-      ]),
+      },
+    ],
   });
 };

@@ -2,17 +2,19 @@ const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const WebpackBar = require('webpackbar');
-const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
-
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const Util = require('../util');
+const commandArgs = require('../commandArgs');
 const { getPostCssConfigPath, isDev } = require('../util');
 
-const runtimePath = process.argv[8];
+const customArgs = commandArgs.toCommandArgs(process.argv[6]);
 
-const packagename = process.argv[10];
+const runtimePath = customArgs.get('runtimepath');
+
+const packagename = customArgs.get('packagename');
 
 const APP_PATH = path.resolve(runtimePath, 'src'); // 项目src目录
 
@@ -39,7 +41,7 @@ module.exports = {
       publicPath: '/',
       library: `${packagename}`,
       libraryTarget: 'umd',
-      libraryExport: 'default'
+      libraryExport: 'default',
     },
     plugins: [
       new webpack.optimize.ModuleConcatenationPlugin(),
@@ -68,7 +70,7 @@ module.exports = {
     ],
     optimization: {
       minimize: true,
-      minimizer: [new TerserPlugin(), new OptimizeCSSAssetsPlugin({})],
+      minimizer: [new TerserPlugin(), new CssMinimizerPlugin()],
       // runtimeChunk: 'single',
       // splitChunks: {
       //   cacheGroups: {
@@ -90,17 +92,17 @@ module.exports = {
             'thread-loader',
             {
               loader: 'babel-loader',
-              query: {
+              options: {
                 presets: [
                   [
                     '@babel/preset-env',
-                    // {
-                    //   useBuiltIns: 'usage',
-                    //   corejs: { version: 3, proposals: true },
-                    // },
                     {
                       useBuiltIns: 'entry',
+                      corejs: { version: 3, proposals: true },
                     },
+                    // {
+                    //   useBuiltIns: 'entry',
+                    // },
                   ],
                   '@babel/preset-react',
                 ],
@@ -108,7 +110,9 @@ module.exports = {
                   '@babel/plugin-transform-runtime',
                   '@babel/plugin-syntax-dynamic-import',
                   '@babel/plugin-proposal-function-bind',
-                  '@babel/plugin-proposal-class-properties',
+                  '@babel/plugin-proposal-optional-chaining',
+                  ['@babel/plugin-proposal-decorators', { legacy: true }],
+                  ['@babel/plugin-proposal-class-properties', { loose: false }],
                 ],
                 cacheDirectory: true,
               },
@@ -136,7 +140,6 @@ module.exports = {
           include: [APP_PATH, /highlight.js/, /photoswipe.css/, /default-skin.css/],
           use: [
             isDev() ? 'style-loader' : MiniCssExtractPlugin.loader,
-            'thread-loader',
             {
               loader: 'css-loader',
               options: {
@@ -146,8 +149,8 @@ module.exports = {
             {
               loader: 'postcss-loader',
               options: {
-                config: {
-                  path: getPostCssConfigPath(runtimePath),
+                postcssOptions: {
+                  config: getPostCssConfigPath(runtimePath),
                 },
               },
             },
@@ -158,7 +161,6 @@ module.exports = {
           include: [APP_PATH, /normalize.less/],
           use: [
             isDev() ? 'style-loader' : MiniCssExtractPlugin.loader,
-            'thread-loader',
             {
               loader: 'css-loader',
               options: {
@@ -168,40 +170,28 @@ module.exports = {
             {
               loader: 'postcss-loader',
               options: {
-                config: {
-                  path: getPostCssConfigPath(runtimePath),
+                postcssOptions: {
+                  config: getPostCssConfigPath(runtimePath),
                 },
               },
             },
             {
               loader: 'less-loader',
-              query: {
-                javascriptEnabled: true,
+              options: {
+                lessOptions: {
+                  javascriptEnabled: true,
+                },
               },
             },
           ],
         },
         {
           test: /\.(png|svg|jpg|gif|ico)$/,
-          use: [
-            {
-              loader: 'url-loader',
-              options: {
-                limit: 1024,
-              },
-            },
-          ],
+          type: 'asset/resource',
         },
         {
           test: /\.(woff|woff2|eot|ttf|otf)$/,
-          use: [
-            {
-              loader: 'url-loader',
-              options: {
-                limit: 1024,
-              },
-            },
-          ],
+          type: 'asset/resource',
         },
         {
           test: /\.(csv|tsv)$/,
@@ -213,11 +203,22 @@ module.exports = {
         },
         {
           test: /\.ejs/,
-          loader: ['ejs-loader?variable=data'],
+          use: [
+            {
+              loader: 'ejs-loader',
+              options: {
+                variable: 'data',
+              },
+            },
+          ],
         },
         {
           test: /\.ya?ml$/,
           use: ['json-loader', 'yaml-loader'],
+        },
+        {
+          test: /\.md$/,
+          use: 'raw-loader',
         },
       ],
     },
