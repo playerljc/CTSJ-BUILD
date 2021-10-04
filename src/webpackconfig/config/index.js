@@ -26,8 +26,8 @@ const map = {
     handler: projectCurResolveModule,
   },
   disableStrict: {
-    handler: projectDisableStrict
-  }
+    handler: projectDisableStrict,
+  },
 };
 
 module.exports = function ({ defineArgs, ...others }) {

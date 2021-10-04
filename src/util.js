@@ -48,7 +48,7 @@ const Util = {
    * getEntryIndex - 获取entry的index入口文件路径
    */
   getEntryIndex(runtimePath) {
-    const extensionNames = ['.js', '.jsx','.ts', '.tsx'];
+    const extensionNames = ['.js', '.jsx', '.ts', '.tsx'];
     let index = -1;
     for (let i = 0; i < extensionNames.length; i++) {
       const extensionName = extensionNames[i];
