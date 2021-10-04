@@ -2,7 +2,7 @@ const path = require('path');
 const gulp = require('gulp');
 const uglify = require('gulp-uglify');
 const sourceMap = require('gulp-sourcemaps');
-const commandArgs = require('./commandArgs');
+const commandArgs = require('./src/commandArgs');
 
 const copyexts = [
   'less',
@@ -38,15 +38,19 @@ const compilePath = argsMap.get('--compilepath')[0];
  * copy
  */
 gulp.task('copy', () => {
-  for (let i = 0; i < copyexts.length; i++) {
-    gulp.src(path.join(compilePath, '**', `*.${copyexts[i]}`)).pipe(gulp.dest(outputpath));
-  }
+  const srcs = copyexts.map(ext => path.join(compilePath, '**', `*.${ext}`));
+  return gulp.src(srcs).pipe(gulp.dest(outputpath));
+
+  // for (let i = 0; i < copyexts.length; i++) {
+  //   gulp.src(path.join(compilePath, '**', `*.${copyexts[i]}`)).pipe(gulp.dest(outputpath));
+  // }
 });
 
 /**
  * 压缩
  */
 gulp.task('minjs', () => {
+  console.log('minjs',outputpath)
   return gulp
     .src([
       // `${runtimePath}lib\\**\\*.js`,

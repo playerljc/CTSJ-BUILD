@@ -56,7 +56,7 @@ module.exports = {
         },
         chunks: ['index'],
       }),
-      new webpack.HashedModuleIdsPlugin(),
+      // new webpack.HashedModuleIdsPlugin(),
       new MiniCssExtractPlugin({
         filename: `${packagename}.min.css`,
         // chunkFilename: `${packagename}.min.css`,

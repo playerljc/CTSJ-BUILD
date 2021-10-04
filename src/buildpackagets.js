@@ -182,6 +182,7 @@ module.exports = {
       // 没有指定编译目录
       compilePath = path.join(runtimePath, srcDirName);
     }
+
     // console.log('buildpackage-srcPath----------------------', srcPath);
 
     loopTask()
