@@ -19,7 +19,7 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0199ea0c-8c86-4152-827f-1b9ce4d68b97" name="Default Changelist" comment="">
+    <list default="true" id="0199ea0c-8c86-4152-827f-1b9ce4d68b97" name="Default Changelist" comment="[升级] v4.0.9">
       <change beforePath="$PROJECT_DIR$/changelog/CHANGELOG.html" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/changelog/CHANGELOG.md" beforeDir="false" />
     </list>
@@ -694,60 +694,6 @@
     <MESSAGE value="[修改] 去掉cache-loader" />
     <MESSAGE value="[升级] v4.0.9" />
     <option name="LAST_COMMIT_MESSAGE" value="[升级] v4.0.9" />
-  </component>
-  <component name="WindowStateProjectService">
-    <state x="886" y="33" key="CommitChangelistDialog2" timestamp="1611911895755">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state x="886" y="33" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1611911895755" />
-    <state x="92" y="92" width="1736" height="856" key="DiffContextDialog" timestamp="1611911675473">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state x="92" y="92" width="1736" height="856" key="DiffContextDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1611911675473" />
-    <state x="394" y="226" width="979" height="807" key="FileChooserDialogImpl" timestamp="1610720758623">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state x="394" y="226" width="979" height="807" key="FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040" timestamp="1610720758623" />
-    <state x="540" y="254" key="IDE.errors.dialog" timestamp="1612781488760">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state x="540" y="254" key="IDE.errors.dialog/0.0.1920.1040@0.0.1920.1040" timestamp="1612781488760" />
-    <state x="184" y="86" key="MergeDialog" timestamp="1610082835550">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state x="184" y="86" key="MergeDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1610082835550" />
-    <state x="586" y="273" key="MultipleFileMergeDialog" timestamp="1611245096596">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state x="586" y="273" key="MultipleFileMergeDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1611245096596" />
-    <state x="736" y="138" key="RollbackChangesDialog" timestamp="1611908577084">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state x="736" y="138" key="RollbackChangesDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1611908577084" />
-    <state x="461" y="164" key="SettingsEditor" timestamp="1610720705779">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state x="461" y="164" key="SettingsEditor/0.0.1920.1040@0.0.1920.1040" timestamp="1610720705779" />
-    <state x="552" y="253" key="Vcs.Push.Dialog.v2" timestamp="1612781280700">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state x="552" y="253" key="Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040" timestamp="1612781280700" />
-    <state x="753" y="433" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1611146025041">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state x="753" y="433" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1920.1040@0.0.1920.1040" timestamp="1611146025041" />
-    <state x="662" y="252" width="596" height="592" key="find.popup" timestamp="1612781511264">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state x="662" y="252" width="596" height="592" key="find.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1612781511264" />
-    <state x="714" y="150" key="git4idea.branch.GitSmartOperationDialog" timestamp="1606118983321">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state x="714" y="150" key="git4idea.branch.GitSmartOperationDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1606118983321" />
-    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup" timestamp="1608693157181">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1608693157181" />
   </component>
   <component name="XPathView.XPathProjectComponent">
     <history />
