@@ -38,9 +38,11 @@ module.exports = {
       // chunkFilename:`${packagename}.bundle.js`,
       path: path.resolve(runtimePath, 'umd'),
       publicPath: '/',
-      library: `${packagename}`,
-      libraryTarget: 'umd',
-      libraryExport: 'default',
+      library: {
+        name: `${packagename}`,
+        type: 'umd',
+        export: 'default',
+      },
       clean: true,
     },
     plugins: [
