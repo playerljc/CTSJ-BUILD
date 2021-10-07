@@ -1,5 +1,6 @@
 const webpack = require('webpack');
 const SpeedMeasurePlugin = require('speed-measure-webpack-plugin');
+
 const common = require('./webpack.common.js');
 const commandArgs = require('../commandArgs');
 const projectWebpackConfigMerge = require('./config/index.js');

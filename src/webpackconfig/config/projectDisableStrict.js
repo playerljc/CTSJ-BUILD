@@ -1,5 +1,7 @@
 const path = require('path');
+
 const { isDev } = require('../../util');
+
 /**
  * 禁用use strict
  * @param webpackConfig

@@ -7,6 +7,7 @@ const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const WebpackBar = require('webpackbar');
 const TerserPlugin = require('terser-webpack-plugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
+
 const commandArgs = require('../commandArgs');
 const Util = require('../util');
 const { getPostCssConfigPath, isDev, isProd } = require('../util');

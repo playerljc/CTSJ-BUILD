@@ -1,5 +1,6 @@
 const webpack = require('webpack');
 const { merge } = require('webpack-merge');
+
 const webpackBase = require('./webpack.base');
 const common = require('./webpack.common.js');
 const commandArgs = require('../commandArgs');

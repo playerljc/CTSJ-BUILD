@@ -1,6 +1,8 @@
 #!/usr/bin/env node
+
 const { spawn } = require('child_process');
 const path = require('path');
+
 const { getEnv, isWin32 } = require('./util');
 
 // 运行脚本的路径
