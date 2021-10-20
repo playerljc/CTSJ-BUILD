@@ -1,3 +1,14 @@
+# 4.0.12
+
+***
+
+2021/10/20
+
+* 加入disableStrict
+* 修改生产环境的mode和devtool
+* exclude的排除修改
+* .npmignore的修改
+
 # 4.0.11
 
 ***
