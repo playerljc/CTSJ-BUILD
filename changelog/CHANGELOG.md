@@ -1,3 +1,14 @@
+# 3.0.11
+
+***
+
+2021/10/20
+
+* 加入disableStrict
+* 修改生产环境的mode和devtool
+* exclude的排除修改
+* .npmignore的修改
+
 # 3.0.10
 
 ***
@@ -5,7 +16,6 @@
 2021/03/20
 
 * 修改util.js中的getEntryIndex方法
-* 加入disableStrict
 
 # 3.0.9
 
