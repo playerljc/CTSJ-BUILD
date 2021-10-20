@@ -121,7 +121,7 @@ module.exports = {
           use: devLoaders.concat([
             {
               loader: 'babel-loader',
-              query: babelConfig,
+              options: babelConfig,
             },
           ]),
         },
