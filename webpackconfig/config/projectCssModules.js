@@ -40,30 +40,30 @@ module.exports = function ({ webpackConfig, plugins, theme = {}, runtimePath }) 
   webpackConfig.module.rules.push({
     test: /\.less$/,
     include: [/node_modules/],
-    use: [isDev() ? 'style-loader' : plugins.MiniCssExtractPlugin.loader]
-      .concat(isDev() ? [] : ['thread-loader'])
-      .concat([
-        {
-          loader: 'css-loader',
-          options: {
-            importLoaders: 1,
+    use: [
+      ...(isDev() ? [] : ['thread-loader']),
+      isDev() ? 'style-loader' : plugins.MiniCssExtractPlugin.loader,
+      {
+        loader: 'css-loader',
+        options: {
+          importLoaders: 1,
+        },
+      },
+      {
+        loader: 'postcss-loader',
+        options: {
+          config: {
+            path: getPostCssConfigPath(runtimePath),
           },
         },
-        {
-          loader: 'postcss-loader',
-          options: {
-            config: {
-              path: getPostCssConfigPath(runtimePath),
-            },
-          },
+      },
+      {
+        loader: 'less-loader',
+        query: {
+          javascriptEnabled: true,
+          modifyVars: theme,
         },
-        {
-          loader: 'less-loader',
-          query: {
-            javascriptEnabled: true,
-            modifyVars: theme,
-          },
-        },
-      ]),
+      },
+    ],
   });
 };
