@@ -1,6 +1,6 @@
 {
   "name": "@ctsj/build",
-  "version": "1.0.37",
+  "version": "1.0.38",
   "description": "一个基于webpack的打包工具",
   "homepage": "https://github.com/playerljc/CTSJ-BUILD#readme",
   "keywords": [
