@@ -1,6 +1,6 @@
 {
   "name": "@ctsj/build",
-  "version": "4.0.12",
+  "version": "4.0.13",
   "description": "一个基于webpack的打包工具",
   "bin": {
     "ctbuild": "./build.js",
@@ -10,7 +10,8 @@
     "devDll": "webpack --config webpack.dll.js",
     "startapp": "cross-env REAP_PATH=dev webpack-dev-server --open --config webpack.dev.js",
     "buildapp": "cross-env REAP_PATH=dev webpack --config webpack.prod.js",
-    "buildpackage": "rimraf lib && babel src -d lib/src --ignore __tests__ && gulp"
+    "buildpackage": "rimraf lib && babel src -d lib/src --ignore __tests__ && gulp",
+    "generatorchangelog": "bd changelog/CHANGELOG.html"
   },
   "keywords": [
     "CTSJ-BUILD",
