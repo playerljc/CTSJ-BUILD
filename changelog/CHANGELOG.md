@@ -1,3 +1,13 @@
+# 6.0.2
+
+***
+
+2021/12/26
+
+* getEvn对path和Path进行降序排列从最近的目录开始寻找命令
+* getTheme也需要传入getConfig的相关参数
+* thead-loader位置不对应该在最上方
+
 # 6.0.1
 
 ***

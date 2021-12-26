@@ -90,7 +90,7 @@ module.exports = {
         typescript: {
           configFile: path.join(runtimePath, 'tsconfig.json'),
           // checkSyntacticErrors: true,
-        }
+        },
       }),
       new WebpackBar({ reporters: ['profile'], profile: true }),
     ]),
@@ -118,18 +118,20 @@ module.exports = {
           test: /\.m?jsx?$/,
           exclude: /(node_modules|bower_components)/,
           // include: [APP_PATH],
-          use: devLoaders.concat([
+          use: [
+            ...devLoaders,
             {
               loader: 'babel-loader',
               options: babelConfig,
             },
-          ]),
+          ],
         },
         {
           test: /\.m?tsx?$/,
           exclude: /(node_modules|bower_components)/,
           // include: [APP_PATH],
-          use: devLoaders.concat([
+          use: [
+            ...devLoaders,
             {
               loader: 'babel-loader',
               options: babelConfig,
@@ -142,7 +144,7 @@ module.exports = {
                 configFile: path.join(runtimePath, 'tsconfig.json'),
               },
             },
-          ]),
+          ],
         },
         {
           test: /\.css$/,
