@@ -37,7 +37,12 @@ module.exports = function ({ webpackConfig, runtimePath }) {
   };
 
   if (customWebpackConfig && customWebpackConfig.getTheme) {
-    projectWebpackConfigMergeParams.theme = customWebpackConfig.getTheme();
+    projectWebpackConfigMergeParams.theme = customWebpackConfig.getTheme({
+      webpack,
+      webpackConfig,
+      plugins: common.plugins,
+      define: defineArgs,
+    });
   }
 
   projectWebpackConfigMerge(projectWebpackConfigMergeParams);

@@ -91,7 +91,8 @@ module.exports = {
           test: /\.m?jsx?$/,
           exclude: /(node_modules|bower_components)/,
           // include: [APP_PATH],
-          use: devLoaders.concat([
+          use: [
+            ...devLoaders,
             {
               loader: 'babel-loader',
               options: {
@@ -116,7 +117,7 @@ module.exports = {
                 cacheDirectory: isProd(),
               },
             },
-          ]),
+          ],
         },
         {
           test: /\.css$/,
