@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 
+const fs = require('fs');
 const { spawn } = require('child_process');
 const path = require('path');
 
@@ -14,13 +15,18 @@ const codePath = __dirname;
 const commandPath = path.join(codePath, '../', 'node_modules', '.bin', path.sep);
 
 // buildpackage生成的目录名称
-const generateDirName = 'lib';
+let generateDirName = 'lib';
 
 // buildpackage原始名称
 const srcDirName = 'src';
 
+// p参数
+let p;
+// tsP的实际路径
+let pTarget;
+
 // 代码输出路径
-const outputPath = path.join(runtimePath, generateDirName);
+let outputPath;
 
 // 代码编译路径
 let compilePath;
@@ -76,7 +82,7 @@ function tscTask() {
   return new Promise((resolve) => {
     const command = isWin32() ? `tsc.cmd` : `tsc`;
 
-    const tscProcess = spawn(command, ['-p', runtimePath], {
+    const tscProcess = spawn(command, ['-p', pTarget], {
       cwd: path.join(codePath, '../'),
       encoding: 'utf-8',
       env: getEnv(commandPath),
@@ -168,25 +174,61 @@ function loopTask() {
 module.exports = {
   /**
    * build
-   * @param srcPath
+   * @param {String} - srcPath
    */
-  build(srcPath) {
-    if (srcPath) {
-      // 指定了编译目录
+  build({ srcpath, output = 'lib' }) {
+    p = srcpath;
+    generateDirName = output;
+    outputPath = path.join(runtimePath, generateDirName);
 
-      if (path.isAbsolute(srcPath)) {
-        // 是绝对路径
-        compilePath = srcPath;
-      } else {
-        // 是相对路径
-        compilePath = path.join(runtimePath, srcPath);
+    // 输入了p参数
+    if (p) {
+      // 文件描述符
+      const stat = fs.statSync(p);
+
+      // 绝对路径
+      if (path.isAbsolute(p)) {
+        // 是文件
+        if (stat.isFile()) {
+          // ts
+          pTarget = p;
+          // gulp
+          compilePath = path.join(runtimePath, srcDirName);
+        }
+        // 是目录
+        else {
+          // ts
+          pTarget = p;
+          // gulp
+          compilePath = path.join(p, srcDirName);
+        }
       }
-    } else {
-      // 没有指定编译目录
+      // 相对路径
+      else {
+        // 是文件
+        if (stat.isFile()) {
+          // ts
+          pTarget = path.join(runtimePath, p);
+          // gulp
+          compilePath = path.join(runtimePath, srcDirName);
+        }
+        // 是目录
+        else {
+          // ts
+          pTarget = path.join(runtimePath, p);
+          // gulp
+          compilePath = path.join(runtimePath, p, srcDirName);
+        }
+      }
+    }
+    // 没输入p参数
+    else {
+      // ts
+      pTarget = runtimePath;
+      // gulp
       compilePath = path.join(runtimePath, srcDirName);
     }
-
-    // console.log('buildpackage-srcPath----------------------', srcPath);
+    // console.log('buildpackage-p----------------------', p);
 
     loopTask()
       .then(() => {
