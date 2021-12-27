@@ -112,20 +112,20 @@ function gulpTask() {
     console.log('outputpath', outputPath);
 
     const gulpProcess = spawn(
-        command,
-        [
-          '--outputpath',
-          // 输出路径
-          path.join(outputPath, path.sep),
-          '--compilepath',
-          // 编译目录
-          path.join(compilePath, path.sep),
-        ],
-        {
-          cwd: codePath,
-          encoding: 'utf-8',
-          env: getEnv(commandPath),
-        },
+      command,
+      [
+        '--outputpath',
+        // 输出路径
+        path.join(outputPath, path.sep),
+        '--compilepath',
+        // 编译目录
+        path.join(compilePath, path.sep),
+      ],
+      {
+        cwd: codePath,
+        encoding: 'utf-8',
+        env: getEnv(commandPath),
+      },
     );
 
     gulpProcess.stdout.on('data', (data) => {
@@ -156,14 +156,14 @@ function loopTask() {
       const task = tasks[index++];
       if (task) {
         task()
-            .then(() => {
-              loopTask().then(() => {
-                resolve();
-              });
-            })
-            .catch((error) => {
-              reject(error);
+          .then(() => {
+            loopTask().then(() => {
+              resolve();
             });
+          })
+          .catch((error) => {
+            reject(error);
+          });
       } else {
         reject();
       }
@@ -231,12 +231,12 @@ module.exports = {
     // console.log('buildpackage-p----------------------', p);
 
     loopTask()
-        .then(() => {
-          console.log('finish');
-          process.exit();
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+      .then(() => {
+        console.log('finish');
+        process.exit();
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   },
 };
