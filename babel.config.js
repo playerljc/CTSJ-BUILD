@@ -24,10 +24,14 @@ const plugins = [
 const config = { presets, plugins };
 
 if (configPath) {
-  const customBabelConfig = require(configPath);
+  try {
+    const customBabelConfig = require(configPath);
 
-  if (customBabelConfig && customBabelConfig.getConfig) {
-    customBabelConfig.getConfig(config);
+    if (customBabelConfig && customBabelConfig.getConfig) {
+      customBabelConfig.getConfig(config);
+    }
+  } catch (e) {
+    
   }
 }
 
