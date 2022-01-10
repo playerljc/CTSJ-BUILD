@@ -12,7 +12,6 @@ npm install @ctsj/build --save-dev
 - [startapp(使用devServer启动工程)](#startapp)
 - [buildapp(打包工程)](#buildapp)
 - [buildpackage(编译npm包)](#buildpackage)
-- [buildpackagets(编译使用ts编写的npm包)](#buildpackagets)
 - [buildumd(把npm包编译成umd)](#buildumd)
 
 ### startapp
@@ -45,8 +44,14 @@ ctbuild startapp --define skin=a,skin2=b
 
 ### buildpackage
 编译npm package
-- -p,-srcpath <path>
+- -c,--config <path>
+##### babel的配置文件重写，默认是ctbuild.package.config.js
+
+- -p,--srcpath <path>
 ##### 可以是相对路径和对路径，也可以不传
+
+- -d,--output <path>
+##### 输出路径
 ```javascript
 // 如果不传-p则编译脚本运行路径下的src目录
 ctbuild buildpackage
@@ -60,11 +65,6 @@ ctbuild buildpackage -p c:/x/xxx
 ```javascript
 // 如果是相对路径编译脚本运行路径+相对路径
 ctbuild buildpackage -p a/b/c
-```
-
-### buildpackagets
-用ts编译npm package
-[其他同buildpackage](#buildpackage)
 
 ### buildumd
 将npm package编译成umd

@@ -12,7 +12,6 @@ npm install @ctsj/build --save-dev
 - [startapp](#startapp)
 - [buildapp](#buildapp)
 - [buildpackage](#buildpackage)
-- [buildpackagets](#buildpackagets)
 - [buildumd](#buildumd)
 
 ### startapp
@@ -31,7 +30,7 @@ ctbuild startapp --define skin=a,skin2=b
 
 ### buildapp
 Start the host project in production mode
-#### 参数：
+#### params：
 - -c,--config <path>
 ##### The path of the configuration file (ctbuild.config.js) that the user redefines webpack. The default is the ctbuild.config.js file in the host project
 ```javascript
@@ -45,8 +44,14 @@ ctbuild startapp --define skin=a,skin2=b
 
 ### buildpackage
 Compile npm package
-- -p,-srcpath <path>
+- -c,--config <path>
+##### ctbuild.package.config.js Configuration file path
+
+- -p,--srcpath <path>
 ##### It can be relative path and pair path, or not pass
+
+- -d,--output <path>
+##### output path
 ```javascript
 // If you don't pass -p, compile the src directory under the script running path
 ctbuild buildpackage
@@ -61,10 +66,6 @@ ctbuild buildpackage -p c:/x/xxx
 // If it is a relative path compile script running path + relative path
 ctbuild buildpackage -p a/b/c
 ```
-
-### buildpackagets
-Compile npm package with ts
-[Other same buildpackage](#buildpackage)
 
 ### buildumd
 Compile npm package into umd
