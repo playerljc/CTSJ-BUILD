@@ -52,4 +52,4 @@ gulp.task('minjs', () => {
     .pipe(gulp.dest(outputpath));
 });
 
-gulp.task('default', gulp.series('copy', 'minjs'));
+gulp.task('default', ['copy', 'minjs']);
