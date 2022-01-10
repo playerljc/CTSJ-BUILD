@@ -1,3 +1,6 @@
+// 配置文件路径
+const configPath = process.env.configPath;
+
 const presets = [
   [
     '@babel/preset-env',
@@ -7,14 +10,6 @@ const presets = [
     },
   ],
   '@babel/preset-react',
-  // TODO: babel.config.js 中babel对typescript的支持
-  // [
-  //   "@babel/preset-typescript",
-  //   {
-  //     isTSX: true,
-  //     allExtensions: true,
-  //   },
-  // ],
 ];
 
 const plugins = [
@@ -26,4 +21,14 @@ const plugins = [
   ['@babel/plugin-proposal-class-properties', { loose: false }],
 ];
 
-module.exports = { presets, plugins };
+const config = { presets, plugins };
+
+if (configPath) {
+  const customBabelConfig = require(configPath);
+
+  if (customBabelConfig && customBabelConfig.getConfig) {
+    customBabelConfig.getConfig(config);
+  }
+}
+
+module.exports = config;
