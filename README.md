@@ -45,8 +45,14 @@ ctbuild startapp --define skin=a,skin2=b
 
 ### buildpackage
 Compile npm package
-- -p,-srcpath <path>
+- -c,--config <path>
 ##### It can be relative path and pair path, or not pass
+
+- -p,--srcpath <path>
+##### ctbuild.package.config.js Configuration file path
+
+- -d,--output <path>
+##### output path
 ```javascript
 // If you don't pass -p, compile the src directory under the script running path
 ctbuild buildpackage
