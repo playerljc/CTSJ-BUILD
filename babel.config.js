@@ -1,3 +1,6 @@
+// 配置文件路径
+const configPath = process.env.configPath;
+
 const presets = [
   [
     '@babel/preset-env',
@@ -28,4 +31,14 @@ const plugins = [
   // }*/],
 ];
 
-module.exports = { presets, plugins };
+const config = { presets, plugins };
+
+if (configPath) {
+  const customBabelConfig = require(configPath);
+
+  if (customBabelConfig && customBabelConfig.getConfig) {
+    customBabelConfig.getConfig(config);
+  }
+}
+
+module.exports = config;
