@@ -90,13 +90,21 @@ module.exports = {
     description: 'build package',
     options: [
       {
+        command: '-c --config <path>',
+        description: 'ctbuild.package.config.js Configuration file path',
+      },
+      {
         command: '-p, --srcpath <path>',
         description: 'build path',
+      },
+      {
+        command: '-d --output <path>',
+        description: 'output path',
       },
     ],
     action: (entry) => {
       console.log('buildpackage');
-      buildpackage.build(entry.srcpath);
+      buildpackage.build(entry);
     },
   },
 };
