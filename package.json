@@ -1,6 +1,6 @@
 {
   "name": "@ctsj/build",
-  "version": "4.0.17",
+  "version": "4.0.18",
   "description": "一个基于webpack的打包工具",
   "bin": {
     "ctbuild": "./build.js",
@@ -65,7 +65,7 @@
     "ejs-loader": "^0.3.1",
     "file-loader": "^2.0.0",
     "fork-ts-checker-webpack-plugin": "^4.0.5",
-    "gulp": "^3.9.1",
+    "gulp": "^4.0.2",
     "gulp-sourcemaps": "^2.6.4",
     "gulp-uglify": "^3.0.1",
     "html-webpack-include-assets-plugin": "^1.0.6",
