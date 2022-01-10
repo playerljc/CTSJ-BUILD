@@ -109,7 +109,7 @@ module.exports = {
     ],
     action: (entry) => {
       console.log('buildpackage');
-      buildpackage.build(entry.srcpath);
+      buildpackage.build(entry);
     },
   },
   // 编译package的ts版本
