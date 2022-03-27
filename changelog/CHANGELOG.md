@@ -1,3 +1,11 @@
+# 5.0.3
+
+***
+
+2022/03/27
+
+* 加入mini-css-extract-plugin和speed-measure-webpack-plugin冲突的hacky
+
 # 5.0.2
 
 ***
