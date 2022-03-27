@@ -1,5 +1,6 @@
 const webpack = require('webpack');
 const SpeedMeasurePlugin = require('speed-measure-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 const common = require('./webpack.common.js');
 const commandArgs = require('../commandArgs');
@@ -60,10 +61,15 @@ module.exports = function ({ webpackConfig, runtimePath }) {
 
   // 是否进行打包分析
   if (defineArgs.get('analysis')) {
+    // mini-css-extract-plugin和speed-measure-webpack-plugin冲突的hacky
+    const MiniCssExtractPlugins = webpackConfig.plugins.filter(p => p instanceof MiniCssExtractPlugin);
+    webpackConfig.plugins = webpackConfig.plugins.filter(p => !(p instanceof MiniCssExtractPlugin));
+
     const smp = new SpeedMeasurePlugin();
 
     // eslint-disable-next-line no-param-reassign
     webpackConfig = smp.wrap(webpackConfig);
+    webpackConfig.plugins.push(...MiniCssExtractPlugins);
   }
 
   return webpackConfig;
