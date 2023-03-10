@@ -1,6 +1,6 @@
+const ReactRefreshPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
 const webpack = require('webpack');
 const { merge } = require('webpack-merge');
-
 const webpackBase = require('./webpack.base');
 const common = require('./webpack.common.js');
 const commandArgs = require('../commandArgs');
@@ -28,7 +28,11 @@ let webpackConfig = merge(common.config, {
     hot: true, // 启动模块热更新 HMR
     open: true, // 开启自动打开浏览器页面
   },
-  plugins: [/*new webpack.NamedModulesPlugin(), */ new webpack.HotModuleReplacementPlugin()],
+  plugins: [
+    /*new webpack.NamedModulesPlugin(), */
+    new ReactRefreshPlugin(),
+    new webpack.HotModuleReplacementPlugin(),
+  ],
 });
 
 webpackConfig = webpackBase({
