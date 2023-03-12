@@ -38,7 +38,7 @@ const compilePath = argsMap.get('--compilepath')[0];
  * copy
  */
 gulp.task('copy', () => {
-  const srcs = copyexts.map(ext => path.join(compilePath, '**', `*.${ext}`));
+  const srcs = copyexts.map(() => path.join(compilePath, '**', `*.*`));
   return gulp.src(srcs).pipe(gulp.dest(outputpath));
 
   // for (let i = 0; i < copyexts.length; i++) {
@@ -50,7 +50,7 @@ gulp.task('copy', () => {
  * 压缩
  */
 gulp.task('minjs', () => {
-  console.log('minjs',outputpath)
+  console.log('minjs', outputpath);
   return gulp
     .src([
       // `${runtimePath}lib\\**\\*.js`,
