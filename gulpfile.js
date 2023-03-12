@@ -5,6 +5,8 @@ const sourceMap = require('gulp-sourcemaps');
 const commandArgs = require('./src/commandArgs');
 
 const copyexts = [
+  'md',
+  'html',
   'less',
   'sass',
   'css',
@@ -25,6 +27,7 @@ const copyexts = [
   'avi',
   'mp3',
   'rmvb',
+  'ico',
 ];
 
 const argsMap = commandArgs.initCommandArgs();
@@ -38,7 +41,7 @@ const compilePath = argsMap.get('--compilepath')[0];
  * copy
  */
 gulp.task('copy', () => {
-  const srcs = copyexts.map(() => path.join(compilePath, '**', `*.*`));
+  const srcs = copyexts.map((ext) => path.join(compilePath, '**', `*.${ext}`));
   return gulp.src(srcs).pipe(gulp.dest(outputpath));
 
   // for (let i = 0; i < copyexts.length; i++) {
