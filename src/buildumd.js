@@ -2,7 +2,7 @@
 
 const path = require('path');
 const { spawn } = require('child_process');
-
+const logger = require('npmlog');
 const { getEnv, isWin32 } = require('./util');
 
 // 运行命令的路径
@@ -55,15 +55,18 @@ function copySrcTask() {
     });
 
     copyProcess.stdout.on('data', (data) => {
-      console.log(`stdout: ${data}`);
+      logger.info(`${data}`);
+    });
+
+    copyProcess.stdin.on('data', (data) => {
+      logger.info(`${data}`);
     });
 
     copyProcess.stderr.on('data', (data) => {
-      console.log(`stderr: ${data}`);
+      logger.warn(`${data}`);
     });
 
-    copyProcess.on('close', (code) => {
-      console.log(`crossenvClose：${code}`);
+    copyProcess.on('close', () => {
       resolve();
     });
   });
@@ -83,15 +86,15 @@ function copySrcTask() {
 //     });
 //
 //     crossenvProcess.stdout.on('data', (data) => {
-//       console.log(`stdout: ${data}`);
+//       logger.info(`stdout: ${data}`);
 //     });
 //
 //     crossenvProcess.stderr.on('data', (data) => {
-//       console.log(`stderr: ${data}`);
+//       logger.info(`stderr: ${data}`);
 //     });
 //
 //     crossenvProcess.on('close', (code) => {
-//       console.log(`crossenvClose：${code}`);
+//       logger.info(`crossenvClose：${code}`);
 //       resolve();
 //     });
 //   });
@@ -127,15 +130,18 @@ function webpackTask() {
     );
 
     babelProcess.stdout.on('data', (data) => {
-      console.log(`stdout: ${data}`);
+      logger.info(`${data}`);
+    });
+
+    babelProcess.stdin.on('data', (data) => {
+      logger.info(`${data}`);
     });
 
     babelProcess.stderr.on('data', (data) => {
-      console.log(`stderr: ${data}`);
+      logger.warn(`${data}`);
     });
 
-    babelProcess.on('close', (code) => {
-      console.log(`webpackTaskClose：${code}`);
+    babelProcess.on('close', () => {
       resolve();
     });
   });
@@ -152,15 +158,15 @@ function webpackTask() {
 //     });
 //
 //     rimrafProcess.stdout.on('data', (data) => {
-//       console.log(`stdout: ${data}`);
+//       logger.info(`stdout: ${data}`);
 //     });
 //
 //     rimrafProcess.stderr.on('data', (data) => {
-//       console.log(`stderr: ${data}`);
+//       logger.info(`stderr: ${data}`);
 //     });
 //
 //     rimrafProcess.on('close', (code) => {
-//       console.log(`rimrafClose：${code}`);
+//       logger.info(`rimrafClose：${code}`);
 //       resolve();
 //     });
 //   });
@@ -212,11 +218,11 @@ module.exports = {
 
     loopTask()
       .then(() => {
-        console.log('finish');
+        logger.info('finish');
         process.exit();
       })
       .catch((error) => {
-        console.log(error);
+        logger.error(error);
       });
   },
 };

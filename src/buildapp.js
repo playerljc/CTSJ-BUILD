@@ -2,7 +2,7 @@
 
 const path = require('path');
 const { spawn } = require('child_process');
-
+const logger = require('npmlog');
 const { getEnv, isWin32 } = require('./util');
 
 // 运行命令的路径
@@ -37,16 +37,16 @@ function corssenvTask() {
       env: getEnv(commandPath),
     });
 
-    crossenvProcess.stdout.on('data', (data) => {
-      console.log(`stdout: ${data}`);
-    });
-
-    crossenvProcess.stderr.on('data', (data) => {
-      console.log(`stderr: ${data}`);
-    });
+    // crossenvProcess.stdout.on('data', (data) => {
+    //   console.log(`stdout: ${data}`);
+    // });
+    //
+    // crossenvProcess.stderr.on('data', (data) => {
+    //   console.log(`stderr: ${data}`);
+    // });
 
     crossenvProcess.on('close', (code) => {
-      console.log(`crossenvClose：${code}`);
+      // console.log(`crossenvClose：${code}`);
       resolve();
     });
   });
@@ -121,15 +121,18 @@ function webpackTask() {
     );
 
     babelProcess.stdout.on('data', (data) => {
-      console.log(`stdout: ${data}`);
+      logger.info(`${data}`);
+    });
+
+    babelProcess.stdin.on('data', (data) => {
+      logger.info(`${data}`);
     });
 
     babelProcess.stderr.on('data', (data) => {
-      console.log(`stderr: ${data}`);
+      logger.warn(`${data}`);
     });
 
-    babelProcess.on('close', (code) => {
-      console.log(`webpackTaskClose：${code}`);
+    babelProcess.on('close', () => {
       resolve();
     });
   });
@@ -188,7 +191,7 @@ module.exports = {
         process.exit();
       })
       .catch((error) => {
-        console.log(error);
+        logger.error(error);
       });
   },
 };

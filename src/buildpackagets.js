@@ -2,6 +2,7 @@
 
 const fs = require('fs');
 const { spawn } = require('child_process');
+const logger = require('npmlog');
 const path = require('path');
 
 const { getEnv, isWin32 } = require('./util');
@@ -58,16 +59,16 @@ function clearTask() {
       env: getEnv(commandPath),
     });
 
-    rimrafProcess.stdout.on('data', (data) => {
-      console.log(`stdout: ${data}`);
-    });
+    // rimrafProcess.stdout.on('data', (data) => {
+    //   logger.info(`stdout: ${data}`);
+    // });
+    //
+    // rimrafProcess.stderr.on('data', (data) => {
+    //   logger.info(`stderr: ${data}`);
+    // });
 
-    rimrafProcess.stderr.on('data', (data) => {
-      console.log(`stderr: ${data}`);
-    });
-
-    rimrafProcess.on('close', (code) => {
-      console.log(`rimrafClose：${code}`);
+    rimrafProcess.on('close', () => {
+      // logger.info(`rimrafClose：${code}`);
       resolve();
     });
   });
@@ -89,15 +90,18 @@ function tscTask() {
     });
 
     tscProcess.stdout.on('data', (data) => {
-      console.log(`stdout: ${data}`);
+      logger.info(`${data}`);
+    });
+
+    tscProcess.stdin.on('data', (data) => {
+      logger.info(`${data}`);
     });
 
     tscProcess.stderr.on('data', (data) => {
-      console.log(`stderr: ${data}`);
+      logger.warn(`${data}`);
     });
 
-    tscProcess.on('close', (code) => {
-      console.log(`tscClose：${code}`);
+    tscProcess.on('close', () => {
       resolve();
     });
   });
@@ -129,15 +133,18 @@ function gulpTask() {
     );
 
     gulpProcess.stdout.on('data', (data) => {
-      console.log(`stdout: ${data}`);
+      logger.info(`${data}`);
+    });
+
+    gulpProcess.stdin.on('data', (data) => {
+      logger.info(`${data}`);
     });
 
     gulpProcess.stderr.on('data', (data) => {
-      console.log(`stderr: ${data}`);
+      logger.warn(`${data}`);
     });
 
-    gulpProcess.on('close', (code) => {
-      console.log(`gulpTaskClose：${code}`);
+    gulpProcess.on('close', () => {
       resolve();
     });
   });
@@ -228,15 +235,15 @@ module.exports = {
       // gulp
       compilePath = path.join(runtimePath, srcDirName);
     }
-    // console.log('buildpackage-p----------------------', p);
+    // logger.info('buildpackage-p----------------------', p);
 
     loopTask()
       .then(() => {
-        console.log('finish');
+        logger.info('finish');
         process.exit();
       })
       .catch((error) => {
-        console.log(error);
+        logger.error(error);
       });
   },
 };

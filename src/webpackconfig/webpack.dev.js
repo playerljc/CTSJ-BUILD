@@ -25,7 +25,7 @@ let webpackConfig = merge(common.config, {
     client: {
       overlay: true, // 浏览器全屏显示错误信息
     },
-    hot: true, // 启动模块热更新 HMR
+    // hot: true, // 启动模块热更新 HMR
     open: true, // 开启自动打开浏览器页面
   },
   plugins: [

@@ -2,6 +2,7 @@
 
 const { spawn } = require('child_process');
 const path = require('path');
+const logger = require('npmlog');
 const { getEnv, isWin32 } = require('./util');
 
 // 运行脚本的路径
@@ -54,16 +55,16 @@ function clearTask() {
       env: getEnv(commandPath),
     });
 
-    rimrafProcess.stdout.on('data', (data) => {
-      console.log(`stdout: ${data}`);
-    });
+    // rimrafProcess.stdout.on('data', (data) => {
+    //   logger.info(`stdout: ${data}`);
+    // });
+    //
+    // rimrafProcess.stderr.on('data', (data) => {
+    //   logger.info(`stderr: ${data}`);
+    // });
 
-    rimrafProcess.stderr.on('data', (data) => {
-      console.log(`stderr: ${data}`);
-    });
-
-    rimrafProcess.on('close', (code) => {
-      console.log(`rimrafClose：${code}`);
+    rimrafProcess.on('close', () => {
+      // logger.info(`rimrafClose：${code}`);
       resolve();
     });
   });
@@ -102,15 +103,18 @@ function babelTask() {
     );
 
     babelProcess.stdout.on('data', (data) => {
-      console.log(`stdout: ${data}`);
+      logger.info(`${data}`);
+    });
+
+    babelProcess.stdin.on('data', (data) => {
+      logger.info(`${data}`);
     });
 
     babelProcess.stderr.on('data', (data) => {
-      console.log(`stderr: ${data}`);
+      logger.warn(`${data}`);
     });
 
-    babelProcess.on('close', (code) => {
-      console.log(`babelClose：${code}`);
+    babelProcess.on('close', () => {
       resolve();
     });
   });
@@ -142,15 +146,18 @@ function gulpTask() {
     );
 
     gulpProcess.stdout.on('data', (data) => {
-      console.log(`stdout: ${data}`);
+      logger.info(`${data}`);
+    });
+
+    gulpProcess.stdin.on('data', (data) => {
+      logger.info(`${data}`);
     });
 
     gulpProcess.stderr.on('data', (data) => {
-      console.log(`stderr: ${data}`);
+      logger.warn(`${data}`);
     });
 
-    gulpProcess.on('close', (code) => {
-      console.log(`gulpTaskClose：${code}`);
+    gulpProcess.on('close', () => {
       resolve();
     });
   });
@@ -245,11 +252,11 @@ module.exports = {
 
     loopTask()
       .then(() => {
-        console.log('finish');
+        logger.info('finish');
         process.exit();
       })
       .catch((error) => {
-        console.log(error);
+        logger.error(error);
       });
   },
 };
