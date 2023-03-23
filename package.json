@@ -1,6 +1,6 @@
 {
   "name": "@ctsj/build",
-  "version": "6.0.10",
+  "version": "6.0.11",
   "description": "一个基于webpack的打包工具",
   "bin": {
     "ctbuild": "./bin/build.js",
@@ -33,7 +33,6 @@
   "devDependencies": {
     "@umijs/fabric": "^2.14.1",
     "eslint": "^8.35.0",
-    "npmlog": "^7.0.1",
     "prettier": "^2.8.4"
   },
   "dependencies": {
@@ -93,6 +92,7 @@
     "webpack-merge": "^5.8.0",
     "webpackbar": "^5.0.2",
     "xml-loader": "^1.2.1",
-    "yaml-loader": "^0.8.0"
+    "yaml-loader": "^0.8.0",
+    "npmlog": "^7.0.1"
   }
 }
