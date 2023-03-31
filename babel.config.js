@@ -4,10 +4,10 @@ const configPath = process.env.configPath;
 const presets = [
   [
     '@babel/preset-env',
-    {
-      useBuiltIns: 'usage',
-      corejs: { version: 3, proposals: true },
-    },
+    // {
+    //   useBuiltIns: 'usage',
+    //   corejs: { version: 3, proposals: true },
+    // },
   ],
   '@babel/preset-react',
 ];
@@ -30,9 +30,7 @@ if (configPath) {
     if (customBabelConfig && customBabelConfig.getConfig) {
       customBabelConfig.getConfig(config);
     }
-  } catch (e) {
-    
-  }
+  } catch (e) {}
 }
 
 module.exports = config;

@@ -3,6 +3,7 @@ const buildapp = require('./buildapp');
 const buildumd = require('./buildumd');
 const buildpackage = require('./buildpackage');
 const buildpackagets = require('./buildpackagets');
+const buildpackagetsBabel = require('./buildpackagets-babel');
 
 /**
  * 将用","分割的define参数转换成key/value的map
@@ -129,6 +130,28 @@ module.exports = {
     action: (entry) => {
       console.log('buildpackagets');
       buildpackagets.build(entry);
+    },
+  },
+  // 使用ts和babel编译package
+  ['buildpackagets-babel']: {
+    alias: 'packagets-babel',
+    description: 'build packagets by gulp',
+    options: [
+      {
+        command: '-c, --config <path>',
+        description: 'ctbuild.package.ts.babel.config.js Configuration file path',
+      },
+      {
+        command: '-e --src <path>',
+        description: 'src path',
+      },
+      {
+        command: '-o, --output <name>',
+        description: 'output path',
+      },
+    ],
+    action: (entry) => {
+      buildpackagetsBabel.build(entry);
     },
   },
 };
