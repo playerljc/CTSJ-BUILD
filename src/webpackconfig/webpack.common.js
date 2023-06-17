@@ -4,9 +4,11 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
-const WebpackBar = require('webpackbar');
 const TerserPlugin = require('terser-webpack-plugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
+const UselessFilesCleanWebpackPlugin = require('useless-files-clean-webpack-plugin');
+const CompressionPlugin = require('compression-webpack-plugin');
+const WebpackBar = require('webpackbar');
 
 const commandArgs = require('../commandArgs');
 const Util = require('../util');
@@ -47,6 +49,10 @@ module.exports = {
     HtmlWebpackPlugin,
     MiniCssExtractPlugin,
     CopyWebpackPlugin,
+    CssMinimizerPlugin,
+    TerserPlugin,
+    UselessFilesCleanWebpackPlugin,
+    CompressionPlugin,
   },
   config: {
     /**
@@ -66,7 +72,18 @@ module.exports = {
       publicPath: '/',
       clean: true,
     },
-    plugins: (isProd() ? [new webpack.optimize.ModuleConcatenationPlugin()] : []).concat([
+    plugins: (isProd()
+      ? [
+          new webpack.optimize.ModuleConcatenationPlugin(),
+          new CompressionPlugin({
+            algorithm: 'gzip',
+            test: new RegExp('\\.(' + ['js', 'css'].join('|') + ')$'),
+            threshold: 10240,
+            minRatio: 0.8,
+          }),
+        ]
+      : []
+    ).concat([
       new HtmlWebpackPlugin({
         title: '',
         filename: 'index.html',
@@ -94,6 +111,13 @@ module.exports = {
         },
       }),
       new WebpackBar({ reporters: ['profile'], profile: true }),
+      new UselessFilesCleanWebpackPlugin({
+        root: APP_PATH,
+        out: path.join(runtimePath, 'lessFiles'),
+        clean: false,
+        exclude: ['*.gitignore', 'node_modules'],
+        log: 'console',
+      }),
     ]),
     optimization: isDev()
       ? {
