@@ -1,3 +1,13 @@
+# 6.4.0
+
+***
+
+2023/06/17
+
+* 依赖包升级
+* 加入UselessFilesCleanWebpackPlugin
+* 加入CompressionPlugin
+
 # 6.3.0
 
 ***
