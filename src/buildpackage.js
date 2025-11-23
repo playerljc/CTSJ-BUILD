@@ -53,6 +53,7 @@ function clearTask() {
       cwd: path.join(codePath, '../'),
       encoding: 'utf-8',
       env: getEnv(commandPath),
+      shell: isWin32(),
     });
 
     // rimrafProcess.stdout.on('data', (data) => {
@@ -99,6 +100,7 @@ function babelTask() {
         cwd: path.join(codePath, '../'),
         encoding: 'utf-8',
         env: getEnv(commandPath),
+        shell: isWin32(),
       },
     );
 
@@ -142,6 +144,7 @@ function gulpTask() {
         cwd: path.join(codePath, '../'),
         encoding: 'utf-8',
         env: getEnv(commandPath),
+        shell: isWin32(),
       },
     );
 

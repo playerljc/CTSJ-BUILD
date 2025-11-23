@@ -31,12 +31,18 @@ module.exports = function ({ webpackConfig, plugins, theme = {}, runtimePath }) 
 
         // return localName;
       },
+      exportLocalsConvention: 'as-is', // 确保类名保持原样
+      namedExport: false, // 禁用命名导出，恢复默认导出
     };
     webpackConfig.module.rules[3].use[3].options.lessOptions = {
       modifyVars: theme,
     };
   } else {
-    webpackConfig.module.rules[3].use[1].options.modules = true;
+    webpackConfig.module.rules[3].use[1].options.modules = {
+        auto: true, // 确保自动检测（或设置为 true 强制启用）
+        exportLocalsConvention: 'as-is', // 确保类名保持原样
+        namedExport: false, // 禁用命名导出，恢复默认导出
+    };
     webpackConfig.module.rules[3].use[3].options.lessOptions = {
       modifyVars: theme,
     };

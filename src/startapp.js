@@ -37,6 +37,7 @@ function corssenvTask() {
       cwd: path.join(codePath, '../'),
       encoding: 'utf-8',
       env: getEnv(commandPath),
+      shell: isWin32(),
     });
 
     // crossenvProcess.stdout.on('data', (data) => {
@@ -117,6 +118,7 @@ function webpackServiceTask() {
         cwd: path.join(codePath, '../'),
         encoding: 'utf-8',
         env: getEnv(commandPath),
+          shell: isWin32(),
       },
     );
 
