@@ -1,4 +1,4 @@
-#一个基于Webpack和less的打包工具
+#一个基于Rspack和less的打包工具
  - 可以对基于React和Less的宿主工程进行build和dev(支持typescript)
  - 可以对除了Vue的npm package进行build(支持typescript)
  - 可以对除了Vue的npm package进行umd(支持typescript)
@@ -19,7 +19,7 @@ npm install @ctsj/build --save-dev
 development模式启动宿主工程
 #### 参数：
 - -c,--config <path>
-##### 用户对webpack进行重定义的配置文件(ctbuild.config.js)路径，默认是宿主工程中的ctbuild.config.js文件
+##### 用户对构建配置进行重定义的配置文件(ctbuild.config.js)路径，默认是宿主工程中的ctbuild.config.js文件
 ```javascript
 ctbuild startapp -c /opt/mydir/;
 ```
@@ -33,7 +33,7 @@ ctbuild startapp --define skin=a,skin2=b
 production模式启动宿主工程
 #### 参数：
 - -c,--config <path>
-##### 用户对webpack进行重定义的配置文件(ctbuild.config.js)路径，默认是宿主工程中的ctbuild.config.js文件
+##### 用户对构建配置进行重定义的配置文件(ctbuild.config.js)路径，默认是宿主工程中的ctbuild.config.js文件
 ```javascript
 ctbuild startapp -c /opt/mydir/;
 ```
@@ -69,7 +69,7 @@ ctbuild buildpackage -p a/b/c
 ### buildumd
 将npm package编译成umd
 - -c,-config <path>
-##### 用户对webpack进行重定义的配置文件(ctbuild.config.js)路径，默认是宿主工程中的ctbuild.config.js文件
+##### 用户对构建配置进行重定义的配置文件(ctbuild.config.js)路径，默认是宿主工程中的ctbuild.config.js文件
 
 - -p,--packagename <name>
 ##### umd的packagename
@@ -79,13 +79,13 @@ ctbuild buildpackage -p a/b/c
 
 
 ## ctbuild.config.js
-此文件的作用是让用户对已经配置好的webpack配置进行重定义，内容如下：
+此文件的作用是让用户对已经配置好的 Rspack 配置进行重定义，内容如下：
 ```javascript
 // 需要导出2个方法
 // 1.getTheme，返回less的全局变量
 // 2.getConfig参数有是一个对象，对象有4个属性
-// webpack: 原始的webpack对象
-// webpackConfig: 已经配置好的webpack配置对象
+// webpack: @rspack/core 对象（保持参数名兼容）
+// webpackConfig: 已经配置好的 Rspack 配置对象
 // plugins: 插件集合
 // define: 自定义参数,
 // 我们只需要对webpackConfig对象进行自定义即可
@@ -94,9 +94,9 @@ module.exports = {
   getTheme() {
     return modifyVars;
   },
-  // webpack - 原生webpack对象
-  // webpackConfig - 已经配置好的webpack配置
-  // plugin - 配置好的webpack插件(具体请查看"缺省的插件列表")
+  // webpack - @rspack/core 对象（保持参数名兼容）
+  // webpackConfig - 已经配置好的 Rspack 配置
+  // plugin - 配置好的 Rspack 插件(具体请查看"缺省的插件列表")
   // define - 自定义参数
   getConfig({ webpack,webpackConfig,plugins,define }) {
     

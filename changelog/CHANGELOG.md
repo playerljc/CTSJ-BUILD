@@ -1,3 +1,17 @@
+# 6.5.0
+
+***
+
+2026/05/27
+
+* 构建引擎从 Webpack 5 迁移至 Rspack
+* 新增 @rspack/core、@rspack/cli、@rspack/dev-server、@rspack/plugin-react-refresh、ts-checker-rspack-plugin
+* 配置目录由 src/webpackconfig 重命名为 src/rspackconfig
+* ctbuild.config.js 的 getConfig({ webpack, webpackConfig, plugins }) API 保持不变，webpack 参数实际指向 @rspack/core
+* plugins 对象 key 名称不变，内置插件替换为 Rspack 等价实现（CssExtractRspackPlugin、CopyRspackPlugin 等）
+* 保留 babel-loader 与 ts-loader，移除 thread-loader、cache-loader、speed-measure-webpack-plugin
+* projectCssModules、projectDisableStrict 改为按 rule.test 查找配置项，避免索引耦合
+
 # 6.4.1
 
 ***

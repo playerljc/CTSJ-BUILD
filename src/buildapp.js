@@ -19,7 +19,7 @@ let configPath;
 
 let define;
 
-const tasks = [corssenvTask, /* prodDllTask, */ webpackTask];
+const tasks = [corssenvTask, /* prodDllTask, */ rspackTask];
 
 let index = 0;
 
@@ -93,16 +93,16 @@ function corssenvTask() {
  * webpackTask
  * @return {Promise}
  */
-function webpackTask() {
+function rspackTask() {
   return new Promise((resolve) => {
-    const command = isWin32() ? `webpack.cmd` : `webpack`;
+    const command = isWin32() ? `rspack.cmd` : `rspack`;
 
     const babelProcess = spawn(
       command,
       [
+        'build',
         '--config',
-        path.join(codePath, 'webpackconfig', 'webpack.prod.js'),
-        '--progress',
+        path.join(codePath, 'rspackconfig', 'rspack.prod.js'),
         '--env',
         [
           `runtimepath=${path.join(runtimePath, path.sep)}`,

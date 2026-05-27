@@ -26,7 +26,7 @@ let packageName;
 
 let define;
 
-const tasks = [copySrcTask, /* corssenvTask, */ webpackTask /* , removeSrcTask */];
+const tasks = [copySrcTask, /* corssenvTask, */ rspackTask /* , removeSrcTask */];
 
 let index = 0;
 
@@ -105,16 +105,16 @@ function copySrcTask() {
  * webpackTask
  * @return {Promise}
  */
-function webpackTask() {
+function rspackTask() {
   return new Promise((resolve) => {
-    const command = isWin32() ? `webpack.cmd` : `webpack`;
+    const command = isWin32() ? `rspack.cmd` : `rspack`;
 
     const babelProcess = spawn(
       command,
       [
+        'build',
         '--config',
-        path.join(codePath, 'webpackconfig', 'webpack.umd.js'),
-        '--progress',
+        path.join(codePath, 'rspackconfig', 'rspack.umd.js'),
         '--env',
         [
           `runtimepath=${path.join(runtimePath, path.sep)}`,

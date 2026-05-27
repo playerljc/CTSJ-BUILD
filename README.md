@@ -1,4 +1,4 @@
-# A packaging tool based on Webpack
+# A packaging tool based on Rspack
  - Can build and dev for host projects based on React and Less (support typescript)
  - Can build npm package except Vue (support typescript)
  - Can compile umd except for Vue's npm package
@@ -19,7 +19,7 @@ npm install @ctsj/build --save-dev
 Start the host project in development mode
 #### params：
 - -c,--config <path>
-##### The path of the configuration file (ctbuild.config.js) that the user redefines webpack. The default is the ctbuild.config.js file in the host project
+##### The path of the configuration file (ctbuild.config.js) that the user redefines the build config. The default is the ctbuild.config.js file in the host project
 ```javascript
 ctbuild startapp -c /opt/mydir/;
 ```
@@ -33,7 +33,7 @@ ctbuild startapp --define skin=a,skin2=b
 Start the host project in production mode
 #### 参数：
 - -c,--config <path>
-##### The path of the configuration file (ctbuild.config.js) that the user redefines webpack. The default is the ctbuild.config.js file in the host project
+##### The path of the configuration file (ctbuild.config.js) that the user redefines the build config. The default is the ctbuild.config.js file in the host project
 ```javascript
 ctbuild startapp -c /opt/mydir/;
 ```
@@ -69,7 +69,7 @@ Compile npm package with ts
 ### buildumd
 Compile npm package into umd
 - -c,-config <path>
-##### The path of the configuration file (ctbuild.config.js) that the user redefines webpack. The default is the ctbuild.config.js file in the host project
+##### The path of the configuration file (ctbuild.config.js) that the user redefines the build config. The default is the ctbuild.config.js file in the host project
 
 - -p,--packagename <name>
 ##### packagename of umd
@@ -79,13 +79,13 @@ Compile npm package into umd
 
 
 ## ctbuild.config.js
-The function of this file is to allow users to redefine the already configured webpack configuration, as follows:
+The function of this file is to allow users to redefine the already configured Rspack configuration, as follows:
 ```javascript
 // Need to export 2 methods
 // 1.getTheme, return the global variable of less
 // 2.getConfig parameter is an object, and the object has 4 properties
-// webpack: the original webpack object
-// webpackConfig: The configured webpack configuration object
+// webpack: @rspack/core object (parameter name kept for compatibility)
+// webpackConfig: The configured Rspack configuration object
 // plugins: plugin collection
 // define: custom parameters,
 // We only need to customize the webpackConfig object

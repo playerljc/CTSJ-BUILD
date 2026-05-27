@@ -20,7 +20,7 @@ let configPath;
 let define;
 
 // startapp的tasks
-const tasks = [corssenvTask, /* devDllTask, */ webpackServiceTask];
+const tasks = [corssenvTask, /* devDllTask, */ rspackServiceTask];
 
 let index = 0;
 
@@ -95,18 +95,17 @@ function corssenvTask() {
  * webpackServiceTask
  * @return {Promise}
  */
-function webpackServiceTask() {
+function rspackServiceTask() {
   return new Promise((resolve, reject) => {
-    const command = isWin32() ? `webpack-dev-server.cmd` : `webpack-dev-server`;
+    const command = isWin32() ? `rspack.cmd` : `rspack`;
 
     const babelProcess = spawn(
       command,
       [
-        // '--open',
+        'serve',
         '--color',
         '--config',
-        path.join(codePath, 'webpackconfig', 'webpack.dev.js'),
-        '--progress',
+        path.join(codePath, 'rspackconfig', 'rspack.dev.js'),
         '--env',
         [
           `runtimepath=${path.join(runtimePath, path.sep)}`,
