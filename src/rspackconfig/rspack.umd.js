@@ -1,25 +1,19 @@
 const { merge } = require('webpack-merge');
 
-const webpackBase = require('./webpack.base');
-const common = require('./webpack.umdcommon.js');
+const rspackBase = require('./rspack.base');
+const common = require('./rspack.umdcommon.js');
 const commandArgs = require('../commandArgs');
 
 const runtimePath = commandArgs.toCommandArgs(process.argv[6]).get('runtimepath');
 
-// --runtimepath
-// --customconfig
-
-// webpack的配置
 let webpackConfig = merge(common.config, {
   mode: 'production',
   devtool: 'cheap-module-source-map',
-  // plugins: [new CleanWebpackPlugin()],
 });
 
-webpackConfig = webpackBase({
+webpackConfig = rspackBase({
   webpackConfig,
   runtimePath,
 });
 
-// 得到最终的配置
 module.exports = webpackConfig;

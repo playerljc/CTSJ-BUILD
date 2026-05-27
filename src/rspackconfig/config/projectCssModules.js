@@ -1,4 +1,5 @@
 const { getPostCssConfigPath, slash, isDev } = require('../../util');
+const { findAppLessRule } = require('./ruleUtils');
 
 /**
  * cssModules
@@ -8,47 +9,45 @@ const { getPostCssConfigPath, slash, isDev } = require('../../util');
  * @param runtimePath
  */
 module.exports = function ({ webpackConfig, plugins, theme = {}, runtimePath }) {
-  // include的APP_PATH中的less文件使用cssModules
+  const lessRule = findAppLessRule(webpackConfig);
+
+  if (!lessRule) {
+    return;
+  }
+
+  const cssLoader = lessRule.use.find((item) => typeof item === 'object' && item.loader === 'css-loader');
+  const lessLoader = lessRule.use.find((item) => typeof item === 'object' && item.loader === 'less-loader');
+
   if (isDev()) {
-    webpackConfig.module.rules[3].use[1].options.modules = {
-      // localIdentName: '[path][name]__[local]--[hash:base64:5]',
+    cssLoader.options.modules = {
       getLocalIdent: (context, localIdentName, localName) => {
-        // const match = context.resourcePath.match(/src(.*)/);
+        const filePath = context.resourcePath.replace('.less', '');
 
-        // if (match && match[1]) {
-        // const path = match[1].replace('.less', '');
-
-        const path = context.resourcePath.replace('.less', '');
-
-        const arr = slash(path)
+        const arr = slash(filePath)
           .split('/')
           .filter((t) => t)
           .map((a) => a.replace(/([A-Z])/g, '-$1'))
           .map((a) => a.toLowerCase());
 
         return `${arr.join('-')}-${localName}`.replace(/--/g, '-');
-        // }
-
-        // return localName;
       },
-      exportLocalsConvention: 'as-is', // 确保类名保持原样
-      namedExport: false, // 禁用命名导出，恢复默认导出
+      exportLocalsConvention: 'as-is',
+      namedExport: false,
     };
-    webpackConfig.module.rules[3].use[3].options.lessOptions = {
+    lessLoader.options.lessOptions = {
       modifyVars: theme,
     };
   } else {
-    webpackConfig.module.rules[3].use[1].options.modules = {
-        auto: true, // 确保自动检测（或设置为 true 强制启用）
-        exportLocalsConvention: 'as-is', // 确保类名保持原样
-        namedExport: false, // 禁用命名导出，恢复默认导出
+    cssLoader.options.modules = {
+      auto: true,
+      exportLocalsConvention: 'as-is',
+      namedExport: false,
     };
-    webpackConfig.module.rules[3].use[3].options.lessOptions = {
+    lessLoader.options.lessOptions = {
       modifyVars: theme,
     };
   }
 
-  // include是node_modules中的less文件不需要cssModules
   webpackConfig.module.rules.push({
     test: /\.less$/,
     include: [/node_modules/],

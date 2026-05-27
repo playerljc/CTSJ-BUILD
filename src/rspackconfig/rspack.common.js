@@ -1,11 +1,7 @@
 const path = require('path');
-const webpack = require('webpack');
+const rspack = require('@rspack/core');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
-const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
-const TerserPlugin = require('terser-webpack-plugin');
-const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
+const { TsCheckerRspackPlugin } = require('ts-checker-rspack-plugin');
 const UselessFilesCleanWebpackPlugin = require('useless-files-clean-webpack-plugin');
 const CompressionPlugin = require('compression-webpack-plugin');
 const WebpackBar = require('webpackbar');
@@ -14,21 +10,22 @@ const commandArgs = require('../commandArgs');
 const Util = require('../util');
 const { getPostCssConfigPath, isDev, isProd } = require('../util');
 
-const argIndex = isDev() ? 8 : 6;
+const {
+  CssExtractRspackPlugin,
+  CopyRspackPlugin,
+  LightningCssMinimizerRspackPlugin,
+  SwcJsMinimizerRspackPlugin,
+} = rspack;
+
+const argIndex = isDev() ? 7 : 6;
 const runtimePath = commandArgs.toCommandArgs(process.argv[argIndex]).get('runtimepath');
 
-const APP_PATH = path.resolve(runtimePath, 'src'); // 项目src目录
-
-const devLoaders = isDev() ? [] : ['thread-loader'];
+const APP_PATH = path.resolve(runtimePath, 'src');
 
 const babelConfig = {
   presets: [
     [
       '@babel/preset-env',
-      // {
-      //   useBuiltIns: 'usage',
-      //   corejs: { version: 3, proposals: true },
-      // },
     ],
     '@babel/preset-react',
   ],
@@ -47,24 +44,17 @@ const babelConfig = {
 module.exports = {
   plugins: {
     HtmlWebpackPlugin,
-    MiniCssExtractPlugin,
-    CopyWebpackPlugin,
-    CssMinimizerPlugin,
-    TerserPlugin,
+    MiniCssExtractPlugin: CssExtractRspackPlugin,
+    CopyWebpackPlugin: CopyRspackPlugin,
+    CssMinimizerPlugin: LightningCssMinimizerRspackPlugin,
+    TerserPlugin: SwcJsMinimizerRspackPlugin,
     UselessFilesCleanWebpackPlugin,
     CompressionPlugin,
   },
   config: {
-    /**
-     * 入口
-     */
     entry: {
-      // 判断入口文件是.js,.jsx,.tsx
       index: Util.getEntryIndex(runtimePath),
     },
-    /**
-     * 出口
-     */
     output: {
       filename: isProd() ? '[name].[chunkhash].bundle.js' : '[name].[contenthash].bundle.js',
       chunkFilename: isProd() ? '[name].[chunkhash].bundle.js' : '[name].[contenthash].bundle.js',
@@ -74,7 +64,6 @@ module.exports = {
     },
     plugins: (isProd()
       ? [
-          new webpack.optimize.ModuleConcatenationPlugin(),
           new CompressionPlugin({
             algorithm: 'gzip',
             test: new RegExp('\\.(' + ['js', 'css'].join('|') + ')$'),
@@ -88,26 +77,24 @@ module.exports = {
         title: '',
         filename: 'index.html',
         template: path.join(runtimePath, 'src', 'index.html'),
-        hash: true, // 防止缓存
+        hash: true,
         minify: {
-          removeAttributeQuotes: true, // 压缩 去掉引号
+          removeAttributeQuotes: true,
         },
         chunks: ['index'],
       }),
-      // new webpack.HashedModuleIdsPlugin(),
-      new MiniCssExtractPlugin({
+      new CssExtractRspackPlugin({
         filename: isDev() ? '[name].css' : '[name].[contenthash].css',
         chunkFilename: isDev() ? '[name].css' : '[name].[contenthash].css',
         ignoreOrder: false,
       }),
-      new webpack.ProvidePlugin({
+      new rspack.ProvidePlugin({
         _: 'lodash',
         $: 'jquery',
       }),
-      new ForkTsCheckerWebpackPlugin({
+      new TsCheckerRspackPlugin({
         typescript: {
           configFile: path.join(runtimePath, 'tsconfig.json'),
-          // checkSyntacticErrors: true,
         },
       }),
       new WebpackBar({ reporters: ['profile'], profile: true }),
@@ -124,8 +111,8 @@ module.exports = {
           splitChunks: false,
         }
       : {
-          minimize: !isDev(), // true,
-          minimizer: isDev() ? [] : [new TerserPlugin(), new CssMinimizerPlugin()],
+          minimize: true,
+          minimizer: [new SwcJsMinimizerRspackPlugin(), new LightningCssMinimizerRspackPlugin()],
           runtimeChunk: 'single',
           splitChunks: {
             cacheGroups: {
@@ -142,9 +129,7 @@ module.exports = {
         {
           test: /\.m?jsx?$/,
           exclude: /(node_modules|bower_components)/,
-          // include: [APP_PATH],
           use: [
-            ...devLoaders,
             {
               loader: 'babel-loader',
               options: babelConfig,
@@ -154,9 +139,7 @@ module.exports = {
         {
           test: /\.m?tsx?$/,
           exclude: /(node_modules|bower_components)/,
-          // include: [APP_PATH],
           use: [
-            ...devLoaders,
             {
               loader: 'babel-loader',
               options: babelConfig,
@@ -187,7 +170,7 @@ module.exports = {
             isDev()
               ? 'style-loader'
               : {
-                  loader: MiniCssExtractPlugin.loader,
+                  loader: CssExtractRspackPlugin.loader,
                 },
             {
               loader: 'css-loader',
@@ -212,7 +195,7 @@ module.exports = {
             isDev()
               ? 'style-loader'
               : {
-                  loader: MiniCssExtractPlugin.loader,
+                  loader: CssExtractRspackPlugin.loader,
                 },
             {
               loader: 'css-loader',
@@ -276,8 +259,8 @@ module.exports = {
       ],
     },
     resolve: {
-      modules: [/* path.join(runtimePath, 'node_modules'), */ 'node_modules'],
-      extensions: ['.js', '.jsx', '.ts', '.tsx', '.css', '.less', '.sass', '.json'], // 后缀名自动补全
+      modules: ['node_modules'],
+      extensions: ['.js', '.jsx', '.ts', '.tsx', '.css', '.less', '.sass', '.json'],
     },
   },
 };
